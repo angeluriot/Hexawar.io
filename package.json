@@ -1,0 +1,32 @@
+{
+	"name": "hexawar.io",
+	"version": "1.0",
+	"description": "A multiplayer browser game of land capture.",
+	"main": "server/server.js",
+	"scripts": {
+		"start": "node server/server.js",
+		"dev": "nodemon server/server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/angeluriot/Hexawar.io.git"
+	},
+	"keywords": [
+		"game",
+		"multiplayer",
+		"land capture"
+	],
+	"author": "Angel Uriot",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/angeluriot/Hexawar.io/issues"
+	},
+	"homepage": "https://github.com/angeluriot/Hexawar.io#readme",
+	"dependencies": {
+		"express": "^4.17.1",
+		"socket.io": "^4.3.2"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.15"
+	}
+}

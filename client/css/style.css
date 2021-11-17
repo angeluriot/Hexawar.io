@@ -1,0 +1,29 @@
+#infos
+{
+	width: 500px;
+	height: 500px;
+	overflow-y: auto;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+#users
+{
+	
+}
+
+#messages
+{
+	
+}
+
+#chat
+{
+	margin: 20px;
+	width: 500px;
+}
+
+#input
+{
+	width: 400px;
+}
