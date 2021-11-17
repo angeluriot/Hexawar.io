@@ -12,7 +12,7 @@
 		<title>Hexawar.io</title>
 		<link rel="shortcut icon" type="image/png" href="resources/images/favicon.png"/>
 
-		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://cdn.socket.io/4.3.2/socket.io.min.js" integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs" crossorigin="anonymous"></script>
 
 		<link rel="stylesheet" type="text/css" href="css/style.css"/>
 		<script type="text/javascript" src="js/main.js"></script>
@@ -20,13 +20,13 @@
 
 	<body>
 		<div id="infos">
+			<h1 id="users_title">Users :</h1>
 			<div id="users">
-				<h3>Users :</h3>
-				<h2 id="user_list"></h2>
+				<h3 id="user_list"></h3>
 			</div>
+			<h1 id="messages_title">Messages :</h1>
 			<div id="messages">
-				<h3>Messages :</h3>
-				<h2 id="message_list"></h2>
+				<h3 id="message_list"></h3>
 			</div>
 		</div>
 		<div id="chat">

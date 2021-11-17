@@ -1,29 +1,56 @@
 #infos
 {
-	width: 500px;
-	height: 500px;
-	overflow-y: auto;
-	display: grid;
-	grid-template-columns: 1fr 1fr;
+	position: fixed;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 70%;
+}
+
+#users_title
+{
+	position: fixed;
+	top: 0%;
+	left: 20px;
 }
 
 #users
 {
-	
+	position: fixed;
+	top: 70px;
+	left: 20px;
+	width: 20%;
+	height: 70%;
+	overflow-y: auto;
+}
+
+#messages_title
+{
+	position: fixed;
+	top: 0%;
+	left: calc(20% + 20px);
 }
 
 #messages
 {
-	
+	position: fixed;
+	top: 70px;
+	left: calc(20% + 20px);
+	width: calc(80% - 20px);
+	height: 70%;
+	overflow-y: auto;
 }
 
 #chat
 {
+	position: fixed;
+	top: calc(70% + 70px);
+	left: 0%;
 	margin: 20px;
-	width: 500px;
+	width: 100%;
 }
 
 #input
 {
-	width: 400px;
+	width: 50%;
 }

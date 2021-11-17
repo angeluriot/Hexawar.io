@@ -7,6 +7,7 @@ window.onload = function()
 {
 	const user_list = document.getElementById('user_list');
 	const chat_form = document.getElementById('chat_form');
+	const messages = document.getElementById('messages');
 	const message_list = document.getElementById('message_list');
 
 	// Get user list
@@ -19,12 +20,14 @@ window.onload = function()
 	socket.on('message', message =>
 	{
 		message_list.innerHTML += `<li>${message.username} : ${message.message}</li>`;
+		messages.scrollTop = messages.scrollHeight;
 	});
 
 	// Log from server
 	socket.on('log', message =>
 	{
 		message_list.innerHTML += `<li>(${message})</li>`;
+		messages.scrollTop = messages.scrollHeight;
 	});
 
 	// Message submit

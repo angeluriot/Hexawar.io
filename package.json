@@ -1,6 +1,6 @@
 {
 	"name": "hexawar.io",
-	"version": "1.0",
+	"version": "1.0.0",
 	"description": "A multiplayer browser game of land capture.",
 	"main": "server/server.js",
 	"scripts": {
