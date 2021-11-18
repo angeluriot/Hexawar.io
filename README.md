@@ -45,7 +45,7 @@ The game is online on [**Hexawar.io**](https://hexawar.io).
 **Windows : [Download installer](https://nodejs.org/en/download/)**.
 
 **Unix :**
-```Shell
+```console
 $ sudo apt install nodejs
 $ sudo apt install npm
 ```
@@ -54,7 +54,7 @@ $ sudo apt install npm
 
 ### Setup
 
-```Shell
+```console
 $ npm install express socket.io
 $ npm install -D nodemon
 $ npm run dev
