@@ -1,56 +1,26 @@
-#infos
+html, body
 {
-	position: fixed;
-	top: 0%;
-	left: 0%;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+}
+
+#game
+{
 	width: 100%;
-	height: 70%;
+	height: 100%;
+	position: fixed;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
 }
 
-#users_title
+#canvas
 {
-	position: fixed;
-	top: 0%;
-	left: 20px;
-}
-
-#users
-{
-	position: fixed;
-	top: 70px;
-	left: 20px;
-	width: 20%;
-	height: 70%;
-	overflow-y: auto;
-}
-
-#messages_title
-{
-	position: fixed;
-	top: 0%;
-	left: calc(20% + 20px);
-}
-
-#messages
-{
-	position: fixed;
-	top: 70px;
-	left: calc(20% + 20px);
-	width: calc(80% - 20px);
-	height: 70%;
-	overflow-y: auto;
-}
-
-#chat
-{
-	position: fixed;
-	top: calc(70% + 70px);
-	left: 0%;
-	margin: 20px;
 	width: 100%;
-}
-
-#input
-{
-	width: 50%;
+	height: 100%;
+	position: fixed;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
 }

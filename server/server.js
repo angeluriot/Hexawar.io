@@ -4,6 +4,7 @@ const express = require('express');
 const socketio = require('socket.io');
 
 const { user_join, get_user, user_leave, get_user_list } = require('./users/users.js');
+const { create_grid, set_cell, get_cell, get_grid } = require('./grid/grid.js');
 
 const app = express();
 const server = http.createServer(app);
@@ -12,45 +13,33 @@ const io = socketio(server);
 // Set static folder
 app.use(express.static(path.join(__dirname, '../client')));
 
+create_grid();
+
 // Run when client connects
 io.on('connection', socket =>
 {
-	// Send user list
-	io.emit('user_list', get_user_list());
-
-	socket.on('join_game', username =>
+	socket.on('join_game', user =>
 	{
 		// Register the user
-		const user = user_join(socket.id, username);
+		user.id = socket.id;
+		user_join(user);
 
-		// Send user list
-		io.emit('user_list', get_user_list());
-
-		// Send log to all other users
-		socket.broadcast.emit('log', `${user.name} has joined the game`);
+		// Send the grid
+		socket.emit('grid_to_client', get_grid());
 	});
 
-	// Listen for chat messages
-	socket.on('chat_message', message =>
+	socket.on('change_cell_to_server', change =>
 	{
-		// Get user from id
-		const user = get_user(socket.id);
+		let color = set_cell(change.i, change.j, change.color);
 
-		// Send message to all users
-		io.emit('message', { username: user.name, message });
+		if (color != null)
+			socket.broadcast.emit('change_cell_to_client', change);
 	});
 
 	// Runs when client disconnects
 	socket.on('disconnect', () =>
 	{
 		const user = user_leave(socket.id);
-
-		// Send user list
-		io.emit('user_list', get_user_list());
-
-		// Send log to all other users
-		if (user != null)
-			socket.broadcast.emit('log', `${user.name} est malheureusement décédé`);
 	});
 });
 

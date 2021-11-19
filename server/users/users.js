@@ -1,23 +1,21 @@
 const users = [];
 
 // Handle user connection
-function user_join(id, name)
+function user_join(user)
 {
-	const user = { id, name };
 	users.push(user);
-	return user;
 }
 
 // Get user from id
 function get_user(id)
 {
-	return users.find(user => user.id === id);
+	return users.find(user => user.id  === id);
 }
 
 // Handle user disconnection
 function user_leave(id)
 {
-	const index = users.findIndex(user => user.id === id);
+	const index = users.findIndex(user => user.id  === id);
 
 	if (index !== -1)
 		return users.splice(index, 1)[0];
