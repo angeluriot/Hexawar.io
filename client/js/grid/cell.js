@@ -1,4 +1,4 @@
-const hexagon_angle = 2 * Math.PI / 6;
+const hexagon_angle = 2 * Math.PI / 6.;
 
 class Cell
 {

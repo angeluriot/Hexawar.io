@@ -1,10 +1,5 @@
 const socket = io();
 
-let user = {
-	id: 0,
-	color: random_color()
-}
-
 window.onload = function()
 {
 	let canvas = document.getElementById('canvas');
@@ -50,6 +45,8 @@ window.onload = function()
 
 		render();
 	});
+
+	color_picker_events();
 }
 
 window.onresize = function()
