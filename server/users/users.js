@@ -1,4 +1,5 @@
-const users = [];
+// Properties
+let users = [];
 
 // Handle user connection
 function user_join(user)
@@ -6,16 +7,16 @@ function user_join(user)
 	users.push(user);
 }
 
-// Get user from id
+// Give a user from its id
 function get_user(id)
 {
-	return users.find(user => user.id  === id);
+	return users.find(user => user.id === id);
 }
 
 // Handle user disconnection
 function user_leave(id)
 {
-	const index = users.findIndex(user => user.id  === id);
+	const index = users.findIndex(user => user.id === id);
 
 	if (index !== -1)
 		return users.splice(index, 1)[0];
@@ -23,6 +24,7 @@ function user_leave(id)
 		return null;
 }
 
+// Give the list of users
 function get_user_list()
 {
 	return users;

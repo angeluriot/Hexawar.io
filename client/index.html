@@ -17,14 +17,15 @@
 
 		<script src="https://cdn.socket.io/4.3.2/socket.io.min.js" integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs" crossorigin="anonymous"></script>
 
+		<script type="text/javascript" src="js/properties.js"></script>
 		<script type="text/javascript" src="js/utils/utils.js"></script>
 		<script type="text/javascript" src="js/renderer/camera.js"></script>
 		<script type="text/javascript" src="js/grid/cell.js"></script>
 		<script type="text/javascript" src="js/grid/grid.js"></script>
 		<script type="text/javascript" src="js/renderer/renderer.js"></script>
-		<script type="text/javascript" src="js/renderer/leaderboard.js"></script>
-		<script type="text/javascript" src="js/user/user.js"></script>
+		<script type="text/javascript" src="js/user/leaderboard.js"></script>
 		<script type="text/javascript" src="js/user/connection.js"></script>
+		<script type="text/javascript" src="js/game.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
 	</head>
 
@@ -36,8 +37,11 @@
 			<div class="connection">
 				<p class="connect_title">Hexawar.io</p>
 				<form class="connect_form">
-					<input class="nickname_input" type="text" placeholder="Nickname">
-					<input class="color_input" type="color">
+					<input class="nickname_input" type="text" placeholder="Nickname" required='required'>
+					<div class="color_div">
+						<input class="color_input" type="color">
+						<span class="color_text">Your color</span>
+					</div>
 					<button class="play_button">Play</button>
 				</form>
 			</div>
