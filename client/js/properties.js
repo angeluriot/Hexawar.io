@@ -20,3 +20,7 @@ let drag_from = { x: 0, y:0 };
 let drag_to = { x: 0, y:0 };
 let cell_from;
 let cell_to;
+
+// Move Clic
+let move_is_cell_from = false;
+let move_cell_from;

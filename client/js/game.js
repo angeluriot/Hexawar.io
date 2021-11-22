@@ -57,6 +57,7 @@ function start_game(socket, name, color)
 
 	join_game(socket, user);
 	game_events(socket, user);
+	create_cookie(user);
 	render();
 }
 
@@ -117,6 +118,44 @@ function move(socket, user)
 
 			dragging = false;
 			render();
+		}
+	});
+
+	// Move by clicking
+	window.addEventListener('click', e => {
+		let cell = get_cell_from_mouse(e.clientX, e.clientY);
+
+		if (cell)
+		if (move_is_cell_from) {
+			if (are_neighbours(cell, move_cell_from)) {
+				socket.emit('move', {
+					from: { i: move_cell_from.i, j: move_cell_from.j },
+					to: { i: cell.i, j: cell.j }
+				});
+				/*
+					Version 1 : Le clic double doit être répété plusieurs fois pour déplacer des unités
+				 */
+				// move_is_cell_from = false;
+
+				/*
+					Version 2 : Le clic après déplacement est retenu comme déplacement, possibilité de faire un déplacement
+					plus rapide si les cases visées appartiennent déjà au joueur
+				 */
+				
+				if (cell.user_id == user.id) {
+					move_cell_from = true;
+					move_cell_from = cell;
+				} else
+					move_is_cell_from = false;
+			
+			} else if (cell.user_id == user.id)
+				move_cell_from = cell;
+			else {
+				move_is_cell_from = false;
+			}
+		} else if (cell.nb_troops > 1 && cell.user_id == user.id) {
+			move_is_cell_from = true;
+			move_cell_from = cell;
 		}
 	});
 }
