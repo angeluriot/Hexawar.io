@@ -20,6 +20,11 @@ function load_background(socket)
 	{
 		for (let i = 0; i < changes.length; i++)
 			set_cell(changes[i]);
+	
+		if (changes[1].user_id == user.id) {
+			move_cell_from = get_cell_from_mouse(move_x, move_y);
+			move_is_cell_from = true;
+		}
 
 		render();
 	});
@@ -123,39 +128,33 @@ function move(socket, user)
 
 	// Move by clicking
 	window.addEventListener('click', e => {
-		let cell = get_cell_from_mouse(e.clientX, e.clientY);
-
+		move_x = e.clientX;
+		move_y = e.clientY;
+		let cell = get_cell_from_mouse(move_x, move_y);
+		
 		if (cell)
-		if (move_is_cell_from) {
-			if (are_neighbours(cell, move_cell_from)) {
-				socket.emit('move', {
-					from: { i: move_cell_from.i, j: move_cell_from.j },
-					to: { i: cell.i, j: cell.j }
-				});
-				/*
-					Version 1 : Le clic double doit être répété plusieurs fois pour déplacer des unités
-				 */
-				// move_is_cell_from = false;
+			if (move_is_cell_from && move_cell_from.nb_troops > 1) {
+				if (are_neighbours(cell, move_cell_from)) {
+					socket.emit('move', {
+						from: { i: move_cell_from.i, j: move_cell_from.j },
+						to: { i: cell.i, j: cell.j }
+					});
+					cell = get_cell_from_mouse(e.clientX, e.clientY);
 
-				/*
-					Version 2 : Le clic après déplacement est retenu comme déplacement, possibilité de faire un déplacement
-					plus rapide si les cases visées appartiennent déjà au joueur
-				 */
+					if (cell.user_id == user.id) {
+						move_cell_from = true;
+						move_cell_from = cell;
+					} else
+						move_is_cell_from = false;
 				
-				if (cell.user_id == user.id) {
-					move_cell_from = true;
+				} else if (cell.user_id == user.id)
 					move_cell_from = cell;
-				} else
+				else {
 					move_is_cell_from = false;
-			
-			} else if (cell.user_id == user.id)
+				}
+			} else if (cell.nb_troops > 1 && cell.user_id == user.id) {
+				move_is_cell_from = true;
 				move_cell_from = cell;
-			else {
-				move_is_cell_from = false;
 			}
-		} else if (cell.nb_troops > 1 && cell.user_id == user.id) {
-			move_is_cell_from = true;
-			move_cell_from = cell;
-		}
 	});
 }

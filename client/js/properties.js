@@ -24,3 +24,5 @@ let cell_to;
 // Move Clic
 let move_is_cell_from = false;
 let move_cell_from;
+let move_x;
+let move_y;
