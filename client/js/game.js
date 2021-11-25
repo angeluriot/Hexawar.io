@@ -20,6 +20,11 @@ function load_background(socket)
 	{
 		for (let i = 0; i < changes.length; i++)
 			set_cell(changes[i]);
+	
+		if (changes[1].user_id == user.id) {
+			move_cell_from = get_cell_from_mouse(move_x, move_y);
+			move_is_cell_from = true;
+		}
 
 		render();
 	});
@@ -57,6 +62,7 @@ function start_game(socket, name, color)
 
 	join_game(socket, user);
 	game_events(socket, user);
+	create_cookie(user);
 	render();
 }
 
@@ -149,5 +155,37 @@ function move(socket, user)
 			dragging = false;
 			render();
 		}
+	});
+
+	// Move by clicking
+	window.addEventListener('click', e => {
+		move_x = e.clientX;
+		move_y = e.clientY;
+		let cell = get_cell_from_mouse(move_x, move_y);
+		
+		if (cell)
+			if (move_is_cell_from && move_cell_from.nb_troops > 1) {
+				if (are_neighbours(cell, move_cell_from)) {
+					socket.emit('move', {
+						from: { i: move_cell_from.i, j: move_cell_from.j },
+						to: { i: cell.i, j: cell.j }
+					});
+					cell = get_cell_from_mouse(e.clientX, e.clientY);
+
+					if (cell.user_id == user.id) {
+						move_cell_from = true;
+						move_cell_from = cell;
+					} else
+						move_is_cell_from = false;
+				
+				} else if (cell.user_id == user.id)
+					move_cell_from = cell;
+				else {
+					move_is_cell_from = false;
+				}
+			} else if (cell.nb_troops > 1 && cell.user_id == user.id) {
+				move_is_cell_from = true;
+				move_cell_from = cell;
+			}
 	});
 }

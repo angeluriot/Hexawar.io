@@ -100,3 +100,20 @@ function update_grid_from_server(socket)
 	// Ask the server for the grid
 	socket.emit('ask_for_grid');
 }
+
+// Tell if the cell are neighbours
+function are_neighbours(cell_1, cell_2)
+{
+	if (cell_1.i == cell_2.i && Math.abs(cell_1.j - cell_2.j) == 1)
+		return true;
+
+	if (Math.abs(cell_1.i - cell_2.i) == 1)
+	{
+		if (cell_1.i % 2 == 0)
+			return cell_2.j == cell_1.j || cell_2.j == cell_1.j - 1;
+		else
+			return cell_2.j == cell_1.j || cell_2.j == cell_1.j + 1;
+	}
+
+	return false;
+}
