@@ -9,44 +9,50 @@
 .connection
 {
 	position: fixed;
-	background-color: #FFFFFF;
-	width: 400px;
-	height: 400px;
-	border-radius: 1.5em;
-	box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.5);
+	width: 460px;
+	height: 574px;
 	transform: translate(-50%, -50%);
 	left: 50%;
 	top: 50%;
 	z-index: 100;
 }
 
+.connect_background
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+	width: 100%;
+	fill: white;
+	filter: drop-shadow(0px 0px 30px rgba(0, 0, 0, 0.4));
+	-webkit-filter: drop-shadow(0px 0px 30px rgba(0, 0, 0, 0.4));
+}
+
 .connect_title
 {
 	position: absolute;
 	transform: translate(-50%, -50%);
-	top: 40px;
+	top: 100px;
 	left: 50%;
-	color: #32da6a;
-	text-align: center;
-	font-family: 'Ubuntu', sans-serif;
-	font-weight: bold;
-	font-size: 23px;
+	width: 65%;
 }
 
 .nickname_input
 {
 	position: absolute;
 	transform: translate(-50%, -50%);
-	top: 160px;
+	top: 230px;
 	left: 50%;
 	width: 76%;
+	height: 40px;
 	color: rgb(38, 50, 56);
 	font-weight: 700;
 	font-size: 14px;
 	background: rgba(136, 126, 126, 0.04);
 	padding: 10px 20px;
 	border: none;
-	border-radius: 20px;
+	border-radius: 25px;
 	outline: none;
 	box-sizing: border-box;
 	border: 2px solid rgba(0, 0, 0, 0.02);
@@ -58,12 +64,12 @@
 {
 	position: absolute;
 	transform: translate(-50%, -50%);
-	top: 225px;
+	top: 320px;
 	left: 50%;
 	width: 40%;
-	height: 8%;
+	height: 40px;
 	border: none;
-	border-radius: 20px;
+	border-radius: 25px;
 	outline: none;
 	border: 2px solid rgba(0, 0, 0, 0.02);
 	overflow: hidden;
@@ -98,39 +104,18 @@
 	border: 2px solid rgba(0, 0, 0, 0.18);
 }
 
-.play_button
+.svg_button
 {
 	position: absolute;
 	transform: translate(-50%, -50%);
-	top: 315px;
+	top: 430px;
 	left: 50%;
+	width: 85px;
+	height: 85px;
 	cursor: pointer;
-	border-radius: 5em;
-	color: black;
-	background-color: white;
-	padding-left: 40px;
-	padding-right: 40px;
-	padding-bottom: 10px;
-	padding-top: 10px;
-	border: none;
-	font-family: 'Ubuntu', sans-serif;
-	box-shadow: 0 0 15px 0px rgba(0, 0, 0, 0.25);
-	color: rgb(38, 50, 56);
-	font-weight: 700;
-	font-size: 14px;
-	transition: box-shadow 0.1s ease-in-out;
-}
-
-.play_button:hover
-{
-	box-shadow: 0 0 15px 0px rgba(0, 0, 0, 0.4);
-	transition: box-shadow 0.1s ease-in-out;
-}
-
-.play_button:active
-{
-	box-shadow: 0 0 15px 0px rgba(0, 0, 0, 0.25);
-	transition: box-shadow 0.1s ease-in-out;
+	fill: white;
+	filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.4));
+	-webkit-filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.4));
 }
 
 .background

@@ -29,6 +29,7 @@ function form_events(socket)
 	const color_picker = document.querySelector('.color_input');
 	const color_div = document.querySelector('.color_div');
 	const color_text = document.querySelector('.color_text');
+	const submit_button = document.querySelector('.svg_button');
 
 	color_picker_events();
 	load_cookie_data(name_input, color_picker, color_div);
@@ -39,7 +40,7 @@ function form_events(socket)
 		color_text.style.color = '#000000';
 
 	// Start the game
-	form.addEventListener('submit', e =>
+	submit_button.addEventListener('click', e =>
 	{
 		e.preventDefault();
 		start_game(socket, name_input.value, color_picker.value);
