@@ -74,10 +74,10 @@ function move(socket, io)
 		let cell_to = get_cell(cells.to.i, cells.to.j);
 
 		// If the move is valid
-		if (cell_from != null && cell_to != null && are_neighbours(cells.from, cells.to))
+		if (cell_from != null && cell_to != null && cell_from.user_id == socket.id && are_neighbours(cells.from, cells.to) && cell_from.nb_troops > 1)
 		{
 			// If it's a simple move
-			if (cell_from.user_id == cell_to.user_id)
+			if (cell_to.user_id == socket.id)
 			{
 				cell_to.nb_troops += cell_from.nb_troops - 1;
 				cell_from.nb_troops = 1;
@@ -131,7 +131,7 @@ function move(socket, io)
 				nb_troops: cell_to.nb_troops
 			};
 
-			io.emit('changes', [change_1, change_2]);
+			io.emit('changes', { changes: [change_1, change_2], is_move: true });
 		}
 	});
 }

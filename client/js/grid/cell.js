@@ -24,16 +24,25 @@ class Cell
 
 		context.closePath();
 		context.fillStyle = this.color;
+
+		if (user != null && this == cell_from)
+			context.fillStyle = change_color(user.color, dark_color_limit, 0.2);
+
 		context.fill();
-		context.strokeStyle = 'black';
+		context.strokeStyle = border_color;
 		context.lineWidth = 0.1;
+		context.lineCap = 'round';
+
+		if (user != null && this.user_id == user.id)
+			context.strokeStyle = change_color(user.color, dark_color_limit, 0.2);
+
 		context.stroke();
 
 		// Draw the number of troops
 		if (this.nb_troops > 0)
 		{
 			context.font = 'bold 0.75px sans-serif';
-			context.fillStyle = is_color_dark(this.color) ? 'white' : 'black';
+			context.fillStyle = is_color_dark(this.color, dark_color_limit) ? 'white' : 'black';
 			context.textAlign = 'center';
 			context.fillText(this.nb_troops.toString(), this.x, this.y + 0.26);
 		}

@@ -27,9 +27,31 @@ function create_grid()
 // Draw the grid on the screen
 function draw_grid(context)
 {
-	for (let i = 0; i < grid_size.x; i++)
-		for (let j = 0; j < grid_size.y; j++)
-			grid[i][j].draw(context);
+	if (user == null)
+	{
+		for (let i = 0; i < grid_size.x; i++)
+			for (let j = 0; j < grid_size.y; j++)
+				grid[i][j].draw(context);
+	}
+
+	else
+	{
+		if (cell_from != null && cell_from.user_id != user.id)
+		cell_from = null;
+
+		for (let i = 0; i < grid_size.x; i++)
+			for (let j = 0; j < grid_size.y; j++)
+				if (grid[i][j].user_id != user.id)
+					grid[i][j].draw(context);
+
+		for (let i = 0; i < grid_size.x; i++)
+			for (let j = 0; j < grid_size.y; j++)
+				if (grid[i][j].user_id == user.id)
+					grid[i][j].draw(context);
+
+		if (cell_from != null)
+			cell_from.draw(context);
+	}
 }
 
 // Give the cell at the given coordinates
@@ -104,6 +126,9 @@ function update_grid_from_server(socket)
 // Tell if the cell are neighbours
 function are_neighbours(cell_1, cell_2)
 {
+	if (cell_1 == null || cell_2 == null)
+		return false;
+
 	if (cell_1.i == cell_2.i && Math.abs(cell_1.j - cell_2.j) == 1)
 		return true;
 
@@ -116,4 +141,22 @@ function are_neighbours(cell_1, cell_2)
 	}
 
 	return false;
+}
+
+function get_neighbours(cell)
+{
+	let temp = [];
+	let neighbours = [];
+	temp.push(get_cell(cell.i - 1, cell.j + ((cell.i + 1) % 2 == 0)));
+	temp.push(get_cell(cell.i    , cell.j - 1));
+	temp.push(get_cell(cell.i - 1, cell.j - ((cell.i + 1) % 2 != 0)));
+	temp.push(get_cell(cell.i    , cell.j + 1));
+	temp.push(get_cell(cell.i + 1, cell.j + ((cell.i + 1) % 2 == 0)));
+	temp.push(get_cell(cell.i + 1, cell.j - ((cell.i + 1) % 2 != 0)));
+
+	for (let i = 0; i < temp.length; i++)
+		if (temp[i] != null)
+			neighbours.push(temp[i]);
+
+	return neighbours;
 }

@@ -4,7 +4,6 @@ const socket = io();
 window.onload = function()
 {
 	load_background(socket);
-	color_picker_events();
 	form_events(socket);
 }
 

@@ -16,15 +16,13 @@ function load_background(socket)
 		render();
 	});
 
-	socket.on('changes', changes =>
+	socket.on('changes', update =>
 	{
-		for (let i = 0; i < changes.length; i++)
-			set_cell(changes[i]);
-	
-		if (changes[1].user_id == user.id) {
-			move_cell_from = get_cell_from_mouse(move_x, move_y);
-			move_is_cell_from = true;
-		}
+		for (let i = 0; i < update.changes.length; i++)
+			set_cell(update.changes[i]);
+
+		if (user != null && update.is_move && update.changes[0].user_id == user.id && update.changes[1].user_id == user.id)
+			cell_from = get_cell(update.changes[1].i, update.changes[1].j);
 
 		render();
 	});
@@ -75,41 +73,29 @@ function game_events(socket, user)
 // The troops moves
 function move(socket, user)
 {
-	// When double clicking
-	window.addEventListener('dblclick', e =>
+	function double_click(e)
 	{
 		let cell = get_cell_from_mouse(e.clientX, e.clientY);
 
 		if (cell != null && cell.user_id == user.id)
 		{
 			let cell_to = cell;
-			let cells_from = [];
-			cells_from.push(get_cell(cell_to.i - 1, cell_to.j + ((cell_to.i + 1) % 2 == 0)));
-			cells_from.push(get_cell(cell_to.i    , cell_to.j - 1));
-			cells_from.push(get_cell(cell_to.i - 1, cell_to.j - ((cell_to.i + 1) % 2 != 0)));
-			cells_from.push(get_cell(cell_to.i    , cell_to.j + 1));
-			cells_from.push(get_cell(cell_to.i + 1, cell_to.j + ((cell_to.i + 1) % 2 == 0)));
-			cells_from.push(get_cell(cell_to.i + 1, cell_to.j - ((cell_to.i + 1) % 2 != 0)));
+			let cells_from = get_neighbours(cell_to);
 
 			for (let i = 0; i < cells_from.length; i++)
-			{
 				if (cells_from[i].user_id == cell_to.user_id)
-				{
 					socket.emit('move', {
 						from: { i: cells_from[i].i, j: cells_from[i].j },
 						to: { i: cell_to.i, j: cell_to.j }
 					});
-				}
-			}
 
 			render();
 		}
-	});
+	}
 
-	// Start dragging
-	window.addEventListener('mousedown', e =>
+	function start_dragging(e)
 	{
-		if (!dragging && e.buttons == 1)
+		if (!dragging)
 		{
 			let cell = get_cell_from_mouse(e.clientX, e.clientY);
 
@@ -119,73 +105,118 @@ function move(socket, user)
 				drag_from = { x: cell.x, y: cell.y };
 				drag_to = camera.screen_to_canvas(e.clientX, e.clientY);
 				dragging = true;
-				render();
 			}
 		}
-	});
+	}
 
-	// When dragging
-	window.addEventListener('mousemove', e =>
-	{
-		if (dragging)
-		{
-			drag_to = camera.screen_to_canvas(e.clientX, e.clientY);
-			render();
-		}
-	});
-
-	// Finish dragging
-	window.addEventListener('mouseup', e =>
+	function when_dragging(e)
 	{
 		if (dragging)
 		{
 			let cell = get_cell_from_mouse(e.clientX, e.clientY);
 
-			if (cell != null)
+			if (cell != null && cell != cell_from && are_neighbours(cell_from, cell))
 			{
-				cell_to = cell;
-
-				// Send the move data to the server
-				socket.emit('move', {
-					from: { i: cell_from.i, j: cell_from.j },
-					to: { i: cell_to.i, j: cell_to.j }
-				});
+				drag_to = { x: cell.x, y: cell.y };
+				show_drag = true;
+				render();
 			}
 
+			else
+				show_drag = false;
+
+			render();
+		}
+	}
+
+	function finish_dragging(e)
+	{
+		if (dragging)
+		{
+			let cell = get_cell_from_mouse(e.clientX, e.clientY);
+
+			// Send the move data to the server
+			if (cell != null)
+				socket.emit('move', {
+					from: { i: cell_from.i, j: cell_from.j },
+					to: { i: cell.i, j: cell.j }
+				});
+
+			show_drag = false;
 			dragging = false;
 			render();
 		}
-	});
+	}
 
-	// Move by clicking
-	window.addEventListener('click', e => {
-		move_x = e.clientX;
-		move_y = e.clientY;
-		let cell = get_cell_from_mouse(move_x, move_y);
-		
-		if (cell)
-			if (move_is_cell_from && move_cell_from.nb_troops > 1) {
-				if (are_neighbours(cell, move_cell_from)) {
+	function move_by_clicking(e)
+	{
+		let cell = get_cell_from_mouse(e.clientX, e.clientY);
+
+		if (cell != null && cell != cell_from)
+		{
+			// In our side
+			if (cell.user_id == user.id)
+			{
+				// Simple move
+				if (cell_from != null && are_neighbours(cell, cell_from) && cell_from.nb_troops > 1)
 					socket.emit('move', {
-						from: { i: move_cell_from.i, j: move_cell_from.j },
+						from: { i: cell_from.i, j: cell_from.j },
 						to: { i: cell.i, j: cell.j }
 					});
-					cell = get_cell_from_mouse(e.clientX, e.clientY);
 
-					if (cell.user_id == user.id) {
-						move_cell_from = true;
-						move_cell_from = cell;
-					} else
-						move_is_cell_from = false;
-				
-				} else if (cell.user_id == user.id)
-					move_cell_from = cell;
-				else {
-					move_is_cell_from = false;
+				// Change selected cell
+				else
+				{
+					cell_from = cell;
+					render();
 				}
-			} else if (cell.nb_troops > 1 && cell.user_id == user.id) {
-				move_is_cell_from = true;
-				move_cell_from = cell;
 			}
+
+			// Enemy side
+			else
+			{
+				// The selected cell is close
+				if (are_neighbours(cell, cell_from) && cell_from.nb_troops > 1)
+					socket.emit('move', {
+						from: { i: cell_from.i, j: cell_from.j },
+						to: { i: cell.i, j: cell.j }
+					});
+
+				// The selected cell is far (choose the cell with the most troops)
+				else
+				{
+					let cells_from = get_neighbours(cell);
+					let nb_troops = -1;
+					let best_cell = null;
+
+					for (let i = 0; i < cells_from.length; i++)
+						if (cells_from[i].user_id == user.id && cells_from[i].nb_troops > nb_troops)
+						{
+							nb_troops = cells_from[i].nb_troops;
+							best_cell = cells_from[i];
+						}
+
+					if (best_cell != null)
+						socket.emit('move', {
+							from: { i: best_cell.i, j: best_cell.j },
+							to: { i: cell.i, j: cell.j }
+						});
+				}
+			}
+		}
+	}
+
+	window.addEventListener('dblclick', e => { double_click(e); });
+
+	window.addEventListener('mousedown', e =>
+	{
+		if (e.buttons == 1)
+		{
+			move_by_clicking(e);
+			start_dragging(e);
+		}
 	});
+
+	window.addEventListener('mousemove', e => { when_dragging(e); });
+	window.addEventListener('mouseup', e => { finish_dragging(e); });
 }

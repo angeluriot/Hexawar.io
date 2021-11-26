@@ -1,26 +1,41 @@
+// Load user's data if he has any
+function load_cookie_data(name_input, color_picker, color_div)
+{
+	let cookie = get_cookie();
+
+	if (cookie.name != "")
+	{
+		name_input.value = cookie.name;
+		color_picker.value = cookie.color;
+		color_div.style.backgroundColor = cookie.color;
+	}
+}
+
 // Create cookie with user's name and color
-create_cookie = (user) => {
-    let date = new Date();
-    date.setTime(date.getTime() + 24*60*60*1000);
-    let value = `name=${ user.name },color=${ user.color }`;
-    let expires = "; expires=" + date.toUTCString();
-    document.cookie = "user=" + value + expires + "; path=/; secure;";
+function create_cookie(user)
+{
+	let date = new Date();
+	date.setTime(date.getTime() + 24 * 60 * 60 * 1000);
+	let value = `name=${ user.name },color=${ user.color }`;
+	let expires = "; expires=" + date.toUTCString();
+	document.cookie = "user=" + value + expires + "; path=/;";
 }
 
 // Get cookie data
-get_cookie = () => {
-    let s = document.cookie;
+function get_cookie()
+{
+	let s = document.cookie;
+	let name = s.substr(0, s.lastIndexOf(",color")).substr(s.indexOf("name=") + 5);
+	let color = s.substr(s.lastIndexOf("color=") + 6);
 
-    let name = s.substr(0, s.lastIndexOf(",color")).substr(s.indexOf("name=") + 5);
-    let color = s.substr(s.lastIndexOf("color=") + 6);
-    
-    return {
-        name: name,
-        color: color
-    };
+	return {
+		name: name,
+		color: color
+	};
 }
 
 // Erase user's data
-erase_cookie = () => {   
-    document.cookie = 'user=; path=/; expires=Thu, 01 Jan 2000 00:00:01 GMT; secure;';
+function erase_cookie()
+{
+	document.cookie = 'user=; path=/; expires=Thu, 01 Jan 2000 00:00:01 GMT;';
 }

@@ -54,6 +54,9 @@ function get_random_cell()
 // Tell if the cell are neighbours
 function are_neighbours(cell_1, cell_2)
 {
+	if (cell_1 == null || cell_2 == null)
+		return false;
+
 	if (cell_1.i == cell_2.i && Math.abs(cell_1.j - cell_2.j) == 1)
 		return true;
 
@@ -91,7 +94,7 @@ function remove_user_from_grid(user, io)
 			}
 
 	// Send the changes to the clients
-	io.emit('changes', changes);
+	io.emit('changes', { changes: changes, is_move: false });
 }
 
 module.exports =
