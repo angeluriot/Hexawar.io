@@ -1,3 +1,21 @@
+@font-face
+{
+	font-family: "Roboto_regular";
+	src: url("../resources/fonts/Roboto/Roboto-Regular.ttf");
+}
+
+@font-face
+{
+	font-family: "Roboto_medium";
+	src: url("../resources/fonts/Roboto/Roboto-Medium.ttf");
+}
+
+@font-face
+{
+	font-family: "Roboto_bold";
+	src: url("../resources/fonts/Roboto/Roboto-Bold.ttf");
+}
+
 .connect_div
 {
 	position: fixed;
@@ -47,8 +65,7 @@
 	width: 76%;
 	height: 40px;
 	color: rgb(38, 50, 56);
-	font-weight: 700;
-	font-size: 14px;
+	font-size: 16px;
 	background: rgba(136, 126, 126, 0.04);
 	padding: 10px 20px;
 	border: none;
@@ -57,7 +74,7 @@
 	box-sizing: border-box;
 	border: 2px solid rgba(0, 0, 0, 0.02);
 	text-align: center;
-	font-family: 'Ubuntu', sans-serif;
+	font-family: "Roboto_medium";
 }
 
 .color_div
@@ -93,10 +110,8 @@
 	top: 50%;
 	left: 50%;
 	text-align: center;
-	font-family: 'Ubuntu', sans-serif;
-	color: rgb(38, 50, 56);
-	font-weight: 700;
-	font-size: 14px;
+	font-family: "Roboto_medium";
+	font-size: 16px;
 }
 
 .nickname_input:focus, .color_div:focus
@@ -108,14 +123,18 @@
 {
 	position: absolute;
 	transform: translate(-50%, -50%);
-	top: 430px;
+	top: 450px;
 	left: 50%;
 	width: 85px;
 	height: 85px;
 	cursor: pointer;
-	fill: white;
-	filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.4));
-	-webkit-filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.4));
+	filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.25));
+	-webkit-filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.25));
+}
+
+.svg_button_text
+{
+	font-family: "Roboto_medium";
 }
 
 .background
