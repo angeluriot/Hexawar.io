@@ -17,9 +17,16 @@ function join_game(socket, io)
 	});
 
 	// Register the user
-	socket.on('join_game', user =>
+	socket.on('join_game', input_user =>
 	{
-		user.id = socket.id;
+		let user = {
+			id: socket.id,
+			name: input_user.name,
+			color: input_user.color,
+			size: 1
+		};
+
+		// Add the user in the users list
 		user_join(user);
 
 		// Give it a random cell
@@ -50,6 +57,13 @@ function game_events(socket, io)
 function game_loop(io)
 {
 	troops_spawn(io);
+}
+
+// When a player dies
+function player_death(io, socket_id)
+{
+	user_leave(socket_id);
+	io.to(socket_id).emit('death');
 }
 
 // Handle a user leaving the game
@@ -96,6 +110,16 @@ function move(socket, io)
 				// If the attack succeeds
 				if (cell_from.nb_troops > cell_to.nb_troops + 1)
 				{
+					get_user(cell_from.user_id).size++;
+
+					if (cell_to.user_id != '')
+					{
+						get_user(cell_to.user_id).size--;
+
+						if (get_user(cell_to.user_id).size == 0)
+							player_death(io, cell_to.user_id);
+					}
+
 					cell_to.nb_troops = cell_from.nb_troops - cell_to.nb_troops - 1;
 					cell_from.nb_troops = 1;
 					cell_to.color = cell_from.color;

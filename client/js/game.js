@@ -53,7 +53,7 @@ function start_game(socket, name, color)
 
 	// Create the user
 	user = {
-		id: 0,
+		id: '',
 		name: name,
 		color: color
 	};
@@ -62,6 +62,15 @@ function start_game(socket, name, color)
 	game_events(socket, user);
 	create_cookie(user);
 	render();
+
+	// If the user dies
+	socket.on('death', () =>
+	{
+		setTimeout(() =>
+		{
+			location.reload();
+		}, 1000);
+	});
 }
 
 // The game events
