@@ -2,8 +2,8 @@
 
 ![Release](https://img.shields.io/badge/Release-v1.0-blueviolet)
 ![Language](https://img.shields.io/badge/Language-JavaScript-ffcc14)
-![Framework](https://img.shields.io/badge/Framework-NodeJS-00cf2c)
-![Size](https://img.shields.io/badge/Size-170Ko-f12222)
+![Frameworks](https://img.shields.io/badge/Frameworks-NodeJS_Socket.io-00cf2c)
+![Size](https://img.shields.io/badge/Size-2Mo-f12222)
 ![Open Source](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)
 
 This repository contains the source code of a multiplayer browser game of land capture.
