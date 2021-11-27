@@ -31,26 +31,34 @@ function draw_grid(context)
 	{
 		for (let i = 0; i < grid_size.x; i++)
 			for (let j = 0; j < grid_size.y; j++)
-				grid[i][j].draw(context);
+				if (grid[i][j].user_id == '')
+					grid[i][j].draw(context);
+
+		for (let i = 0; i < grid_size.x; i++)
+			for (let j = 0; j < grid_size.y; j++)
+				if (grid[i][j].user_id != '')
+					grid[i][j].draw(context);
 	}
 
 	else
 	{
 		if (cell_from != null && cell_from.user_id != user.id)
-		cell_from = null;
+			cell_from = null;
 
 		for (let i = 0; i < grid_size.x; i++)
 			for (let j = 0; j < grid_size.y; j++)
-				if (grid[i][j].user_id != user.id)
+				if (grid[i][j].user_id == '')
+					grid[i][j].draw(context);
+
+		for (let i = 0; i < grid_size.x; i++)
+			for (let j = 0; j < grid_size.y; j++)
+				if (grid[i][j].user_id != '' && grid[i][j].user_id != user.id)
 					grid[i][j].draw(context);
 
 		for (let i = 0; i < grid_size.x; i++)
 			for (let j = 0; j < grid_size.y; j++)
 				if (grid[i][j].user_id == user.id)
 					grid[i][j].draw(context);
-
-		if (cell_from != null)
-			cell_from.draw(context);
 	}
 }
 

@@ -1,11 +1,5 @@
 @font-face
 {
-	font-family: "Roboto_regular";
-	src: url("../resources/fonts/Roboto/Roboto-Regular.ttf");
-}
-
-@font-face
-{
 	font-family: "Roboto_medium";
 	src: url("../resources/fonts/Roboto/Roboto-Medium.ttf");
 }
@@ -51,28 +45,27 @@
 {
 	position: absolute;
 	transform: translate(-50%, -50%);
-	top: 100px;
+	top: 110px;
 	left: 50%;
-	width: 65%;
+	width: 80%;
 }
 
 .nickname_input
 {
 	position: absolute;
 	transform: translate(-50%, -50%);
-	top: 230px;
+	top: 255px;
 	left: 50%;
-	width: 76%;
+	width: 300px;
 	height: 40px;
 	color: rgb(38, 50, 56);
 	font-size: 16px;
-	background: rgba(136, 126, 126, 0.04);
+	background: rgba(126, 128, 136, 0.102);
 	padding: 10px 20px;
-	border: none;
 	border-radius: 25px;
 	outline: none;
 	box-sizing: border-box;
-	border: 2px solid rgba(0, 0, 0, 0.02);
+	border: 2px solid rgba(0, 0, 0, 0.041);
 	text-align: center;
 	font-family: "Roboto_medium";
 }
@@ -81,15 +74,17 @@
 {
 	position: absolute;
 	transform: translate(-50%, -50%);
-	top: 320px;
+	top: 330px;
 	left: 50%;
-	width: 40%;
+	width: 150px;
 	height: 40px;
-	border: none;
+	border: 2px solid rgba(0, 0, 0, 0.08);
 	border-radius: 25px;
-	outline: none;
-	border: 2px solid rgba(0, 0, 0, 0.02);
-	overflow: hidden;
+}
+
+.color_div:hover
+{
+	border: 2px solid rgba(0, 0, 0, 0.35);
 }
 
 .color_input
@@ -125,11 +120,27 @@
 	transform: translate(-50%, -50%);
 	top: 450px;
 	left: 50%;
-	width: 85px;
-	height: 85px;
+	width: 83px;
 	cursor: pointer;
+	dominant-baseline: middle;
 	filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.25));
 	-webkit-filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.25));
+	transition: all 0.2s;
+	fill: rgb(6, 209, 125);
+}
+
+.svg_button:hover
+{
+	transition: all 0.2s;
+	width: 88px;
+	fill: rgb(3, 192, 120);
+}
+
+.svg_button:active
+{
+	transition: all 0.2s;
+	width: 83px;
+	fill: rgb(6, 209, 125);
 }
 
 .svg_button_text

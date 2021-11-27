@@ -14,8 +14,7 @@ function load_cookie_data(name_input, color_picker, color_div)
 // Create cookie with user's name and color
 function create_cookie(user)
 {
-	let date = new Date();
-	date.setTime(date.getTime() + 24 * 60 * 60 * 1000);
+	let date = new Date(2032, 1, 1);
 	let value = `name=${ user.name },color=${ user.color }`;
 	let expires = "; expires=" + date.toUTCString();
 	document.cookie = "user=" + value + expires + "; path=/;";
