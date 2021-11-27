@@ -1,4 +1,4 @@
-# Hexawar.io
+# [Hexawar.io](https://hexawar.io)
 
 ![Release](https://img.shields.io/badge/Release-v1.0-blueviolet)
 ![Language](https://img.shields.io/badge/Language-JavaScript-ffcc14)
@@ -6,14 +6,14 @@
 ![Size](https://img.shields.io/badge/Size-170Ko-f12222)
 ![Open Source](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)
 
-A multiplayer browser game of land capture.
+This repository contains the source code of a multiplayer browser game of land capture.
 
 The game is online on [**Hexawar.io**](https://hexawar.io).
 
 <br/>
 
 <p align="center">
-	<img src="" width="700">
+	<img src="https://www.angeluriot.com/storage/shapes/hexawar_logo.svg" width="500">
 </p>
 
 <br/>
@@ -37,7 +37,7 @@ The game is online on [**Hexawar.io**](https://hexawar.io).
 
 # Install
 
-### Dependecies
+### 1. Dependecies
 
 * **[NodeJS](https://nodejs.org/en/)**
 * **[npm](https://www.npmjs.com)**
@@ -52,7 +52,7 @@ $ sudo apt install npm
 
 <br/>
 
-### Setup
+### 2. Setup
 
 ```shell
 $ npm install express socket.io
@@ -68,3 +68,4 @@ $ npm run dev
 * [**Arthur Azambre**](https://github.com/arthurazambre) : Co-creator of the project.
 * [**Gaétan Renard**](https://github.com/G-rnd) : Co-creator of the project.
 * [**Pierre Surer**](https://github.com/PignoulMarcel) : Co-creator of the project.
+* [**Thomas Mostowfi**](https://github.com/nuuye) : Co-creator of the project.
