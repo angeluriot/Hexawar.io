@@ -27,6 +27,13 @@ function create_grid()
 // Draw the grid on the screen
 function draw_grid(context)
 {
+	// Force Roboto loading
+	context.font = '0.75px Roboto_bold';
+	context.fillStyle = '#000000';
+	context.textAlign = 'center';
+	context.fillText("load", -10000, -10000);
+
+	// Before joining the game
 	if (user == null)
 	{
 		for (let i = 0; i < grid_size.x; i++)
@@ -40,6 +47,7 @@ function draw_grid(context)
 					grid[i][j].draw(context);
 	}
 
+	// In game
 	else
 	{
 		if (cell_from != null && cell_from.user_id != user.id)
