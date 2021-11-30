@@ -41,3 +41,4 @@ export function change_color(color, dark_level, change_level) {
         return rgb_to_hexa({ r: apply_change(rgb.r, 255, change_level), g: apply_change(rgb.g, 255, change_level), b: apply_change(rgb.b, 255, change_level) });
     return rgb_to_hexa({ r: apply_change(rgb.r, 0, change_level), g: apply_change(rgb.g, 0, change_level), b: apply_change(rgb.b, 0, change_level) });
 }
+//# sourceMappingURL=color.js.map

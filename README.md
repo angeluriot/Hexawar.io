@@ -37,12 +37,14 @@ The game is online on [**Hexawar.io**](https://hexawar.io).
 
 # Install
 
-### 1. Dependecies
+## 1/ Dependecies
 
 * **[NodeJS](https://nodejs.org/en/)**
 * **[npm](https://www.npmjs.com)**
 
-**Windows : [Download installer](https://nodejs.org/en/download/)**.
+**Windows :**
+
+**[Download installer](https://nodejs.org/en/download/)**.
 
 **Unix :**
 ```shell
@@ -52,13 +54,36 @@ $ sudo apt install npm
 
 <br/>
 
-### 2. Setup
+## 2/ Setup
+
+**Default setup :**
 
 ```shell
-$ npm install express socket.io
-$ npm install -D nodemon
+$ npm install
+$ tsc
+$ npm run start
+```
+
+**Dev setup :**
+
+```shell
+$ npm install
+$ tsc -w
+```
+
+```shell
 $ npm run dev
 ```
+
+**Server setup :**
+
+```shell
+$ npm install
+$ npm install forever
+$ tsc
+$ npm run fstart
+```
+(Stop the server with : `npm run fstop`).
 
 <br/>
 
