@@ -1,6 +1,17 @@
 import * as Grid from './grid/grid.js';
-import { Socket, Server } from 'socket.io';
 import { User } from './users/users.js';
+import { Socket, Server } from 'socket.io';
+import mongoose from 'mongoose';
+
+mongoose.connect('mongodb://localhost/test');
+
+mongoose.connection.once('open', () =>
+{
+	console.log('Connected to MongoDB');
+}).on('error', (error) =>
+{
+	console.log('Error connecting to MongoDB: ', error);
+});
 
 // Properties
 const initial_nb_troops = 10;
