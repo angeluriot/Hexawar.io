@@ -5,6 +5,7 @@ import * as Cookie from './user/cookie.js';
 import { Socket } from "socket.io-client";
 import { Camera } from './renderer/camera.js';
 import { User } from './user/user.js';
+import { Change } from './grid/cell.js';
 
 // Load the map and the change events
 export function load_background(socket : Socket)
@@ -18,19 +19,19 @@ export function load_background(socket : Socket)
 	Grid.update_grid_from_server(socket);
 
 	// Changes from server
-	socket.on('change', change =>
+	socket.on('change', (change: Change) =>
 	{
 		Grid.set_cell(change);
 		render();
 	});
 
-	socket.on('changes', update =>
+	socket.on('changes', (changes: Change[], is_move: boolean) =>
 	{
-		for (let i = 0; i < update.changes.length; i++)
-			Grid.set_cell(update.changes[i]);
+		for (let i = 0; i < changes.length; i++)
+			Grid.set_cell(changes[i]);
 
-		if (User.joined && update.is_move && update.changes[0].user_id == User.id && update.changes[1].user_id == User.id)
-			Global.cell_from = Grid.get_cell(update.changes[1].i, update.changes[1].j);
+		if (User.joined && is_move && changes[0].user_id == User.id && changes[1].user_id == User.id)
+			Global.cell_from = Grid.get_cell(changes[1].i, changes[1].j);
 
 		render();
 	});
@@ -40,10 +41,10 @@ export function load_background(socket : Socket)
 export function join_game(socket : Socket)
 {
 	// When the server sends the spawn data
-	socket.on('send_joining_data', data =>
+	socket.on('send_joining_data', (socket_id: string, spawn: {i: number, j: number}) =>
 	{
-		User.id = data.socket_id;
-		let cell = Grid.get_cell(data.spawn.i, data.spawn.j);
+		User.id = socket_id;
+		let cell = Grid.get_cell(spawn.i, spawn.j);
 
 		if (cell != null)
 			Camera.move(cell.x, cell.y);

@@ -2,3 +2,8 @@
 perso
 package-lock.json
 node_modules
+client/js
+models
+server
+!sources/models
+!sources/server

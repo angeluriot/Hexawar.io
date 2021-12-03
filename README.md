@@ -41,15 +41,18 @@ The game is online on [**Hexawar.io**](https://hexawar.io).
 
 * **[NodeJS](https://nodejs.org/en/)**
 * **[npm](https://www.npmjs.com)**
+* **[MongoDB](https://www.npmjs.com)**
 
 **Windows :**
 
-**[Download installer](https://nodejs.org/en/download/)**.
+* NodeJS and npm : **[install here](https://nodejs.org/en/download/)**.
+* MongoDB : **[install here](https://www.mongodb.com/try/download/community)**.
 
 **Unix :**
 ```shell
 $ sudo apt install nodejs
 $ sudo apt install npm
+$ sudo apt install mongodb-org
 ```
 
 <br/>

@@ -129,7 +129,7 @@ export function get_cell_from_mouse(x: number, y: number)
 export function update_grid_from_server(socket: Socket)
 {
 	// When the server send the grid
-	socket.on('grid_to_client', server_grid =>
+	socket.on('grid_to_client', (server_grid: Cell[][]) =>
 	{
 		for (let i = 0; i < Global.grid_size.x; i++)
 			for (let j = 0; j < Global.grid_size.y; j++)

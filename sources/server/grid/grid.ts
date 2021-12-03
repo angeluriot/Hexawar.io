@@ -1,7 +1,7 @@
 import * as Utils from '../utils/utils.js';
 import { Cell, Change } from './cell.js';
 import { User } from '../users/users.js';
-import { Server } from 'socket.io';
+import { Global } from '../properties.js';
 
 // Properties
 let grid_size = { x: 60, y: 30 };
@@ -25,11 +25,41 @@ export function set_cell(change: Change)
 	if (change.i < 0 || change.i >= grid_size.x || change.j < 0 || change.j >= grid_size.y)
 		return null;
 
-	grid[change.i][change.j].color = change.color;
-	grid[change.i][change.j].user_id = change.user_id;
-	grid[change.i][change.j].nb_troops = change.nb_troops;
+	let cell = grid[change.i][change.j];
+	User.update_sizes(cell.user_id, change.user_id);
 
+	cell.color = change.color;
+	cell.user_id = change.user_id;
+	cell.nb_troops = change.nb_troops;
+
+	Global.io.emit('change', change);
 	return grid[change.i][change.j];
+}
+
+// Set cells values from changes
+export function set_cells(changes: Change[], is_move: boolean)
+{
+	let valid_changes: Change[] = [];
+	let result: Cell[] = [];
+
+	for (let i = 0; i < changes.length; i++)
+	{
+		if (changes[i].i < 0 || changes[i].i >= grid_size.x || changes[i].j < 0 || changes[i].j >= grid_size.y)
+			continue;
+
+		let cell = grid[changes[i].i][changes[i].j];
+		User.update_sizes(cell.user_id, changes[i].user_id);
+
+		cell.color = changes[i].color;
+		cell.user_id = changes[i].user_id;
+		cell.nb_troops = changes[i].nb_troops;
+
+		valid_changes.push(changes[i]);
+		result.push(grid[changes[i].i][changes[i].j]);
+	}
+
+	Global.io.emit('changes', valid_changes, is_move);
+	return result;
 }
 
 // Give the cell at the given coordinates
@@ -74,7 +104,7 @@ export function are_neighbours(cell_1: { i: number, j: number }, cell_2: { i: nu
 }
 
 // Remove all the cells of a user
-export function remove_user_from_grid(user: User, io: Server<any>)
+export function remove_user_from_grid(user: User)
 {
 	let changes: Change[] = [];
 
@@ -96,5 +126,5 @@ export function remove_user_from_grid(user: User, io: Server<any>)
 			}
 
 	// Send the changes to the clients
-	io.emit('changes', { changes: changes, is_move: false });
+	Global.io.emit('changes', { changes: changes, is_move: false });
 }

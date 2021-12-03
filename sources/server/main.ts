@@ -4,10 +4,13 @@ import express from 'express';
 import { Server, Socket } from 'socket.io';
 import * as Grid from './grid/grid.js';
 import * as Game from './game.js';
+import mongoose from 'mongoose';
+import { Global } from './properties.js';
+import { User } from '../models/user.js';
 
 const app = express();
 const server = Http.createServer(app);
-const io = new Server(server);
+Global.io = new Server(server);
 
 // Set static folder
 const __dirname = Path.resolve();
@@ -15,16 +18,29 @@ app.use(express.static(Path.join(__dirname, '/client')));
 console.log(__dirname);
 
 // Initialize the server game
-Grid.create_grid();
-Game.game_loop(io);
+function init()
+{
+	Grid.create_grid();
+	Game.game_loop();
+}
 
 // When client connects
-io.on('connection', (socket: Socket) =>
+Global.io.on('connection', (socket: Socket) =>
 {
-	Game.join_game(socket, io);
-	Game.game_events(socket, io);
-	Game.leave_game(socket, io);
+	Game.join_game(socket);
+	Game.game_events(socket);
+	Game.leave_game(socket);
 });
 
 const port = process.env.PORT || 80;
-server.listen(port, () => console.log(`Server running on port ${port}`));
+
+mongoose.connect('mongodb://localhost/hexawar')
+.then((result) =>
+{
+	init();
+	server.listen(port, () => console.log(`Server running on port ${port}`));
+})
+.catch((error) =>
+{
+	console.log(error);
+});
