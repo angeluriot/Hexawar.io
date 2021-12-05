@@ -52,7 +52,7 @@ The game is online on [**Hexawar.io**](https://hexawar.io).
 ```shell
 $ sudo apt install nodejs
 $ sudo apt install npm
-$ sudo apt install mongodb-org
+$ sudo apt install mongodb
 ```
 
 <br/>
