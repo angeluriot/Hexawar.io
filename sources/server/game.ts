@@ -1,25 +1,30 @@
 import * as Grid from './grid/grid.js';
-import { User } from './users/users.js';
-import { Socket } from 'socket.io';
+import { Player } from './players/player.js';
 import { Global } from './properties.js';
 import { Change } from './grid/cell.js';
 
-// Handle a user joining the game
-export function join_game(socket: Socket)
+export type Move = {
+	from: { i: number, j: number },
+	to: { i: number, j: number }
+}
+
+// Handle a player joining the game
+export function join(player: Player)
 {
 	// Send the grid
-	socket.on('ask_for_grid', () =>
+	player.socket.on('ask_for_grid', () =>
 	{
-		socket.emit('grid_to_client', Grid.get_grid());
+		player.socket.emit('grid_to_client', Grid.get_client_grid());
 	});
 
-	// Register the user
-	socket.on('join_game', (input_user: { nickname: string, color: string }) =>
+	// Register the player
+	player.socket.on('join_game', (input_player: { nickname: string, color: string }) =>
 	{
-		let user = new User(socket.id, input_user.nickname, input_user.color, 0);
+		player.nickname = input_player.nickname;
+		player.color = input_player.color;
 
-		// Add the user in the users list
-		User.user_join(user);
+		// Add the player in the players list
+		player.join();
 
 		// Give it a random cell
 		let spawn = Grid.get_random_cell();
@@ -28,20 +33,20 @@ export function join_game(socket: Socket)
 		const change = {
 			i: spawn.i,
 			j: spawn.j,
-			color: user.color,
-			user_id: user.id,
+			color: player.color,
+			player: player,
 			nb_troops: Global.initial_nb_troops
 		};
 
 		Grid.set_cell(change);
-		socket.emit('send_joining_data', socket.id, spawn);
+		player.socket.emit('send_joining_data', player.socket.id, spawn);
 	});
 }
 
 // The events of the game
-export function game_events(socket: Socket)
+export function game_events(player: Player)
 {
-	move(socket);
+	player_moves(player);
 }
 
 // Loops of the game
@@ -50,48 +55,46 @@ export function game_loop()
 	troops_spawn();
 }
 
-// Handle a user leaving the game
-export function leave_game(socket: Socket)
+// Handle a player leaving the game
+export function leave_game(player: Player)
 {
 	// When client disconnects
-	socket.on('disconnect', () =>
+	player.socket.on('disconnect', () =>
 	{
-		const user = User.user_leave(socket.id);
-
-		if (user != null)
-			Grid.remove_user_from_grid(user);
+		player.leave();
+		Grid.remove_player_from_grid(player);
 	});
 }
 
-// Handle user moves
-export function move(socket: Socket)
+// Handle player moves
+export function player_moves(player: Player)
 {
-	socket.on('move', (cells: { from: { i: number, j: number }, to: { i: number, j: number } }) =>
+	function move_event(move: Move)
 	{
-		let cell_from = Grid.get_cell(cells.from.i, cells.from.j);
-		let cell_to = Grid.get_cell(cells.to.i, cells.to.j);
+		let cell_from = Grid.get_cell(move.from.i, move.from.j);
+		let cell_to = Grid.get_cell(move.to.i, move.to.j);
 
 		// If the move is valid
-		if (cell_from != null && cell_to != null && cell_from.user_id == socket.id && Grid.are_neighbours(cells.from, cells.to) && cell_from.nb_troops > 1)
+		if (cell_from != null && cell_to != null && cell_from.player == player && Grid.are_neighbours(move.from, move.to) && cell_from.nb_troops > 1)
 		{
 			let change_from = {
-				i: cells.from.i,
-				j: cells.from.j,
+				i: move.from.i,
+				j: move.from.j,
 				color: cell_from.color,
-				user_id: cell_from.user_id,
+				player: cell_from.player,
 				nb_troops: cell_from.nb_troops
 			};
 
 			let change_to = {
-				i: cells.to.i,
-				j: cells.to.j,
+				i: move.to.i,
+				j: move.to.j,
 				color: cell_to.color,
-				user_id: cell_to.user_id,
+				player: cell_to.player,
 				nb_troops: cell_to.nb_troops
 			};
 
 			// If it's a simple move
-			if (change_to.user_id == socket.id)
+			if (change_to.player == player)
 			{
 				change_to.nb_troops += change_from.nb_troops - 1;
 				change_from.nb_troops = 1;
@@ -113,7 +116,7 @@ export function move(socket: Socket)
 					change_to.nb_troops = change_from.nb_troops - change_to.nb_troops - 1;
 					change_from.nb_troops = 1;
 					change_to.color = change_from.color;
-					change_to.user_id = change_from.user_id;
+					change_to.player = change_from.player;
 				}
 
 				// If the attack fails
@@ -130,7 +133,10 @@ export function move(socket: Socket)
 
 			Grid.set_cells([change_from, change_to], true);
 		}
-	});
+	}
+
+	player.socket.on('move', (move: Move) => { move_event(move); });
+	player.socket.on('moves', (moves: Move[]) => { moves.forEach(move => move_event(move)); });
 }
 
 // Handle troops spawning
@@ -147,14 +153,14 @@ export function troops_spawn()
 			let cell = Grid.get_cell(i, j);
 
 			// If the cell isn't empty
-			if (cell != null && cell.user_id != '')
+			if (cell != null && cell.player != null)
 			{
 				// Add the change to the list
 				let change = {
 					i: i,
 					j: j,
 					color: cell.color,
-					user_id:cell.user_id,
+					player: cell.player,
 					nb_troops: cell.nb_troops
 				};
 

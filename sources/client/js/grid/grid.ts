@@ -1,9 +1,8 @@
 import { Global } from '../properties.js';
 import { Cell, Change } from './cell.js';
 import { render } from '../renderer/renderer.js';
-import { User } from '../user/user.js';
+import { Player } from '../players/player.js';
 import { Camera } from '../renderer/camera.js';
-import { Socket } from "socket.io-client";
 
 // Create the grid of cells
 export function create_grid()
@@ -20,7 +19,7 @@ export function create_grid()
 
 		for (let j = 0; j < Global.grid_size.y; j++)
 		{
-			Global.grid[i].push(new Cell(i, j, x, y + y_offset, "#FFFFFF", '', 0));
+			Global.grid[i].push(new Cell(i, j, x, y + y_offset, '#FFFFFF', '', 0));
 			y += Math.sin(Global.hexagon_angle) * 2;
 		}
 
@@ -38,41 +37,44 @@ export function draw_grid(context: CanvasRenderingContext2D)
 	context.font = '0.75px Roboto_bold';
 	context.fillStyle = '#000000';
 	context.textAlign = 'center';
-	context.fillText("load", -10000, -10000);
+	context.fillText('load', -10000, -10000);
 
 	// Before joining the game
-	if (User.joined)
+	if (!Player.playing)
 	{
 		for (let i = 0; i < Global.grid_size.x; i++)
 			for (let j = 0; j < Global.grid_size.y; j++)
-				if (Global.grid[i][j].user_id == '')
+				if (Global.grid[i][j].player_id == '')
 					Global.grid[i][j].draw(context);
 
 		for (let i = 0; i < Global.grid_size.x; i++)
 			for (let j = 0; j < Global.grid_size.y; j++)
-				if (Global.grid[i][j].user_id != '')
+				if (Global.grid[i][j].player_id != '')
 					Global.grid[i][j].draw(context);
 	}
 
 	// In game
 	else
 	{
-		if (Global.cell_from != null && Global.cell_from.user_id != User.id)
+		if (Global.cell_from != null && Global.cell_from.player_id != Player.id)
 			Global.cell_from = null;
 
+		// Draw empty cells
 		for (let i = 0; i < Global.grid_size.x; i++)
 			for (let j = 0; j < Global.grid_size.y; j++)
-				if (Global.grid[i][j].user_id == '')
+				if (Global.grid[i][j].player_id == '')
 					Global.grid[i][j].draw(context);
 
+		// Draw opponent's cells
 		for (let i = 0; i < Global.grid_size.x; i++)
 			for (let j = 0; j < Global.grid_size.y; j++)
-				if (Global.grid[i][j].user_id != '' && Global.grid[i][j].user_id != User.id)
+				if (Global.grid[i][j].player_id != '' && Global.grid[i][j].player_id != Player.id)
 					Global.grid[i][j].draw(context);
 
+		// Draw player's cells
 		for (let i = 0; i < Global.grid_size.x; i++)
 			for (let j = 0; j < Global.grid_size.y; j++)
-				if (Global.grid[i][j].user_id == User.id)
+				if (Global.grid[i][j].player_id == Player.id)
 					Global.grid[i][j].draw(context);
 	}
 }
@@ -93,7 +95,7 @@ export function set_cell(change: Change)
 		return null;
 
 	Global.grid[change.i][change.j].color = change.color;
-	Global.grid[change.i][change.j].user_id = change.user_id;
+	Global.grid[change.i][change.j].player_id = change.player_id;
 	Global.grid[change.i][change.j].nb_troops = change.nb_troops;
 
 	return Global.grid[change.i][change.j];
@@ -126,16 +128,16 @@ export function get_cell_from_mouse(x: number, y: number)
 }
 
 // Update the grid from the server data
-export function update_grid_from_server(socket: Socket)
+export function update_grid_from_server()
 {
 	// When the server send the grid
-	socket.on('grid_to_client', (server_grid: Cell[][]) =>
+	Global.socket.on('grid_to_client', (server_grid: Cell[][]) =>
 	{
 		for (let i = 0; i < Global.grid_size.x; i++)
 			for (let j = 0; j < Global.grid_size.y; j++)
 			{
 				Global.grid[i][j].color = server_grid[i][j].color;
-				Global.grid[i][j].user_id = server_grid[i][j].user_id;
+				Global.grid[i][j].player_id = server_grid[i][j].player_id;
 				Global.grid[i][j].nb_troops = server_grid[i][j].nb_troops;
 			}
 
@@ -143,7 +145,7 @@ export function update_grid_from_server(socket: Socket)
 	});
 
 	// Ask the server for the grid
-	socket.emit('ask_for_grid');
+	Global.socket.emit('ask_for_grid');
 }
 
 // Tell if the cell are neighbours
@@ -171,9 +173,9 @@ export function get_neighbours(cell: Cell)
 	let temp: (Cell | null)[] = [];
 	let neighbours: Cell[] = [];
 	temp.push(get_cell(cell.i - 1, cell.j + (((cell.i + 1) % 2 == 0) ? 1 : 0)));
-	temp.push(get_cell(cell.i    , cell.j - 1));
+	temp.push(get_cell(cell.i    , cell.j - 1                                ));
 	temp.push(get_cell(cell.i - 1, cell.j - (((cell.i + 1) % 2 != 0) ? 1 : 0)));
-	temp.push(get_cell(cell.i    , cell.j + 1));
+	temp.push(get_cell(cell.i    , cell.j + 1                                ));
 	temp.push(get_cell(cell.i + 1, cell.j + (((cell.i + 1) % 2 == 0) ? 1 : 0)));
 	temp.push(get_cell(cell.i + 1, cell.j - (((cell.i + 1) % 2 != 0) ? 1 : 0)));
 

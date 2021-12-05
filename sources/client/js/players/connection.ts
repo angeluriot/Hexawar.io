@@ -2,8 +2,7 @@ import { Global } from '../properties.js';
 import * as Color from '../utils/color.js';
 import * as Cookie from './cookie.js';
 import * as Game from '../game.js';
-import { Socket } from "socket.io-client";
-import { User } from '../user/user.js';
+import { Player } from '../players/player.js';
 
 // Update the color picker div
 export function color_picker_events()
@@ -28,7 +27,7 @@ export function color_picker_events()
 }
 
 // Connection events
-export function form_events(socket: Socket)
+export function form_events()
 {
 	const form_div = document.querySelector('.connect_div') as HTMLDivElement;
 	const name_input = document.querySelector('.nickname_input') as HTMLInputElement;
@@ -49,8 +48,8 @@ export function form_events(socket: Socket)
 	submit_button.addEventListener('click', e =>
 	{
 		e.preventDefault();
-		Game.start_game(socket, name_input.value, color_picker.value);
-		User.joined = true;
+		Game.start_game(name_input.value, color_picker.value);
+		Player.playing = true;
 		form_div.style.display = 'none';
 	});
 }

@@ -27,10 +27,10 @@ export function rgb_to_hexa(rgb: { r: number, g: number, b: number })
 	function component_to_hex(c: number)
 	{
 		let hex = c.toString(16);
-		return hex.length == 1 ? "0" + hex : hex;
+		return hex.length == 1 ? '0' + hex : hex;
 	}
 
-	return "#" + component_to_hex(rgb.r) + component_to_hex(rgb.g) + component_to_hex(rgb.b);
+	return '#' + component_to_hex(rgb.r) + component_to_hex(rgb.g) + component_to_hex(rgb.b);
 }
 
 // Tell if color is dark or light

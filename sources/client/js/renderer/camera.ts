@@ -1,5 +1,5 @@
 import { Global } from '../properties.js';
-import { User } from '../user/user.js';
+import { Player } from '../players/player.js';
 import { render } from '../renderer/renderer.js';
 
 // A class that represents the camera
@@ -25,7 +25,7 @@ export class Camera
 		// Move the camera with the mouse
 		function on_move_mouse(e: MouseEvent)
 		{
-			if (User.joined && !Global.dragging && e.buttons == 4)
+			if (Player.playing && !Global.dragging && e.buttons == 4)
 			{
 				Camera.x += e.movementX;
 				Camera.y += e.movementY;
@@ -69,7 +69,7 @@ export class Camera
 
 		function update()
 		{
-			if (User.joined && !Global.dragging)
+			if (Player.playing && !Global.dragging)
 			{
 				if (left)
 					Camera.x += camera_speed;
@@ -93,7 +93,7 @@ export class Camera
 		// Zoom with the mouse wheel
 		function on_zoom(e: Event)
 		{
-			if (User.joined && !Global.dragging)
+			if (Player.playing && !Global.dragging)
 			{
 				let temp = Camera.screen_to_canvas(Camera.mouse_pos.x,Camera.mouse_pos.y);
 				Camera.zoom *= 1 - (<WheelEvent>e).deltaY / 5000.;

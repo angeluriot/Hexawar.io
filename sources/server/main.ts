@@ -6,6 +6,7 @@ import * as Grid from './grid/grid.js';
 import * as Game from './game.js';
 import mongoose from 'mongoose';
 import { Global } from './properties.js';
+import { Player } from './players/player.js';
 import { User } from '../models/user.js';
 
 const app = express();
@@ -22,15 +23,17 @@ function init()
 {
 	Grid.create_grid();
 	Game.game_loop();
-}
 
-// When client connects
-Global.io.on('connection', (socket: Socket) =>
-{
-	Game.join_game(socket);
-	Game.game_events(socket);
-	Game.leave_game(socket);
-});
+	// When client connects
+	Global.io.on('connection', (socket: Socket) =>
+	{
+		let player = new Player(socket, '', '', 0);
+
+		Game.join(player);
+		Game.game_events(player);
+		Game.leave_game(player);
+	});
+}
 
 const port = process.env.PORT || 80;
 

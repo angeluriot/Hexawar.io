@@ -2,6 +2,9 @@ import { Cell } from './grid/cell.js';
 
 export class Global
 {
+	// Client
+	static socket: any;
+
 	// Cell
 	static hexagon_angle = 2 * Math.PI / 6.;
 	static border_color = '#D3D4DC';

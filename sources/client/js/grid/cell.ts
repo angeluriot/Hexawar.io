@@ -1,12 +1,12 @@
 import { Global } from '../properties.js';
 import * as Color from '../utils/color.js';
-import { User } from '../user/user.js';
+import { Player } from '../players/player.js';
 
 export type Change = {
 	i: number,
 	j: number,
 	color: string,
-	user_id: string,
+	player_id: string,
 	nb_troops: number
 };
 
@@ -18,18 +18,18 @@ export class Cell
 	x: number;
 	y: number;
 	color: string;
-	user_id: string;
+	player_id: string;
 	nb_troops: number;
 
 	// Contruct a cell
-	constructor(i: number, j: number, x: number, y: number, color: string, user_id: string, nb_troops: number)
+	constructor(i: number, j: number, x: number, y: number, color: string, player_id: string, nb_troops: number)
 	{
 		this.i = i;
 		this.j = j;
 		this.x = x;
 		this.y = y;
 		this.color = color;
-		this.user_id = user_id;
+		this.player_id = player_id;
 		this.nb_troops = nb_troops;
 	}
 
@@ -53,7 +53,7 @@ export class Cell
 		context.lineWidth = 0.1;
 		context.lineCap = 'round';
 
-		if (this.user_id != '')
+		if (this.player_id != '')
 			context.strokeStyle = Color.change_color(this.color, Global.dark_color_limit, 0.2);
 
 		context.stroke();
@@ -63,7 +63,7 @@ export class Cell
 		{
 			context.font = '0.75px Roboto_bold';
 
-			if (User.joined && this.user_id == User.id)
+			if (Player.playing && this.player_id == Player.id)
 				context.fillStyle = Color.is_color_dark(this.color, Global.dark_color_limit) ? 'white' : 'black';
 
 			else

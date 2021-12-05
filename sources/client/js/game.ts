@@ -1,14 +1,18 @@
 import { Global } from './properties.js';
 import * as Grid from './grid/grid.js';
 import { render } from './renderer/renderer.js';
-import * as Cookie from './user/cookie.js';
-import { Socket } from "socket.io-client";
+import * as Cookie from './players/cookie.js';
 import { Camera } from './renderer/camera.js';
-import { User } from './user/user.js';
+import { Player } from './players/player.js';
 import { Change } from './grid/cell.js';
 
+export type Move = {
+	from: { i: number, j: number },
+	to: { i: number, j: number }
+}
+
 // Load the map and the change events
-export function load_background(socket : Socket)
+export function load_background()
 {
 	let canvas = document.getElementById('canvas') as HTMLCanvasElement;
 	canvas.width = window.innerWidth;
@@ -16,21 +20,21 @@ export function load_background(socket : Socket)
 
 	Grid.create_grid();
 	Camera.init();
-	Grid.update_grid_from_server(socket);
+	Grid.update_grid_from_server();
 
 	// Changes from server
-	socket.on('change', (change: Change) =>
+	Global.socket.on('change', (change: Change) =>
 	{
 		Grid.set_cell(change);
 		render();
 	});
 
-	socket.on('changes', (changes: Change[], is_move: boolean) =>
+	Global.socket.on('changes', (changes: Change[], is_move: boolean) =>
 	{
 		for (let i = 0; i < changes.length; i++)
 			Grid.set_cell(changes[i]);
 
-		if (User.joined && is_move && changes[0].user_id == User.id && changes[1].user_id == User.id)
+		if (Player.playing && is_move && changes[0].player_id == Player.id && changes[1].player_id == Player.id)
 			Global.cell_from = Grid.get_cell(changes[1].i, changes[1].j);
 
 		render();
@@ -38,12 +42,12 @@ export function load_background(socket : Socket)
 }
 
 // Join the game
-export function join_game(socket : Socket)
+export function join_game()
 {
 	// When the server sends the spawn data
-	socket.on('send_joining_data', (socket_id: string, spawn: {i: number, j: number}) =>
+	Global.socket.on('send_joining_data', (socket_id: string, spawn: {i: number, j: number}) =>
 	{
-		User.id = socket_id;
+		Player.id = socket_id;
 		let cell = Grid.get_cell(spawn.i, spawn.j);
 
 		if (cell != null)
@@ -52,61 +56,60 @@ export function join_game(socket : Socket)
 		render();
 	});
 
-	// Tell the server that the user has joined
-	socket.emit('join_game', User.get_object());
+	// Tell the server that the player has joined
+	Global.socket.emit('join_game', Player.get_object());
 }
 
 // Start the game
-export function start_game(socket: Socket, nickname: string, color: string)
+export function start_game(nickname: string, color: string)
 {
 	let canvas = document.getElementById('canvas') as HTMLCanvasElement;
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 
-	// Create the user
-	User.nickname = nickname;
-	User.color = color;
+	// Create the player
+	Player.nickname = nickname;
+	Player.color = color;
 
-	join_game(socket);
-	game_events(socket);
+	join_game();
+	game_events();
 	Cookie.create_cookie();
 	render();
 
-	// If the user dies
-	socket.on('death', () =>
+	// If the player dies
+	Global.socket.on('die', () =>
 	{
-		setTimeout(() =>
-		{
-			location.reload();
-		}, 1000);
+		setTimeout(() => { location.reload(); }, 1000);
 	});
 }
 
 // The game events
-export function game_events(socket: Socket)
+export function game_events()
 {
-	move(socket);
+	move();
 }
 
 // The troops moves
-export function move(socket: Socket)
+export function move()
 {
 	function double_click(e: MouseEvent)
 	{
 		let cell = Grid.get_cell_from_mouse(e.clientX, e.clientY);
 
-		if (cell != null && cell.user_id == User.id)
+		if (cell != null && cell.player_id == Player.id)
 		{
 			let cell_to = cell;
 			let cells_from = Grid.get_neighbours(cell_to);
+			let moves: Move[] = [];
 
 			for (let i = 0; i < cells_from.length; i++)
-				if (cells_from[i].user_id == cell_to.user_id)
-					socket.emit('move', {
+				if (cells_from[i].player_id == cell_to.player_id)
+					moves.push({
 						from: { i: cells_from[i].i, j: cells_from[i].j },
 						to: { i: cell_to.i, j: cell_to.j }
 					});
 
+			Global.socket.emit('moves', moves);
 			render();
 		}
 	}
@@ -117,7 +120,7 @@ export function move(socket: Socket)
 		{
 			let cell = Grid.get_cell_from_mouse(e.clientX, e.clientY);
 
-			if (cell != null && cell.user_id == User.id && cell.nb_troops > 1)
+			if (cell != null && cell.player_id == Player.id && cell.nb_troops > 1)
 			{
 				Global.cell_from = cell;
 				Global.drag_from = { x: cell.x, y: cell.y };
@@ -155,7 +158,7 @@ export function move(socket: Socket)
 
 			// Send the move data to the server
 			if (cell != null && Global.cell_from != null)
-				socket.emit('move', {
+				Global.socket.emit('move', {
 					from: { i: Global.cell_from.i, j: Global.cell_from.j },
 					to: { i: cell.i, j: cell.j }
 				});
@@ -173,11 +176,11 @@ export function move(socket: Socket)
 		if (cell != null && cell != Global.cell_from)
 		{
 			// In our side
-			if (cell.user_id == User.id)
+			if (cell.player_id == Player.id)
 			{
 				// Simple move
 				if (Global.cell_from != null && Grid.are_neighbours(cell, Global.cell_from) && Global.cell_from.nb_troops > 1)
-					socket.emit('move', {
+					Global.socket.emit('move', {
 						from: { i: Global.cell_from.i, j: Global.cell_from.j },
 						to: { i: cell.i, j: cell.j }
 					});
@@ -195,7 +198,7 @@ export function move(socket: Socket)
 			{
 				// The selected cell is close
 				if (Global.cell_from != null && Grid.are_neighbours(cell, Global.cell_from) && Global.cell_from.nb_troops > 1)
-					socket.emit('move', {
+					Global.socket.emit('move', {
 						from: { i: Global.cell_from.i, j: Global.cell_from.j },
 						to: { i: cell.i, j: cell.j }
 					});
@@ -208,14 +211,14 @@ export function move(socket: Socket)
 					let best_cell = null;
 
 					for (let i = 0; i < cells_from.length; i++)
-						if (cells_from[i].user_id == User.id && cells_from[i].nb_troops > nb_troops)
+						if (cells_from[i].player_id == Player.id && cells_from[i].nb_troops > nb_troops)
 						{
 							nb_troops = cells_from[i].nb_troops;
 							best_cell = cells_from[i];
 						}
 
 					if (best_cell != null)
-						socket.emit('move', {
+						Global.socket.emit('move', {
 							from: { i: best_cell.i, j: best_cell.j },
 							to: { i: cell.i, j: cell.j }
 						});
