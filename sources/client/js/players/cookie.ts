@@ -21,15 +21,15 @@ export function create_cookie()
 	let date = new Date(2032, 1, 1);
 	let value = `nickname=${ Player.nickname },color=${ Player.color }`;
 	let expires = '; expires=' + date.toUTCString();
-	document.cookie = 'player=' + value + expires + '; path=/;';
+	document.cookie = 'player=' + value + expires + '; Secure' + '; path=/;';
 }
 
 // Get cookie data
 export function get_cookie()
 {
 	let s = document.cookie;
-	let nickname = s.substr(0, s.lastIndexOf(',color')).substr(s.indexOf('nickname=') + 9);
-	let color = s.substr(s.lastIndexOf('color=') + 6);
+	let nickname = s.substring(0, s.lastIndexOf(',color')).substring(s.indexOf('nickname=') + 9);
+	let color = s.substring(s.lastIndexOf('color=') + 6);
 
 	return {
 		nickname: nickname,
