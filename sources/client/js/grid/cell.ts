@@ -1,6 +1,6 @@
 import { Global } from '../properties.js';
 import * as Color from '../utils/color.js';
-import { Player } from '../players/player.js';
+import { Player } from '../player/player.js';
 
 export type Change = {
 	i: number,

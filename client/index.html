@@ -12,6 +12,12 @@
 		<title>Hexawar.io</title>
 		<link rel="shortcut icon" type="image/png" href="resources/images/favicon.png"/>
 
+		<link rel="stylesheet" type="text/css" href="css/user/user.css"/>
+		<link rel="stylesheet" type="text/css" href="css/user/register_login.css"/>
+		<link rel="stylesheet" type="text/css" href="css/user/register.css"/>
+		<link rel="stylesheet" type="text/css" href="css/user/login.css"/>
+		<link rel="stylesheet" type="text/css" href="css/user/account.css"/>
+
 		<link rel="stylesheet" type="text/css" href="css/connection.css"/>
 		<link rel="stylesheet" type="text/css" href="css/style.css"/>
 
@@ -24,27 +30,60 @@
 		</div>
 		<div class="connect_div">
 			<div class="connection">
-				<svg class="connect_background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 629.01 784.7"><g><path d="M629,579.05V205.65a56.93,56.93,0,0,0-28.48-49.32L343,7.63a57,57,0,0,0-57,0L28.48,156.33A56.93,56.93,0,0,0,0,205.65v373.4a56.94,56.94,0,0,0,28.48,49.32L286,777.07a57,57,0,0,0,57,0l257.55-148.7A56.94,56.94,0,0,0,629,579.05Z"/></g></svg>
+				<svg class="connect_background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 629.01 802.7"><g><path d="M629,597.05V205.65a56.93,56.93,0,0,0-28.48-49.32L343,7.63a57,57,0,0,0-57,0L28.48,156.33A56.93,56.93,0,0,0,0,205.65v391.4a56.94,56.94,0,0,0,28.48,49.32L286,795.07a57,57,0,0,0,57,0l257.55-148.7A56.94,56.94,0,0,0,629,597.05Z"/></g></svg>
 
-				<a href="http://51.83.44.110/">
+				<a href="https://hexawar.io">
 					<img class="connect_title" title="Hexawar.io" src="resources/shapes/main_logo.svg">
 				</a>
 
-				<form class="connect_form">
-					<input class="nickname_input" title="Nickname" type="text" placeholder="Nickname" required='required'>
+				<input class="nickname_input" title="Nickname" type="text" placeholder="Nickname" required='required'>
 
-					<div class="color_div" title="Your color">
-						<input class="color_input" type="color">
-						<span class="color_text">Your color</span>
-					</div>
+				<div class="color_div" title="Your color">
+					<input class="color_input" type="color">
+					<span class="color_text">Your color</span>
+				</div>
 
-					<svg class="svg_button" title="Play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 629.01 708.7">
-						<g><path d="M629,503.05V205.65a56.93,56.93,0,0,0-28.48-49.32L343,7.63a57,57,0,0,0-57,0L28.48,156.33A56.93,56.93,0,0,0,0,205.65v297.4a56.94,56.94,0,0,0,28.48,49.32L286,701.07a57,57,0,0,0,57,0l257.55-148.7A56.94,56.94,0,0,0,629,503.05Z"/></g>
-						<text class="svg_button_text" x="314.505" y="354.35" font-size="170" fill="#FFFFFF" text-anchor="middle" alignment-baseline="middle">Play</text>
-					</svg>
-				</form>
+				<svg class="svg_button" title="Play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 629.01 708.7">
+					<g><path d="M629,503.05V205.65a56.93,56.93,0,0,0-28.48-49.32L343,7.63a57,57,0,0,0-57,0L28.48,156.33A56.93,56.93,0,0,0,0,205.65v297.4a56.94,56.94,0,0,0,28.48,49.32L286,701.07a57,57,0,0,0,57,0l257.55-148.7A56.94,56.94,0,0,0,629,503.05Z"/></g>
+					<text class="svg_button_text" x="314.505" y="354.35" font-size="170" fill="#FFFFFF" text-anchor="middle" alignment-baseline="middle">Play</text>
+				</svg>
 			</div>
-			<div class="background"></div>
+
+			<div class="user_menu">
+				<div class="register_login">
+					<svg class="background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252.82 366.39"><g><path d="M252.82,279.58V86.81a32.71,32.71,0,0,0-16.36-28.33l-93.7-54.1a32.72,32.72,0,0,0-32.71,0L16.36,58.48A32.69,32.69,0,0,0,0,86.81V279.58a32.69,32.69,0,0,0,16.36,28.33L110.05,362a32.72,32.72,0,0,0,32.71,0l93.7-54.1A32.71,32.71,0,0,0,252.82,279.58Z"/></g></svg>
+
+					<button class="register_button">Register</button>
+					<button class="login_button">Login</button>
+				</div>
+
+				<div class="register">
+					<svg class="background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252.82 366.39"><g><path d="M252.82,279.58V86.81a32.71,32.71,0,0,0-16.36-28.33l-93.7-54.1a32.72,32.72,0,0,0-32.71,0L16.36,58.48A32.69,32.69,0,0,0,0,86.81V279.58a32.69,32.69,0,0,0,16.36,28.33L110.05,362a32.72,32.72,0,0,0,32.71,0l93.7-54.1A32.71,32.71,0,0,0,252.82,279.58Z"/></g></svg>
+
+					<input class="username_input" type="text" placeholder="Enter Username" required>
+					<input class="password_input" type="password" placeholder="Enter Password" required>
+					<input class="password_repeat_input" type="password" placeholder="Repeat Password" required>
+
+					<button class="back_button">Back</button>
+					<button class="register_button">Register</button>
+				</div>
+
+				<div class="login">
+					<svg class="background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252.82 366.39"><g><path d="M252.82,279.58V86.81a32.71,32.71,0,0,0-16.36-28.33l-93.7-54.1a32.72,32.72,0,0,0-32.71,0L16.36,58.48A32.69,32.69,0,0,0,0,86.81V279.58a32.69,32.69,0,0,0,16.36,28.33L110.05,362a32.72,32.72,0,0,0,32.71,0l93.7-54.1A32.71,32.71,0,0,0,252.82,279.58Z"/></g></svg>
+
+					<input class="username_input" type="text" placeholder="Enter Username" required>
+					<input class="password_input" type="password" placeholder="Enter Password" required>
+
+					<button class="back_button">Back</button>
+					<button class="login_button">Login</button>
+				</div>
+
+				<div class="account">
+					<svg class="background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252.82 440.3"><g><path d="M252.82,353.5V86.81a32.71,32.71,0,0,0-16.36-28.33l-93.7-54.1a32.72,32.72,0,0,0-32.71,0L16.36,58.48A32.69,32.69,0,0,0,0,86.81V353.5a32.69,32.69,0,0,0,16.36,28.32l93.69,54.1a32.72,32.72,0,0,0,32.71,0l93.7-54.1A32.71,32.71,0,0,0,252.82,353.5Z"/></g></svg>
+					<span class="log_info">Not logged</span>
+				</div>
+			</div>
+			<div class="global_background"></div>
 		</div>
 	</body>
 </html>

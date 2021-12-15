@@ -1,7 +1,7 @@
 import { Global } from '../properties.js';
 import { Cell, Change } from './cell.js';
 import { render } from '../renderer/renderer.js';
-import { Player } from '../players/player.js';
+import { Player } from '../player/player.js';
 import { Camera } from '../renderer/camera.js';
 
 // Create the grid of cells

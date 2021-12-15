@@ -39,7 +39,7 @@ export function join(player: Player)
 		};
 
 		Grid.set_cell(change);
-		player.socket.emit('send_joining_data', player.socket.id, spawn);
+		player.socket.emit('send_spawn', spawn);
 	});
 }
 

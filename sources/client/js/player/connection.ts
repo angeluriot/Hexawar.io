@@ -2,7 +2,7 @@ import { Global } from '../properties.js';
 import * as Color from '../utils/color.js';
 import * as Cookie from './cookie.js';
 import * as Game from '../game.js';
-import { Player } from '../players/player.js';
+import { Player } from './player.js';
 
 // Update the color picker div
 export function color_picker_events()

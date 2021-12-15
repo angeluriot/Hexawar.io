@@ -2,6 +2,9 @@ import { Cell } from './grid/cell.js';
 
 export class Global
 {
+	// User
+	static connected = false;
+
 	// Client
 	static socket: any;
 

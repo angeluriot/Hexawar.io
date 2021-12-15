@@ -1,5 +1,5 @@
 import { Global } from '../properties.js';
-import { Player } from '../players/player.js';
+import { Player } from '../player/player.js';
 import { render } from '../renderer/renderer.js';
 
 // A class that represents the camera

@@ -1,0 +1,53 @@
+.user_menu
+{
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 290px;
+	transform: translate(-50%, -50%);
+	left: calc(50% - 415px);
+	top: 50%;
+	z-index: 100;
+}
+
+.user_menu .background
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+	width: 100%;
+	fill: white;
+	filter: drop-shadow(0px 0px 20px rgba(0, 0, 0, 0.4));
+	-webkit-filter: drop-shadow(0px 0px 20px rgba(0, 0, 0, 0.4));
+}
+
+.user_menu .register_button
+{
+
+}
+
+.user_menu .login_button
+{
+	
+}
+
+.user_menu .back_button
+{
+	
+}
+
+.user_menu .logout_button
+{
+	
+}
+
+.user_menu .username_input
+{
+
+}
+
+.user_menu .password_input
+{
+	
+}

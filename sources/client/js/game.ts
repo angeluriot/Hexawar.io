@@ -1,9 +1,9 @@
 import { Global } from './properties.js';
 import * as Grid from './grid/grid.js';
 import { render } from './renderer/renderer.js';
-import * as Cookie from './players/cookie.js';
+import * as Cookie from './player/cookie.js';
 import { Camera } from './renderer/camera.js';
-import { Player } from './players/player.js';
+import { Player } from './player/player.js';
 import { Change } from './grid/cell.js';
 
 export type Move = {
@@ -45,9 +45,9 @@ export function load_background()
 export function join_game()
 {
 	// When the server sends the spawn data
-	Global.socket.on('send_joining_data', (socket_id: string, spawn: {i: number, j: number}) =>
+	Global.socket.on('send_spawn', (spawn: {i: number, j: number}) =>
 	{
-		Player.id = socket_id;
+		Player.id = Global.socket.id;
 		let cell = Grid.get_cell(spawn.i, spawn.j);
 
 		if (cell != null)

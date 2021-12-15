@@ -21,7 +21,7 @@
 .connection
 {
 	position: fixed;
-	width: 460px;
+	width: 450px;
 	height: 574px;
 	transform: translate(-50%, -50%);
 	left: 50%;
@@ -47,7 +47,7 @@
 	transform: translate(-50%, -50%);
 	top: 110px;
 	left: 50%;
-	width: 80%;
+	width: 368px;
 }
 
 .nickname_input
@@ -148,7 +148,7 @@
 	font-family: "Roboto_medium";
 }
 
-.background
+.global_background
 {
 	position: fixed;
 	width: 100%;

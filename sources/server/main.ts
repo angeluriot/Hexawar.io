@@ -4,11 +4,14 @@ import express from 'express';
 import { Server, Socket } from 'socket.io';
 import * as Grid from './grid/grid.js';
 import * as Game from './game.js';
+import * as Connection from './users/connection.js';
 import mongoose from 'mongoose';
 import { Global } from './properties.js';
 import { Player } from './players/player.js';
 import { User } from '../models/user.js';
+import { config } from 'dotenv';
 
+config();
 const app = express();
 const server = Http.createServer(app);
 Global.io = new Server(server);
@@ -18,20 +21,30 @@ const __dirname = Path.resolve();
 app.use(express.static(Path.join(__dirname, '/client')));
 console.log(__dirname);
 
+// Redirect all 404
+app.get('*', function(req, res)
+{
+	res.redirect('/');
+});
+
 // Initialize the server game
 function init()
 {
 	Grid.create_grid();
 	Game.game_loop();
 
-	// When client connects
 	Global.io.on('connection', (socket: Socket) =>
 	{
-		let player = new Player(socket, '', '', 0);
+		let user = {
+			player: new Player(socket, '', '', 0),
+			user: null
+		};
 
-		Game.join(player);
-		Game.game_events(player);
-		Game.leave_game(player);
+		Connection.connection_events(user);
+
+		Game.join(user.player);
+		Game.game_events(user.player);
+		Game.leave_game(user.player);
 	});
 }
 

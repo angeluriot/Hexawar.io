@@ -3,6 +3,9 @@ import { Cell } from './grid/cell.js';
 
 export class Global
 {
+	// Users
+	static token_nb_days = 365;
+
 	// Server
 	static io: Server<any>;
 
