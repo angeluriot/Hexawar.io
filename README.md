@@ -55,35 +55,32 @@ $ sudo apt install npm
 $ sudo apt install mongodb
 ```
 
-<br/>
-
 ## 2/ Setup
 
-**Default setup :**
+* Add a file named `.env` in the root of the project whith `TOKEN_SECRET=<random long string>` in it
+
+* Install the dependencies with `npm install`
+
+* Compile typescript files with `tsc` *(or `tsc -w` for real time compilation)*
+
+## 3/ Run
+
+**Default :**
 
 ```shell
-$ npm install
-$ tsc
 $ npm run start
 ```
 
-**Dev setup :**
-
-```shell
-$ npm install
-$ tsc -w
-```
+**Dev :**
 
 ```shell
 $ npm run dev
 ```
 
-**Server setup :**
+**Server :**
 
 ```shell
-$ npm install
 $ npm install forever
-$ tsc
 $ npm run fstart
 ```
 (Stop the server with : `npm run fstop`).
