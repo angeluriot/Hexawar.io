@@ -12,13 +12,13 @@
 		<title>Hexawar.io</title>
 		<link rel="shortcut icon" type="image/png" href="resources/images/favicon.png"/>
 
+		<link rel="stylesheet" type="text/css" href="css/connection.css"/>
+		<link rel="stylesheet" type="text/css" href="css/user/loading.css"/>
 		<link rel="stylesheet" type="text/css" href="css/user/user.css"/>
 		<link rel="stylesheet" type="text/css" href="css/user/register_login.css"/>
 		<link rel="stylesheet" type="text/css" href="css/user/register.css"/>
 		<link rel="stylesheet" type="text/css" href="css/user/login.css"/>
 		<link rel="stylesheet" type="text/css" href="css/user/account.css"/>
-
-		<link rel="stylesheet" type="text/css" href="css/connection.css"/>
 		<link rel="stylesheet" type="text/css" href="css/style.css"/>
 
 		<script type="module" src="js/main.js"></script>
@@ -53,34 +53,73 @@
 				<div class="register_login">
 					<svg class="background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252.82 366.39"><g><path d="M252.82,279.58V86.81a32.71,32.71,0,0,0-16.36-28.33l-93.7-54.1a32.72,32.72,0,0,0-32.71,0L16.36,58.48A32.69,32.69,0,0,0,0,86.81V279.58a32.69,32.69,0,0,0,16.36,28.33L110.05,362a32.72,32.72,0,0,0,32.71,0l93.7-54.1A32.71,32.71,0,0,0,252.82,279.58Z"/></g></svg>
 
-					<button class="register_button">Register</button>
-					<button class="login_button">Login</button>
+					<svg class="user_button register_button" title="Register" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 69.49 76.44">
+						<g><path d="M0,25.24v26A12.27,12.27,0,0,0,6.13,61.82l22.49,13a12.24,12.24,0,0,0,12.25,0l22.49-13a12.27,12.27,0,0,0,6.13-10.61v-26a12.25,12.25,0,0,0-6.13-10.61l-22.49-13a12.24,12.24,0,0,0-12.25,0l-22.49,13A12.25,12.25,0,0,0,0,25.24Z"/></g>
+						<text class="button_text" x="34.745" y="38.22" font-size="15" fill="#FFFFFF" text-anchor="middle" alignment-baseline="middle">Register</text>
+					</svg>
+
+					<svg class="user_button login_button" title="Login" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 69.49 76.44">
+						<g><path d="M0,25.24v26A12.27,12.27,0,0,0,6.13,61.82l22.49,13a12.24,12.24,0,0,0,12.25,0l22.49-13a12.27,12.27,0,0,0,6.13-10.61v-26a12.25,12.25,0,0,0-6.13-10.61l-22.49-13a12.24,12.24,0,0,0-12.25,0l-22.49,13A12.25,12.25,0,0,0,0,25.24Z"/></g>
+						<text class="button_text" x="34.745" y="38.22" font-size="15" fill="#FFFFFF" text-anchor="middle" alignment-baseline="middle">Login</text>
+					</svg>
 				</div>
 
 				<div class="register">
 					<svg class="background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252.82 366.39"><g><path d="M252.82,279.58V86.81a32.71,32.71,0,0,0-16.36-28.33l-93.7-54.1a32.72,32.72,0,0,0-32.71,0L16.36,58.48A32.69,32.69,0,0,0,0,86.81V279.58a32.69,32.69,0,0,0,16.36,28.33L110.05,362a32.72,32.72,0,0,0,32.71,0l93.7-54.1A32.71,32.71,0,0,0,252.82,279.58Z"/></g></svg>
 
-					<input class="username_input" type="text" placeholder="Enter Username" required>
-					<input class="password_input" type="password" placeholder="Enter Password" required>
-					<input class="password_repeat_input" type="password" placeholder="Repeat Password" required>
+					<input class="user_input username_input" title="Username" type="text" placeholder="Enter Username" required>
+					<input class="user_input password_input" title="Password" type="password" placeholder="Enter Password" required>
+					<input class="user_input password_repeat_input" title="Repeat Password" type="password" placeholder="Repeat Password" required>
 
-					<button class="back_button">Back</button>
-					<button class="register_button">Register</button>
+					<svg class="user_button back_button" title="Back" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 69.49 76.44">
+						<g><path d="M0,25.24v26A12.27,12.27,0,0,0,6.13,61.82l22.49,13a12.24,12.24,0,0,0,12.25,0l22.49-13a12.27,12.27,0,0,0,6.13-10.61v-26a12.25,12.25,0,0,0-6.13-10.61l-22.49-13a12.24,12.24,0,0,0-12.25,0l-22.49,13A12.25,12.25,0,0,0,0,25.24Z"/></g>
+						<text class="button_text" x="34.745" y="38.22" font-size="15" fill="#FFFFFF" text-anchor="middle" alignment-baseline="middle">Back</text>
+					</svg>
+
+					<svg class="user_button register_button" title="Register" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 69.49 76.44">
+						<g><path d="M0,25.24v26A12.27,12.27,0,0,0,6.13,61.82l22.49,13a12.24,12.24,0,0,0,12.25,0l22.49-13a12.27,12.27,0,0,0,6.13-10.61v-26a12.25,12.25,0,0,0-6.13-10.61l-22.49-13a12.24,12.24,0,0,0-12.25,0l-22.49,13A12.25,12.25,0,0,0,0,25.24Z"/></g>
+						<text class="button_text" x="34.745" y="38.22" font-size="15" fill="#FFFFFF" text-anchor="middle" alignment-baseline="middle">Register</text>
+					</svg>
 				</div>
 
 				<div class="login">
 					<svg class="background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252.82 366.39"><g><path d="M252.82,279.58V86.81a32.71,32.71,0,0,0-16.36-28.33l-93.7-54.1a32.72,32.72,0,0,0-32.71,0L16.36,58.48A32.69,32.69,0,0,0,0,86.81V279.58a32.69,32.69,0,0,0,16.36,28.33L110.05,362a32.72,32.72,0,0,0,32.71,0l93.7-54.1A32.71,32.71,0,0,0,252.82,279.58Z"/></g></svg>
 
-					<input class="username_input" type="text" placeholder="Enter Username" required>
-					<input class="password_input" type="password" placeholder="Enter Password" required>
+					<input class="user_input username_input" title="Username" type="text" placeholder="Enter Username" required>
+					<input class="user_input password_input" title="Password" type="password" placeholder="Enter Password" required>
 
-					<button class="back_button">Back</button>
-					<button class="login_button">Login</button>
+					<svg class="user_button back_button" title="Back" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 69.49 76.44">
+						<g><path d="M0,25.24v26A12.27,12.27,0,0,0,6.13,61.82l22.49,13a12.24,12.24,0,0,0,12.25,0l22.49-13a12.27,12.27,0,0,0,6.13-10.61v-26a12.25,12.25,0,0,0-6.13-10.61l-22.49-13a12.24,12.24,0,0,0-12.25,0l-22.49,13A12.25,12.25,0,0,0,0,25.24Z"/></g>
+						<text class="button_text" x="34.745" y="38.22" font-size="15" fill="#FFFFFF" text-anchor="middle" alignment-baseline="middle">Back</text>
+					</svg>
+
+					<svg class="user_button login_button" title="Login" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 69.49 76.44">
+						<g><path d="M0,25.24v26A12.27,12.27,0,0,0,6.13,61.82l22.49,13a12.24,12.24,0,0,0,12.25,0l22.49-13a12.27,12.27,0,0,0,6.13-10.61v-26a12.25,12.25,0,0,0-6.13-10.61l-22.49-13a12.24,12.24,0,0,0-12.25,0l-22.49,13A12.25,12.25,0,0,0,0,25.24Z"/></g>
+						<text class="button_text" x="34.745" y="38.22" font-size="15" fill="#FFFFFF" text-anchor="middle" alignment-baseline="middle">Login</text>
+					</svg>
 				</div>
 
 				<div class="account">
 					<svg class="background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252.82 440.3"><g><path d="M252.82,353.5V86.81a32.71,32.71,0,0,0-16.36-28.33l-93.7-54.1a32.72,32.72,0,0,0-32.71,0L16.36,58.48A32.69,32.69,0,0,0,0,86.81V353.5a32.69,32.69,0,0,0,16.36,28.32l93.69,54.1a32.72,32.72,0,0,0,32.71,0l93.7-54.1A32.71,32.71,0,0,0,252.82,353.5Z"/></g></svg>
 					<span class="log_info">Not logged</span>
+
+					<svg class="user_button logout_button" title="Logout" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 69.49 76.44">
+						<g><path d="M0,25.24v26A12.27,12.27,0,0,0,6.13,61.82l22.49,13a12.24,12.24,0,0,0,12.25,0l22.49-13a12.27,12.27,0,0,0,6.13-10.61v-26a12.25,12.25,0,0,0-6.13-10.61l-22.49-13a12.24,12.24,0,0,0-12.25,0l-22.49,13A12.25,12.25,0,0,0,0,25.24Z"/></g>
+						<text class="button_text" x="34.745" y="38.22" font-size="15" fill="#FFFFFF" text-anchor="middle" alignment-baseline="middle">Logout</text>
+					</svg>
+
+					<svg class="user_button delete_account_button" title="Delete account" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 69.49 76.44">
+						<g><path d="M0,25.24v26A12.27,12.27,0,0,0,6.13,61.82l22.49,13a12.24,12.24,0,0,0,12.25,0l22.49-13a12.27,12.27,0,0,0,6.13-10.61v-26a12.25,12.25,0,0,0-6.13-10.61l-22.49-13a12.24,12.24,0,0,0-12.25,0l-22.49,13A12.25,12.25,0,0,0,0,25.24Z"/></g>
+						<text class="button_text" x="34.745" y="38.22" font-size="15" fill="#FFFFFF" text-anchor="middle" alignment-baseline="middle">
+							<tspan x="36" dy="-0.55em">Delete</tspan>
+							<tspan x="34.745" dy="1.1em">account</tspan>
+						</text>
+					</svg>
+				</div>
+
+				<div class="loading">
+					<svg class="background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252.82 366.39"><g><path d="M252.82,279.58V86.81a32.71,32.71,0,0,0-16.36-28.33l-93.7-54.1a32.72,32.72,0,0,0-32.71,0L16.36,58.48A32.69,32.69,0,0,0,0,86.81V279.58a32.69,32.69,0,0,0,16.36,28.33L110.05,362a32.72,32.72,0,0,0,32.71,0l93.7-54.1A32.71,32.71,0,0,0,252.82,279.58Z"/></g></svg>
+					<svg class="loading_hexagon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90.33 99.38"><g><path d="M82.37,19,53.13,2.14a15.91,15.91,0,0,0-15.93,0L8,19A15.91,15.91,0,0,0,0,32.81V66.57a15.94,15.94,0,0,0,8,13.8L37.2,97.25a16,16,0,0,0,15.93,0L82.37,80.37a16,16,0,0,0,8-13.8V32.81A15.93,15.93,0,0,0,82.37,19ZM71.73,59.62A9.39,9.39,0,0,1,67,67.74L49.85,77.66a9.34,9.34,0,0,1-9.37,0l-17.2-9.92a9.38,9.38,0,0,1-4.68-8.12V39.77a9.38,9.38,0,0,1,4.68-8.12l17.2-9.93a9.39,9.39,0,0,1,9.37,0L67,31.65a9.39,9.39,0,0,1,4.69,8.12Z"/></g></svg>
 				</div>
 			</div>
 			<div class="global_background"></div>
