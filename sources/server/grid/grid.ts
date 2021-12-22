@@ -11,7 +11,7 @@ export function create_grid()
 		Global.grid.push([]);
 
 		for (let _ = 0; _ < Global.grid_size.y; _++)
-			Global.grid[i].push(new Cell('#FFFFFF', null, 0));
+			Global.grid[i].push(new Cell('#FFFFFF', -1, null, 0));
 	}
 }
 
@@ -25,6 +25,7 @@ export function set_cell(change: Change)
 	Player.update_sizes(cell.player, change.player);
 
 	cell.color = change.color;
+	cell.skin_id = change.skin_id;
 	cell.player = change.player;
 	cell.nb_troops = change.nb_troops;
 
@@ -45,6 +46,7 @@ export function set_cells(changes: Change[], is_move: boolean)
 		Player.update_sizes(cell.player, changes[i].player);
 
 		cell.color = changes[i].color;
+		cell.skin_id = changes[i].skin_id;
 		cell.player = changes[i].player;
 		cell.nb_troops = changes[i].nb_troops;
 
@@ -102,6 +104,7 @@ export function remove_player_from_grid(player: Player)
 					i: i,
 					j: j,
 					color: '#FFFFFF',
+					skin_id: -1,
 					player: null,
 					nb_troops: 0
 				});
@@ -125,6 +128,7 @@ export function get_client_grid()
 
 			grid[i].push({
 				color: cell.color,
+				skin_id: cell.skin_id,
 				player_id: (cell.player == null ? '' : cell.player.socket.id),
 				nb_troops: cell.nb_troops
 			});

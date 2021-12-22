@@ -1,0 +1,66 @@
+.login
+{
+	visibility: hidden;
+	position: absolute;
+	width: 100%;
+	height: 420.27px;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+}
+
+.login .username_input
+{
+	top: 125px;
+}
+
+.login .password_input
+{
+	top: 198px;
+}
+
+.login .back_button
+{
+	left: 30.5%;
+	top: 305px;
+	width: 80px;
+	fill: #ED2E2E;
+	transition: width 0.2s, fill 0.2s;
+}
+
+.login .back_button:hover
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 84px;
+	fill: #da141e;
+}
+
+.login .back_button:active
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 80px;
+	fill: #ED2E2E;
+}
+
+.login .login_button
+{
+	left: 69.5%;
+	top: 305px;
+	width: 80px;
+	fill: #EF7A2B;
+	transition: width 0.2s, fill 0.2s;
+}
+
+.login .login_button:hover
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 84px;
+	fill: #ef692b;
+}
+
+.login .login_button:active
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 80px;
+	fill: #EF7A2B;
+}

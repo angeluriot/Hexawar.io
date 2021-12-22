@@ -1,0 +1,56 @@
+.register_login
+{
+	visibility: hidden;
+	position: absolute;
+	width: 100%;
+	height: 420.27px;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+}
+
+.register_login .register_button
+{
+	left: 50%;
+	top: 31%;
+	width: 100px;
+	fill: #F4BE27;
+	transition: width 0.2s, fill 0.2s;
+}
+
+.register_login .register_button:hover
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 106px;
+	fill: rgb(247, 175, 39);
+}
+
+.register_login .register_button:active
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 100px;
+	fill: #F4BE27;
+}
+
+.register_login .login_button
+{
+	left: 50%;
+	top: 69%;
+	width: 100px;
+	fill: #EF7A2B;
+	transition: width 0.2s, fill 0.2s;
+}
+
+.register_login .login_button:hover
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 106px;
+	fill: #ef692b;
+}
+
+.register_login .login_button:active
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 100px;
+	fill: #EF7A2B;
+}

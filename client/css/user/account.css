@@ -1,0 +1,230 @@
+.account
+{
+	visibility: hidden;
+	position: absolute;
+	width: 100%;
+	height: 505.05px;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+}
+
+.account .username
+{
+	position: absolute;
+	z-index: 300;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	width: 225px;
+	top: 100px;
+	height: 38px;
+	color: white;
+	font-size: 16px;
+	background: #EF7A2B;
+	padding: 10px 20px;
+	border-radius: 25px;
+	outline: none;
+	box-sizing: border-box;
+	text-align: center;
+	font-family: "Roboto_medium";
+}
+
+.account .xp_label
+{
+	position: absolute;
+	z-index: 300;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	top: 148px;
+	color: rgb(38, 50, 56);
+	font-size: 15.5px;
+	text-align: center;
+	font-family: "Roboto_bold";
+}
+
+.account .xp_div
+{
+	position: absolute;
+	z-index: 300;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	width: 200px;
+	top: 177px;
+}
+
+.account .xp_level
+{
+	position: absolute;
+	z-index: 310;
+	transform: translate(0%, -50%);
+	top: 50%;
+	left: 0%;
+	width: 35px;
+	fill:rgb(51, 192, 248);
+}
+
+.account .xp_level_number
+{
+	font-family: "Roboto_medium";
+}
+
+.account .xp_bar
+{
+	position: absolute;
+	z-index: 300;
+	transform: translate(0%, -50%);
+	top: 50%;
+	left: calc(0% + 10px);
+	width: calc(100% - 10px);
+	height: 27px;
+}
+
+.account .xp_background
+{
+	position: absolute;
+	z-index: 300;
+	left: 1px;
+	top: 1px;
+	width: calc(100% - 2px);
+	height: calc(100% - 2px);
+	background: rgba(126, 128, 136, 0.102);
+	border-radius: 25px;
+	outline: none;
+	box-sizing: border-box;
+}
+
+.account .xp_progress
+{
+	position: absolute;
+	left: 1px;
+	top: 1px;
+	z-index: 301;
+	width: calc(50% - 2px);
+	height: calc(100% - 2px);
+	background: rgb(38, 97, 236);
+	border-radius: 27px;
+	outline: none;
+	box-sizing: border-box;
+}
+
+.account .xp_border
+{
+	position: absolute;
+	z-index: 302;
+	width: 100%;
+	height: 100%;
+	border-radius: 27px;
+	outline: none;
+	box-sizing: border-box;
+	border: 2px solid rgb(217, 217, 221);
+}
+
+.account .stats
+{
+	position: absolute;
+	z-index: 300;
+	left: 54px;
+	color: rgb(38, 50, 56);
+	font-size: 15.5px;
+	font-family: "Roboto_bold";
+}
+
+.account .stats_value
+{
+	position: absolute;
+	z-index: 300;
+	color: rgb(38, 50, 56);
+	font-size: 15.5px;
+	font-family: "Roboto_medium";
+}
+
+.account .stats_1
+{
+	top: 216px;
+}
+
+.account .stats_value_1
+{
+	top: 216px;
+	left: 162px;
+}
+
+.account .stats_2
+{
+	top: 245px;
+}
+
+.account .stats_value_2
+{
+	top: 245px;
+	left: 181px;
+}
+
+.account .stats_3
+{
+	top: 274px;
+}
+
+.account .stats_value_3
+{
+	top: 274px;
+	left: 160px;
+}
+
+.account .stats_4
+{
+	top: 303px;
+}
+
+.account .stats_value_4
+{
+	top: 303px;
+	left: 163px;
+}
+
+.account .logout_button
+{
+	left: 30.5%;
+	top: 390px;
+	width: 80px;
+	fill: #ED2E2E;
+	transition: width 0.2s, fill 0.2s;
+}
+
+.account .logout_button:hover
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 84px;
+	fill: #da141e;
+}
+
+.account .logout_button:active
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 80px;
+	fill: #ED2E2E;
+}
+
+.account .delete_account_button
+{
+	left: 69.5%;
+	top: 390px;
+	width: 80px;
+	fill: #ED2E2E;
+	transition: width 0.2s, fill 0.2s;
+}
+
+.account .delete_account_button:hover
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 84px;
+	fill: #da141e;
+}
+
+.account .delete_account_button:active
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 80px;
+	fill: #ED2E2E;
+}
+

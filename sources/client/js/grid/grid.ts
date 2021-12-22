@@ -1,7 +1,7 @@
 import { Global } from '../properties.js';
 import { Cell, Change } from './cell.js';
 import { render } from '../renderer/renderer.js';
-import { Player } from '../players/player.js';
+import { Player } from '../player/player.js';
 import { Camera } from '../renderer/camera.js';
 
 // Create the grid of cells
@@ -19,7 +19,7 @@ export function create_grid()
 
 		for (let j = 0; j < Global.grid_size.y; j++)
 		{
-			Global.grid[i].push(new Cell(i, j, x, y + y_offset, '#FFFFFF', '', 0));
+			Global.grid[i].push(new Cell(i, j, x, y + y_offset, '#FFFFFF', -1, '', 0));
 			y += Math.sin(Global.hexagon_angle) * 2;
 		}
 
@@ -95,6 +95,7 @@ export function set_cell(change: Change)
 		return null;
 
 	Global.grid[change.i][change.j].color = change.color;
+	Global.grid[change.i][change.j].skin_id = change.skin_id;
 	Global.grid[change.i][change.j].player_id = change.player_id;
 	Global.grid[change.i][change.j].nb_troops = change.nb_troops;
 
@@ -137,6 +138,7 @@ export function update_grid_from_server()
 			for (let j = 0; j < Global.grid_size.y; j++)
 			{
 				Global.grid[i][j].color = server_grid[i][j].color;
+				Global.grid[i][j].skin_id = server_grid[i][j].skin_id;
 				Global.grid[i][j].player_id = server_grid[i][j].player_id;
 				Global.grid[i][j].nb_troops = server_grid[i][j].nb_troops;
 			}

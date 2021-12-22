@@ -1,0 +1,81 @@
+.delete_account
+{
+	visibility: hidden;
+	position: absolute;
+	width: 100%;
+	height: 420.27px;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+}
+
+.delete_account .background
+{
+	fill: #ED2E2E;
+}
+
+.delete_account .text_message
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	z-index: 300;
+	left: 50%;
+	top: 120px;
+	width: 200px;
+	color: #FFFFFF;
+	font-size: 17px;
+	text-align: center;
+	font-family: "Roboto_medium";
+}
+
+.delete_account .password_input
+{
+	background: rgb(242, 242, 243);
+	top: 202px;
+}
+
+.delete_account .delete_account_button
+{
+	left: 69.5%;
+	top: 305px;
+	width: 80px;
+	fill: #ffffff;
+	transition: width 0.2s, fill 0.2s;
+}
+
+.delete_account .delete_account_button:hover
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 84px;
+	fill: #e4e4eb;
+}
+
+.delete_account .delete_account_button:active
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 80px;
+	fill: #ffffff;
+}
+
+.delete_account .back_button
+{
+	left: 30.5%;
+	top: 305px;
+	width: 80px;
+	fill: #ffffff;
+	transition: width 0.2s, fill 0.2s;
+}
+
+.delete_account .back_button:hover
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 84px;
+	fill: #e4e4eb;
+}
+
+.delete_account .back_button:active
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 80px;
+	fill: #ffffff;
+}

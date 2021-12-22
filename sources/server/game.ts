@@ -2,6 +2,7 @@ import * as Grid from './grid/grid.js';
 import { Player } from './players/player.js';
 import { Global } from './properties.js';
 import { Change } from './grid/cell.js';
+import * as Utils from './utils/utils.js';
 
 export type Move = {
 	from: { i: number, j: number },
@@ -18,28 +19,41 @@ export function join(player: Player)
 	});
 
 	// Register the player
-	player.socket.on('join_game', (input_player: { nickname: string, color: string }) =>
+	player.socket.on('join_game', (input_player: { nickname: string, color: string, skin_id: number }) =>
 	{
 		player.nickname = input_player.nickname;
-		player.color = input_player.color;
+
+		if (Utils.is_color(input_player.color))
+			player.color = input_player.color;
+		else
+			player.color = Utils.random_color();
+
+		if (input_player.skin_id == -1)
+			player.skin_id = -1;
+		else if (player.user != null && player.user.skins.includes(input_player.skin_id))
+			player.skin_id = input_player.skin_id;
+		else
+			player.skin_id = -1;
 
 		// Add the player in the players list
-		player.join();
+		if (player.join())
+		{
+			// Give it a random cell
+			let spawn = Grid.get_random_cell();
 
-		// Give it a random cell
-		let spawn = Grid.get_random_cell();
+			// Set the change
+			const change = {
+				i: spawn.i,
+				j: spawn.j,
+				color: player.color,
+				skin_id: player.skin_id,
+				player: player,
+				nb_troops: Global.initial_nb_troops
+			};
 
-		// Set the change
-		const change = {
-			i: spawn.i,
-			j: spawn.j,
-			color: player.color,
-			player: player,
-			nb_troops: Global.initial_nb_troops
-		};
-
-		Grid.set_cell(change);
-		player.socket.emit('send_joining_data', player.socket.id, spawn);
+			Grid.set_cell(change);
+			player.socket.emit('send_spawn', spawn);
+		}
 	});
 }
 
@@ -81,6 +95,7 @@ export function player_moves(player: Player)
 				i: move.from.i,
 				j: move.from.j,
 				color: cell_from.color,
+				skin_id: cell_from.skin_id,
 				player: cell_from.player,
 				nb_troops: cell_from.nb_troops
 			};
@@ -89,6 +104,7 @@ export function player_moves(player: Player)
 				i: move.to.i,
 				j: move.to.j,
 				color: cell_to.color,
+				skin_id: cell_to.skin_id,
 				player: cell_to.player,
 				nb_troops: cell_to.nb_troops
 			};
@@ -116,6 +132,7 @@ export function player_moves(player: Player)
 					change_to.nb_troops = change_from.nb_troops - change_to.nb_troops - 1;
 					change_from.nb_troops = 1;
 					change_to.color = change_from.color;
+					change_to.skin_id = change_from.skin_id;
 					change_to.player = change_from.player;
 				}
 
@@ -160,6 +177,7 @@ export function troops_spawn()
 					i: i,
 					j: j,
 					color: cell.color,
+					skin_id: cell.skin_id,
 					player: cell.player,
 					nb_troops: cell.nb_troops
 				};

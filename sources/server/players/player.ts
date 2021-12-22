@@ -1,21 +1,31 @@
 import { Socket } from 'socket.io';
+import * as Utils from '../utils/utils.js';
+import { UserInterface } from '../../models/user.js';
 
 export class Player
 {
 	socket: Socket;
 	nickname: string;
 	color: string;
+	skin_id: number;
 	size: number;
+	max_size: number;
+	conquered_lands: number;
 	playing: boolean;
+	user: UserInterface | null;
 	static list: Player[] = [];
 
-	constructor(socket: Socket, nickname: string, color: string, size: number)
+	constructor(socket: Socket)
 	{
 		this.socket = socket;
-		this.nickname = nickname;
-		this.color = color;
-		this.size = size;
+		this.nickname = '';
+		this.color = '';
+		this.skin_id = -1;
+		this.size = 0;
+		this.max_size = 0;
+		this.conquered_lands = 0;
 		this.playing = false;
+		this.user = null;
 	}
 
 	// Handle player connection
@@ -23,9 +33,25 @@ export class Player
 	{
 		if (!this.playing)
 		{
-			Player.list.push(this);
 			this.playing = true;
+
+			if (this.user != null)
+				for (let i = 0; i < Player.list.length; i++)
+				{
+					let player = Player.list[i];
+
+					if (player.user != null && player.user.username == this.user.username)
+						this.playing = false;
+				}
 		}
+
+		else
+			this.playing = false;
+
+		if (this.playing)
+			Player.list.push(this);
+
+		return this.playing;
 	}
 
 	// Handle player disconnection
@@ -38,6 +64,29 @@ export class Player
 
 			if (index != -1)
 				Player.list.splice(index, 1);
+
+			if (this.user != null)
+			{
+				this.user.nickname = this.nickname;
+				this.user.color = this.color;
+				this.user.skin_id = this.skin_id;
+				this.user.games_played++;
+				this.user.conquered_lands += this.conquered_lands;
+
+				if (this.max_size > this.user.highest_score)
+					this.user.highest_score = this.max_size;
+
+				this.user.total_score += this.max_size;
+				this.user.xp += this.conquered_lands;
+
+				while (this.user.xp >= Utils.get_required_xp(this.user.xp_level + 1) && this.user.xp_level < 100)
+				{
+					this.user.xp -= Utils.get_required_xp(this.user.xp_level + 1);
+					this.user.xp_level++;
+				}
+
+				this.user.save();
+			}
 		}
 	}
 
@@ -78,13 +127,27 @@ export class Player
 
 			// Player replace empty
 			else if (player_from == null && player_to != null)
+			{
 				player_to.size++;
+
+				if (player_to.size > player_to.max_size)
+					player_to.max_size = player_to.size;
+
+				if (player_to.user != null)
+					player_to.conquered_lands++;
+			}
 
 			// Player replace player
 			else if (player_from != null && player_to != null)
 			{
 				player_from.size--;
 				player_to.size++;
+
+				if (player_to.size > player_to.max_size)
+					player_to.max_size = player_to.size;
+
+				if (player_to.user != null)
+					player_to.conquered_lands++;
 
 				if (player_from.size == 0)
 					player_from.die();

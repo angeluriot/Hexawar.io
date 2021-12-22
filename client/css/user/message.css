@@ -1,0 +1,73 @@
+.message
+{
+	visibility: hidden;
+	position: absolute;
+	width: 100%;
+	height: 420.27px;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+}
+
+.message .background
+{
+	fill: #ED2E2E;
+}
+
+.message .text_title
+{
+	position: absolute;
+	z-index: 300;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	width: 225px;
+	top: 100px;
+	height: 38px;
+	color: rgb(38, 50, 56);
+	font-size: 16px;
+	background: white;
+	padding: 10px 20px;
+	border-radius: 25px;
+	outline: none;
+	box-sizing: border-box;
+	text-align: center;
+	font-family: "Roboto_bold";
+}
+
+.message .text_message
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	z-index: 300;
+	left: 50%;
+	top: 185px;
+	width: 180px;
+	color: #FFFFFF;
+	font-size: 16px;
+	text-align: center;
+	font-family: "Roboto_medium";
+}
+
+.message .ok_button
+{
+	left: 50%;
+	top: 305px;
+	width: 80px;
+	fill: #ffffff;
+	transition: width 0.2s, fill 0.2s;
+}
+
+.message .ok_button:hover
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 84px;
+	fill: #e4e4eb;
+}
+
+.message .ok_button:active
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 80px;
+	fill: #ffffff;
+}
+

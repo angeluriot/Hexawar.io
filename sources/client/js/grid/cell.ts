@@ -1,11 +1,12 @@
 import { Global } from '../properties.js';
 import * as Color from '../utils/color.js';
-import { Player } from '../players/player.js';
+import { Player } from '../player/player.js';
 
 export type Change = {
 	i: number,
 	j: number,
 	color: string,
+	skin_id: number,
 	player_id: string,
 	nb_troops: number
 };
@@ -18,17 +19,19 @@ export class Cell
 	x: number;
 	y: number;
 	color: string;
+	skin_id: number;
 	player_id: string;
 	nb_troops: number;
 
 	// Contruct a cell
-	constructor(i: number, j: number, x: number, y: number, color: string, player_id: string, nb_troops: number)
+	constructor(i: number, j: number, x: number, y: number, color: string, skin_id: number, player_id: string, nb_troops: number)
 	{
 		this.i = i;
 		this.j = j;
 		this.x = x;
 		this.y = y;
 		this.color = color;
+		this.skin_id = skin_id;
 		this.player_id = player_id;
 		this.nb_troops = nb_troops;
 	}

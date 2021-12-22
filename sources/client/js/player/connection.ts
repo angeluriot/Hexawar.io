@@ -2,7 +2,7 @@ import { Global } from '../properties.js';
 import * as Color from '../utils/color.js';
 import * as Cookie from './cookie.js';
 import * as Game from '../game.js';
-import { Player } from '../players/player.js';
+import { Player } from './player.js';
 
 // Update the color picker div
 export function color_picker_events()
@@ -14,7 +14,7 @@ export function color_picker_events()
 	color_picker.addEventListener('input', (e: Event) =>
 	{
 		color_div.style.backgroundColor = (e.target as HTMLInputElement).value;
-		color_text.innerHTML = color_picker.value;
+		color_text.innerText = color_picker.value;
 
 		if (Color.is_color_dark(color_picker.value, Global.dark_color_limit))
 			color_text.style.color = '#ffffff';
@@ -34,7 +34,7 @@ export function form_events()
 	const color_picker = document.querySelector('.color_input') as HTMLInputElement;
 	const color_div = document.querySelector('.color_div') as HTMLDivElement;
 	const color_text = document.querySelector('.color_text') as HTMLSpanElement;
-	const submit_button = document.querySelector('.svg_button') as SVGElement;
+	const play_button = document.querySelector('.svg_button') as SVGElement;
 
 	color_picker_events();
 	Cookie.load_cookie_data(name_input, color_picker, color_div);
@@ -45,10 +45,10 @@ export function form_events()
 		color_text.style.color = '#000000';
 
 	// Start the game
-	submit_button.addEventListener('click', e =>
+	play_button.addEventListener('click', e =>
 	{
 		e.preventDefault();
-		Game.start_game(name_input.value, color_picker.value);
+		Game.start_game(name_input.value.trim(), color_picker.value, -1);
 		Player.playing = true;
 		form_div.style.display = 'none';
 	});
