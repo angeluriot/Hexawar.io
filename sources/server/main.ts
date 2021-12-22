@@ -8,7 +8,6 @@ import * as Connection from './users/connection.js';
 import mongoose from 'mongoose';
 import { Global } from './properties.js';
 import { Player } from './players/player.js';
-import { User } from '../models/user.js';
 import { config } from 'dotenv';
 
 config();
@@ -35,16 +34,13 @@ function init()
 
 	Global.io.on('connection', (socket: Socket) =>
 	{
-		let user = {
-			player: new Player(socket, '', '', 0),
-			user: null
-		};
+		let player = new Player(socket);
 
-		Connection.connection_events(user);
+		Connection.connection_events(player);
 
-		Game.join(user.player);
-		Game.game_events(user.player);
-		Game.leave_game(user.player);
+		Game.join(player);
+		Game.game_events(player);
+		Game.leave_game(player);
 	});
 }
 

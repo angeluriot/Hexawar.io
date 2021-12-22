@@ -1,9 +1,11 @@
 import { Cell } from './grid/cell.js';
+import { UserData } from './user/connection.js';
 
 export class Global
 {
 	// User
 	static connected = false;
+	static user_data: UserData | null = null;
 
 	// Client
 	static socket: any;

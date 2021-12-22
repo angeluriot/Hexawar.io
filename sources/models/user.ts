@@ -1,19 +1,78 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
+export interface UserInterface extends mongoose.Document
+{
+	username: string;
+	hashed_password: string;
+	nickname: string;
+	color: string;
+	role: string;
+	skin_id: number;
+	skins: number[];
+	xp_level: number;
+	xp: number;
+	games_played: number;
+	conquered_lands: number;
+	highest_score: number;
+	total_score: number;
+}
+
 const user_schema = new Schema(
 {
 	username: {
 		type: String,
+		index: true,
+		unique: true,
 		required: true
 	},
 	hashed_password: {
 		type: String,
 		required: true
 	},
-	data: {
+	nickname: {
 		type: String,
-		required: true
+		default: ''
+	},
+	color: {
+		type: String,
+		default: ''
+	},
+	role: {
+		type: String,
+		default: ''
+	},
+	skin_id: {
+		type: Number,
+		default: -1
+	},
+	skins: {
+		type: [Number],
+		default: []
+	},
+	xp_level: {
+		type: Number,
+		default: 1
+	},
+	xp: {
+		type: Number,
+		default: 0
+	},
+	games_played: {
+		type: Number,
+		default: 0
+	},
+	conquered_lands: {
+		type: Number,
+		default: 0
+	},
+	highest_score: {
+		type: Number,
+		default: 0
+	},
+	total_score: {
+		type: Number,
+		default: 0
 	}
 }, { timestamps: true });
 

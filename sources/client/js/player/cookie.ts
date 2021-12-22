@@ -17,7 +17,7 @@ export function load_cookie_data(name_input: HTMLInputElement, color_picker: HTM
 export function create_cookie()
 {
 	let date = new Date(2100, 1, 1);
-	let value = 'nickname=' + encodeURIComponent(Player.nickname) + ',color=' + encodeURIComponent(Player.color);
+	let value = 'nickname=' + encodeURIComponent(Player.nickname) + ',color=' + encodeURIComponent(Player.color) + ',skin_id=' + encodeURIComponent(Player.skin_id);
 	let expires = '; expires=' + date.toUTCString();
 	document.cookie = 'player=' + value + expires + '; Secure' + '; path=/;';
 }
@@ -36,10 +36,12 @@ export function get_cookie()
 		return null;
 
 	let nickname = decodeURIComponent(player.substring(0, player.lastIndexOf(',color')).substring(player.indexOf('nickname=') + 9));
-	let color = decodeURIComponent(player.substring(player.lastIndexOf('color=') + 6));
+	let color = decodeURIComponent(player.substring(0, player.lastIndexOf(',skin_id')).substring(player.lastIndexOf('color=') + 6));
+	let skin_id = decodeURIComponent(player.substring(player.lastIndexOf('skin_id=') + 8));
 
 	return {
 		nickname: nickname,
-		color: color
+		color: color,
+		skin_id: skin_id
 	};
 }

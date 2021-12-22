@@ -109,7 +109,7 @@
 	font-size: 16px;
 }
 
-.nickname_input:focus, .color_div:focus
+.nickname_input:focus
 {
 	border: 2px solid rgba(0, 0, 0, 0.18);
 }
@@ -120,26 +120,26 @@
 	transform: translate(-50%, -50%);
 	top: 450px;
 	left: 50%;
-	width: 83px;
+	width: 90px;
 	cursor: pointer;
 	dominant-baseline: middle;
 	filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.25));
 	-webkit-filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.25));
-	transition: all 0.2s;
+	transition: width 0.2s, fill 0.2s;
 	fill: rgb(6, 209, 125);
 }
 
 .svg_button:hover
 {
-	transition: all 0.2s;
-	width: 88px;
+	transition: width 0.2s, fill 0.2s;
+	width: 95px;
 	fill: rgb(3, 192, 120);
 }
 
 .svg_button:active
 {
-	transition: all 0.2s;
-	width: 83px;
+	transition: width 0.2s, fill 0.2s;
+	width: 90px;
 	fill: rgb(6, 209, 125);
 }
 

@@ -5,6 +5,7 @@ import * as Cookie from './player/cookie.js';
 import { Camera } from './renderer/camera.js';
 import { Player } from './player/player.js';
 import { Change } from './grid/cell.js';
+import * as Menu from './user/menu.js';
 
 export type Move = {
 	from: { i: number, j: number },
@@ -56,12 +57,14 @@ export function join_game()
 		render();
 	});
 
+	Menu.clear();
+
 	// Tell the server that the player has joined
 	Global.socket.emit('join_game', Player.get_object());
 }
 
 // Start the game
-export function start_game(nickname: string, color: string)
+export function start_game(nickname: string, color: string, skin_id: number)
 {
 	let canvas = document.getElementById('canvas') as HTMLCanvasElement;
 	canvas.width = window.innerWidth;
@@ -70,6 +73,7 @@ export function start_game(nickname: string, color: string)
 	// Create the player
 	Player.nickname = nickname;
 	Player.color = color;
+	Player.skin_id = skin_id;
 
 	join_game();
 	game_events();
@@ -79,7 +83,7 @@ export function start_game(nickname: string, color: string)
 	// If the player dies
 	Global.socket.on('die', () =>
 	{
-		setTimeout(() => { location.reload(); }, 1000);
+		setTimeout(() => { location.reload(); }, 500);
 	});
 }
 

@@ -8,7 +8,9 @@
 		"fstart": "forever start server/main.js",
 		"fstop": "forever stop server/main.js",
 		"start": "node server/main.js",
-		"dev": "nodemon server/main.js"
+		"dev": "nodemon server/main.js",
+		"build": "npx tsc",
+		"devBuild": "npx tsc -w"
 	},
 	"repository": {
 		"type": "git",

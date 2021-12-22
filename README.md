@@ -61,7 +61,7 @@ $ sudo apt install mongodb
 
 * Install the dependencies with `npm install`
 
-* Compile typescript files with `tsc` *(or `tsc -w` for real time compilation)*
+* Compile typescript files with `npm run build` *(or `npm run devBuild` for real time compilation)*
 
 ## 3/ Run
 
