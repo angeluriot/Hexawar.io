@@ -18,7 +18,7 @@ function set_xp_bar()
 		const value = Global.user_data.xp;
 		const width = (value / max_value) * (max - min) + min;
 		xp_progress.style.width = `calc(${width}% - 1px)`;
-		xp_div.title = `${value}/${max_value}`;
+		xp_div.title = `${Utils.add_spaces(value)} / ${Utils.add_spaces(max_value)}`;
 	}
 
 	else
