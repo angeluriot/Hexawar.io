@@ -21,7 +21,10 @@ export function join(player: Player)
 	// Register the player
 	player.socket.on('join_game', (input_player: { nickname: string, color: string, skin_id: number }) =>
 	{
-		player.nickname = input_player.nickname;
+		player.nickname = input_player.nickname.trim();
+
+		if (player.nickname.length > 16)
+			player.nickname = player.nickname.substring(0, 16);
 
 		if (Utils.is_color(input_player.color))
 			player.color = input_player.color;
