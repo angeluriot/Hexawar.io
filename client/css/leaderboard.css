@@ -1,0 +1,38 @@
+@font-face
+{
+	font-family: "Roboto_black";
+	src: url("../resources/fonts/Roboto/Roboto-Black.ttf");
+}
+
+.leaderboard
+{
+	visibility: hidden;
+	pointer-events: none;
+	position: absolute;
+	z-index: 10;
+	right: 20px;
+	top: 20px;
+	width: 312px;
+	height: 324px;
+}
+
+.leaderboard .leaderboard_svg
+{
+	pointer-events: none;
+	position: absolute;
+	z-index: 10;
+	width: 100%;
+	height: 100%;
+}
+
+.leaderboard .leaderboard_title
+{
+	font-family: "Roboto_black";
+	letter-spacing: 1px;
+}
+
+.leaderboard .nickname, .leaderboard .score
+{
+	font-family: "Roboto_bold";
+	letter-spacing: 0.5px;
+}

@@ -48,6 +48,17 @@ export function join_game()
 	// When the server sends the spawn data
 	Global.socket.on('send_spawn', (spawn: {i: number, j: number}) =>
 	{
+		const form_div = document.querySelector('.connect_div') as HTMLDivElement;
+		const leaderboard = document.querySelector('.leaderboard') as HTMLDivElement;
+
+		Player.playing = true;
+		form_div.style.display = 'none';
+		leaderboard.style.visibility = 'visible';
+
+		game_events();
+		Cookie.create_cookie();
+		render();
+
 		Player.id = Global.socket.id;
 		let cell = Grid.get_cell(spawn.i, spawn.j);
 
@@ -71,14 +82,15 @@ export function start_game(nickname: string, color: string, skin_id: number)
 	canvas.height = window.innerHeight;
 
 	// Create the player
-	Player.nickname = nickname;
+	Player.nickname = nickname.trim();
+
+	if (Player.nickname.length > 16)
+		Player.nickname = Player.nickname.substring(0, 16);
+
 	Player.color = color;
 	Player.skin_id = skin_id;
 
 	join_game();
-	game_events();
-	Cookie.create_cookie();
-	render();
 
 	// If the player dies
 	Global.socket.on('die', () =>
@@ -231,10 +243,16 @@ export function move()
 		}
 	}
 
-	window.addEventListener('dblclick', double_click);
+	window.addEventListener('dblclick', e =>
+	{
+		e.preventDefault();
+		double_click(e);
+	});
 
 	window.addEventListener('mousedown', e =>
 	{
+		e.preventDefault();
+
 		if (e.buttons == 1)
 		{
 			move_by_clicking(e);
@@ -242,6 +260,15 @@ export function move()
 		}
 	});
 
-	window.addEventListener('mousemove', when_dragging);
-	window.addEventListener('mouseup', finish_dragging);
+	window.addEventListener('mousemove', e =>
+	{
+		e.preventDefault();
+		when_dragging(e);
+	});
+
+	window.addEventListener('mouseup', e =>
+	{
+		e.preventDefault();
+		finish_dragging(e);
+	});
 }

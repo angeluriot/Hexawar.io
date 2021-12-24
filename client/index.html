@@ -21,6 +21,7 @@
 		<link rel="stylesheet" type="text/css" href="css/user/account.css"/>
 		<link rel="stylesheet" type="text/css" href="css/user/message.css"/>
 		<link rel="stylesheet" type="text/css" href="css/user/delete_account.css"/>
+		<link rel="stylesheet" type="text/css" href="css/leaderboard.css"/>
 		<link rel="stylesheet" type="text/css" href="css/style.css"/>
 
 		<script type="module" src="js/main.js"></script>
@@ -29,7 +30,40 @@
 	<body>
 		<div id="game">
 			<canvas id="canvas"></canvas>
+
+			<div class="leaderboard">
+				<svg class="leaderboard_svg" viewBox="0 0 312 324" xmlns="http://www.w3.org/2000/svg">
+					<rect class="background" x="0" y="0" width="312" height="324" rx="20" ry="20" opacity="0.4"/>
+
+					<text class="leaderboard_title" x="50%" y="33" font-size="31" fill="white" text-anchor="middle" alignment-baseline="middle"> Leaderboard </text>
+
+					<text class="nickname line_1" x="16" y="68" font-size="17" fill="white" alignment-baseline="middle"></text>
+					<text class="nickname line_2" x="16" y="91" font-size="17" fill="white" alignment-baseline="middle"></text>
+					<text class="nickname line_3" x="16" y="114" font-size="17" fill="white" alignment-baseline="middle"></text>
+					<text class="nickname line_4" x="16" y="137" font-size="17" fill="white" alignment-baseline="middle"></text>
+					<text class="nickname line_5" x="16" y="160" font-size="17" fill="white" alignment-baseline="middle"></text>
+					<text class="nickname line_6" x="16" y="183" font-size="17" fill="white" alignment-baseline="middle"></text>
+					<text class="nickname line_7" x="16" y="206" font-size="17" fill="white" alignment-baseline="middle"></text>
+					<text class="nickname line_8" x="16" y="229" font-size="17" fill="white" alignment-baseline="middle"></text>
+					<text class="nickname line_9" x="16" y="252" font-size="17" fill="white" alignment-baseline="middle"></text>
+					<text class="nickname line_10" x="16" y="275" font-size="17" fill="white" alignment-baseline="middle"></text>
+					<text class="nickname player_line" x="16" y="301" font-size="17" fill="#F9A6AB" alignment-baseline="middle"></text>
+
+					<text class="score line_1" x="296" y="68" font-size="17" fill="white" text-anchor="end" alignment-baseline="middle"></text>
+					<text class="score line_2" x="296" y="91" font-size="17" fill="white" text-anchor="end" alignment-baseline="middle"></text>
+					<text class="score line_3" x="296" y="114" font-size="17" fill="white" text-anchor="end" alignment-baseline="middle"></text>
+					<text class="score line_4" x="296" y="137" font-size="17" fill="white" text-anchor="end" alignment-baseline="middle"></text>
+					<text class="score line_5" x="296" y="160" font-size="17" fill="white" text-anchor="end" alignment-baseline="middle"></text>
+					<text class="score line_6" x="296" y="183" font-size="17" fill="white" text-anchor="end" alignment-baseline="middle"></text>
+					<text class="score line_7" x="296" y="206" font-size="17" fill="white" text-anchor="end" alignment-baseline="middle"></text>
+					<text class="score line_8" x="296" y="229" font-size="17" fill="white" text-anchor="end" alignment-baseline="middle"></text>
+					<text class="score line_9" x="296" y="252" font-size="17" fill="white" text-anchor="end" alignment-baseline="middle"></text>
+					<text class="score line_10" x="296" y="275" font-size="17" fill="white" text-anchor="end" alignment-baseline="middle"></text>
+					<text class="score player_line" x="296" y="301" font-size="17" fill="#F9A6AB" text-anchor="end" alignment-baseline="middle"></text>
+				</svg>
+			</div>
 		</div>
+
 		<div class="connect_div">
 			<div class="connection">
 				<svg class="connect_background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 629.01 802.7"><g><path d="M629,597.05V205.65a56.93,56.93,0,0,0-28.48-49.32L343,7.63a57,57,0,0,0-57,0L28.48,156.33A56.93,56.93,0,0,0,0,205.65v391.4a56.94,56.94,0,0,0,28.48,49.32L286,795.07a57,57,0,0,0,57,0l257.55-148.7A56.94,56.94,0,0,0,629,597.05Z"/></g></svg>

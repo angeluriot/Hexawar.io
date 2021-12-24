@@ -29,7 +29,6 @@ export function color_picker_events()
 // Connection events
 export function form_events()
 {
-	const form_div = document.querySelector('.connect_div') as HTMLDivElement;
 	const name_input = document.querySelector('.nickname_input') as HTMLInputElement;
 	const color_picker = document.querySelector('.color_input') as HTMLInputElement;
 	const color_div = document.querySelector('.color_div') as HTMLDivElement;
@@ -49,7 +48,5 @@ export function form_events()
 	{
 		e.preventDefault();
 		Game.start_game(name_input.value.trim(), color_picker.value, -1);
-		Player.playing = true;
-		form_div.style.display = 'none';
 	});
 }

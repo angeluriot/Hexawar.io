@@ -6,6 +6,7 @@ import * as UserConnection from './user/connection.js';
 import * as Login from './user/menu.js';
 import { render } from './renderer/renderer.js';
 import { Global } from './properties.js';
+import * as Leaderboard from './player/leaderboard.js';
 
 Global.socket = io();
 
@@ -16,11 +17,14 @@ window.onload = function()
 	UserConnection.connection_events();
 	Game.load_background();
 	PlayerConnection.form_events();
+	Leaderboard.update_leaderboard();
 }
 
 // On window resize
 window.onresize = function()
 {
+	Leaderboard.update_size();
+
 	let canvas = document.getElementById('canvas') as HTMLCanvasElement;
 
 	canvas.width = window.innerWidth;

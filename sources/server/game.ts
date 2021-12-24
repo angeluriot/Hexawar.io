@@ -56,6 +56,7 @@ export function join(player: Player)
 
 			Grid.set_cell(change);
 			player.socket.emit('send_spawn', spawn);
+			update_leaderboard();
 		}
 	});
 }
@@ -69,7 +70,15 @@ export function game_events(player: Player)
 // Loops of the game
 export function game_loop()
 {
-	troops_spawn();
+	setInterval(() =>
+	{
+		troops_spawn();
+	}, 1000);
+
+	setInterval(() =>
+	{
+		update_leaderboard();
+	}, 500);
 }
 
 // Handle a player leaving the game
@@ -162,45 +171,58 @@ export function player_moves(player: Player)
 // Handle troops spawning
 export function troops_spawn()
 {
-	var troops_spawn_interval = setInterval(() =>
+	let changes: Change[] = [];
+
+	for (let _ = 0; _ < Global.spawn_per_sec; _++)
 	{
-		let changes: Change[] = [];
+		// Choose the cell
+		let { i, j } = Grid.get_random_cell();
+		let cell = Grid.get_cell(i, j);
 
-		for (let _ = 0; _ < Global.spawn_per_sec; _++)
+		// If the cell isn't empty
+		if (cell != null && cell.player != null)
 		{
-			// Choose the cell
-			let { i, j } = Grid.get_random_cell();
-			let cell = Grid.get_cell(i, j);
+			// Add the change to the list
+			let change = {
+				i: i,
+				j: j,
+				color: cell.color,
+				skin_id: cell.skin_id,
+				player: cell.player,
+				nb_troops: cell.nb_troops
+			};
 
-			// If the cell isn't empty
-			if (cell != null && cell.player != null)
+			// Add troops if there are not enough
+			if (change.nb_troops < Global.troops_spawn_max)
 			{
-				// Add the change to the list
-				let change = {
-					i: i,
-					j: j,
-					color: cell.color,
-					skin_id: cell.skin_id,
-					player: cell.player,
-					nb_troops: cell.nb_troops
-				};
+				change.nb_troops++;
+				changes.push(change);
+			}
 
-				// Add troops if there are not enough
-				if (change.nb_troops < Global.troops_spawn_max)
-				{
-					change.nb_troops++;
-					changes.push(change);
-				}
-
-				// Remove troops if there are too many
-				else if (change.nb_troops > Global.troops_spawn_max)
-				{
-					change.nb_troops--;
-					changes.push(change);
-				}
+			// Remove troops if there are too many
+			else if (change.nb_troops > Global.troops_spawn_max)
+			{
+				change.nb_troops--;
+				changes.push(change);
 			}
 		}
+	}
 
-		Grid.set_cells(changes, false);
-	}, 1000);
+	Grid.set_cells(changes, false);
+}
+
+export function update_leaderboard()
+{
+	let players_data = Player.list.map(player =>
+	{
+		return {
+			id: player.socket.id,
+			nickname: player.nickname,
+			size: player.size
+		};
+	});
+
+	players_data.sort((a, b) => b.size - a.size);
+
+	Global.io.emit('leaderboard', players_data);
 }
