@@ -57,7 +57,13 @@ $ sudo apt install mongodb
 
 ## 2/ Setup
 
-* Add a file named `.env` in the root of the project whith `TOKEN_SECRET=<random long string>` in it
+* Add a file named `.env` in the root of the project with :
+```shell
+TOKEN_SECRET=<random long string>
+MONGODB_URL=<your mongodb uri>/hexawar
+MONGODB_USER=<user> #optional
+MONGODB_PASSWORD=<password> #optional
+```
 
 * Install the dependencies with `npm install`
 

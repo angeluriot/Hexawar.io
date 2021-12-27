@@ -46,13 +46,43 @@ function init()
 
 const port = process.env.PORT || 80;
 
-mongoose.connect('mongodb://localhost/hexawar')
-.then((result) =>
+if (process.env.MONGODB_URL)
 {
-	init();
-	server.listen(port, () => console.log(`Server running on port ${port}`));
-})
-.catch((error) =>
-{
-	console.log(error);
-});
+	if (process.env.MONGODB_USER && process.env.MONGODB_PASSWORD)
+	{
+		mongoose.connect(process.env.MONGODB_URL, {
+			'auth': {
+				'username': process.env.MONGODB_USER,
+				'password': process.env.MONGODB_PASSWORD
+			},
+			'authSource': 'admin'
+		})
+		.then((result) =>
+		{
+			console.log('Connected to MongoDB');
+			init();
+			server.listen(port, () => console.log(`Server running on port ${port}`));
+		})
+		.catch((error) =>
+		{
+			console.log('MongoDB connection error:');
+			console.log(error);
+		});
+	}
+
+	else
+	{
+		mongoose.connect(process.env.MONGODB_URL)
+		.then((result) =>
+		{
+			console.log('Connected to MongoDB');
+			init();
+			server.listen(port, () => console.log(`Server running on port ${port}`));
+		})
+		.catch((error) =>
+		{
+			console.log('MongoDB connection error:');
+			console.log(error);
+		});
+	}
+}
