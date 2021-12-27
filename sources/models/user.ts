@@ -7,7 +7,7 @@ export interface UserInterface extends mongoose.Document
 	hashed_password: string;
 	nickname: string;
 	color: string;
-	role: string;
+	admin: boolean;
 	skin_id: number;
 	skins: number[];
 	xp_level: number;
@@ -38,9 +38,9 @@ const user_schema = new Schema(
 		type: String,
 		default: ''
 	},
-	role: {
-		type: String,
-		default: ''
+	admin: {
+		type: Boolean,
+		default: false
 	},
 	skin_id: {
 		type: Number,

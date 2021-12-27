@@ -36,3 +36,9 @@
 	font-family: "Roboto_bold";
 	letter-spacing: 0.5px;
 }
+
+.leaderboard .leaderboard_svg .admin_role
+{
+	width: 10px;
+	height: 10px;
+}

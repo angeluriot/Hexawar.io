@@ -218,7 +218,8 @@ export function update_leaderboard()
 		return {
 			id: player.socket.id,
 			nickname: player.nickname,
-			size: player.size
+			size: player.size,
+			admin: player.user != null && player.user.admin
 		};
 	});
 
