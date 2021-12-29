@@ -170,24 +170,31 @@ export function are_neighbours(cell_1: Cell, cell_2: Cell)
 	return false;
 }
 
+//Find the neighbours from a cell
+//@see https://www.redblobgames.com/grids/hexagons/#neighbors
 export function get_neighbours(cell: Cell)
 {
-	let temp: (Cell | null)[] = [];
+	if (cell.i < 0 || cell.i >= Global.grid_size.x || cell.j < 0 || cell.j >= Global.grid_size.y)
+		return null;
+
 	let neighbours: Cell[] = [];
-	temp.push(get_cell(cell.i - 1, cell.j + (((cell.i + 1) % 2 == 0) ? 1 : 0)));
-	temp.push(get_cell(cell.i    , cell.j - 1                                ));
-	temp.push(get_cell(cell.i - 1, cell.j - (((cell.i + 1) % 2 != 0) ? 1 : 0)));
-	temp.push(get_cell(cell.i    , cell.j + 1                                ));
-	temp.push(get_cell(cell.i + 1, cell.j + (((cell.i + 1) % 2 == 0) ? 1 : 0)));
-	temp.push(get_cell(cell.i + 1, cell.j - (((cell.i + 1) % 2 != 0) ? 1 : 0)));
+	let parity = cell.i & 1;
+	let offsets: number[][][] = [
+		// even cols 
+		[[+1,  0], [+1, -1], [ 0, -1], 
+		 [-1, -1], [-1,  0], [ 0, +1]],
+		// odd cols 
+		[[+1, +1], [+1,  0], [ 0, -1], 
+		 [-1,  0], [-1, +1], [ 0, +1]],
+	]
 
-	for (let i = 0; i < temp.length; i++)
+	for (let i = 0; i < offsets.length; i++)
 	{
-		let cell = temp[i];
-
-		if (cell != null)
-			neighbours.push(cell);
+		let newCell = get_cell(cell.i + offsets[parity][i][0], cell.j + offsets[parity][i][1]);
+		if(newCell != null){
+			neighbours.push(newCell);
+		}
+			
 	}
-
 	return neighbours;
 }

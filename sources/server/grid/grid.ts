@@ -137,3 +137,32 @@ export function get_client_grid()
 
 	return grid;
 }
+
+//Find the neighbours coordinates from a cell
+//@see https://www.redblobgames.com/grids/hexagons/#neighbors
+export function get_neighbours_coordinates(x: number, y: number){
+
+	if (x < 0 || x >= Global.grid_size.x || y < 0 || y >= Global.grid_size.y)
+		return null;
+
+	let neighbours: number[][] = [];
+	let parity = x & 1;
+	let offsets: number[][][] = [
+		// even cols 
+		[[+1,  0], [+1, -1], [ 0, -1], 
+		 [-1, -1], [-1,  0], [ 0, +1]],
+		// odd cols 
+		[[+1, +1], [+1,  0], [ 0, -1], 
+		 [-1,  0], [-1, +1], [ 0, +1]],
+	]
+
+	for (let i = 0; i < offsets.length; i++)
+	{
+		if(get_cell(x + offsets[parity][i][0], y + offsets[parity][i][1]) != null){
+			neighbours.push([x + offsets[parity][i][0], y + offsets[parity][i][1]]);
+		}
+			
+	}
+	return neighbours;
+
+}
