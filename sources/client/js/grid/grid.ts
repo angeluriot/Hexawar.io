@@ -170,15 +170,15 @@ export function are_neighbours(cell_1: Cell, cell_2: Cell)
 	return false;
 }
 
-//Find the neighbours from a cell
+//Find the neighbours from a cell in a cyclic order
 //@see https://www.redblobgames.com/grids/hexagons/#neighbors
 export function get_neighbours(cell: Cell)
 {
 	if (cell.i < 0 || cell.i >= Global.grid_size.x || cell.j < 0 || cell.j >= Global.grid_size.y)
-		return null;
+		return [];
 
 	let neighbours: Cell[] = [];
-	let parity = cell.i & 1;
+	let parity = cell.i & 1 ;
 	let offsets: number[][][] = [
 		// even cols 
 		[[+1,  0], [+1, -1], [ 0, -1], 
@@ -188,7 +188,7 @@ export function get_neighbours(cell: Cell)
 		 [-1,  0], [-1, +1], [ 0, +1]],
 	]
 
-	for (let i = 0; i < offsets.length; i++)
+	for (let i = 0; i < offsets[parity].length; i++)
 	{
 		let newCell = get_cell(cell.i + offsets[parity][i][0], cell.j + offsets[parity][i][1]);
 		if(newCell != null){
