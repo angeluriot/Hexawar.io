@@ -71,6 +71,68 @@ export function get_random_cell()
 	return { i: Utils.random_int(0, Global.grid_size.x), j: Utils.random_int(0, Global.grid_size.y) };
 }
 
+// Gives a cell by prioritising empty cells and then the borders 
+export function get_spawn_cell()
+{
+	let empty_cells: {i: number, j: number}[] = [];
+	let border_cells: {i: number, j: number}[] = [];
+
+	for(let i = 0; i < Global.grid_size.x; i++)
+		for(let j = 0; j < Global.grid_size.y; j++)
+		{
+			let cell = Global.grid[i][j];
+		
+			if (cell.player == null)
+				empty_cells.push({i, j});
+			else if (i == (Global.grid_size.x - 1) || j == Global.grid_size.y - 1 || i == 0 || j == 0 || is_player_border(i, j))
+				border_cells.push({i, j});
+		}
+	
+	if (empty_cells.length > 0)
+		return empty_cells[Utils.random_int(0, empty_cells.length)];
+	else
+		return border_cells[Utils.random_int(0, border_cells.length)];
+}
+
+// Tells if the cell is surrounded by at least two players and if there is no empty cell around.
+export function is_player_border(i: number, j: number)
+{
+	let cells: Cell[] = get_neighbours(i, j);
+	let players: Player[] = [];
+	let res = true;
+	
+	cells.forEach(cell => {
+		if (cell.player == null)
+			res = false;
+		else if (!players.includes(cell.player))
+			players.push(cell.player);
+	});
+	return res && players.length > 1;
+}
+
+
+// Returns surroungind cells
+export function get_neighbours(i: number, j: number)
+{
+    let temp: (Cell | null)[] = [];
+    let neighbours: Cell[] = [];
+
+    temp.push(get_cell(i + 1, j + (i % 2)));
+    temp.push(get_cell(i    , j + 1));
+    temp.push(get_cell(i - 1, j + (i % 2)));
+    temp.push(get_cell(i - 1, j - ((i + 1) % 2)));
+    temp.push(get_cell(i    , j - 1));
+    temp.push(get_cell(i + 1, j - ((i + 1) % 2)));
+
+    temp.forEach(cell =>
+    {
+        if (cell != null)
+            neighbours.push(cell);
+    });
+
+    return neighbours;
+}
+
 // Tell if the cell are neighbours
 export function are_neighbours(cell_1: { i: number, j: number }, cell_2: { i: number, j: number })
 {

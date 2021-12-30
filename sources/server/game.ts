@@ -41,8 +41,8 @@ export function join(player: Player)
 		// Add the player in the players list
 		if (player.join())
 		{
-			// Give it a random cell
-			let spawn = Grid.get_random_cell();
+			// Gives the player a spawn cell
+			let spawn = Grid.get_spawn_cell();
 
 			// Set the change
 			const change = {
