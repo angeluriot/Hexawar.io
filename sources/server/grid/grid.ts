@@ -140,13 +140,13 @@ export function get_client_grid()
 
 //Find the neighbours from a cell in a cyclic order
 //@see https://www.redblobgames.com/grids/hexagons/#neighbors
-export function get_neighbours_coordinates(x: number, y: number){
+export function get_neighbours_coordinates(cell: [number, number]){
 
-	if (x < 0 || x >= Global.grid_size.x || y < 0 || y >= Global.grid_size.y)
+	if (cell[0] < 0 || cell[0] >= Global.grid_size.x || cell[1] < 0 || cell[1] >= Global.grid_size.y)
 		return [];
 
-	let neighbours: number[][] = [];
-	let parity = x % 2;
+	let neighbours: [number, number][] = [];
+	let parity = cell[0] % 2;
 	let offsets: number[][][] = [
 		// even cols 
 		[[+1,  0], [+1, -1], [ 0, -1], 
@@ -158,11 +158,127 @@ export function get_neighbours_coordinates(x: number, y: number){
 
 	for (let i = 0; i < offsets[parity].length; i++)
 	{
-		if(get_cell(x + offsets[parity][i][0], y + offsets[parity][i][1]) != null){
-			neighbours.push([x + offsets[parity][i][0], y + offsets[parity][i][1]]);
+		if(get_cell(cell[0] + offsets[parity][i][0], cell[1] + offsets[parity][i][1]) != null){
+			neighbours.push([cell[0] + offsets[parity][i][0], cell[1] + offsets[parity][i][1]]);
 		}
 			
 	}
 	return neighbours;
 
+}
+
+//Return the number of cells we have to cross to go from c1 to c2
+//@see https://www.redblobgames.com/grids/hexagons/#distances
+export function get_relative_distance(cell_1: [number,number], cell_2: [number,number]){
+	let axial_1:  [number,number] = [cell_1[0], cell_1[1] - (cell_1[0] - (cell_1[0] & 1)) / 2];
+	let axial_2:  [number,number] = [cell_2[0], cell_2[1] - (cell_2[0] - (cell_2[0] & 1)) / 2];
+
+	return (Math.abs(axial_1[0] - axial_2[0]) 
+          + Math.abs(axial_1[0] + axial_1[1] - axial_2[0] - axial_2[1])
+          + Math.abs(axial_1[1] - axial_2[1])) / 2;
+}
+
+//Return array of dying cells
+export function dying_cells(areas: [number, number][][], excludedCells: [number, number][]): [number, number][]{
+	if(areas.length>1){
+		let dyingCells: [number,number][] = [];
+		let player:Player = get_cell(areas[areas.length-1][0][0], areas[areas.length-1][0][1])!.player!;
+
+		//Execute the A* algorithm between the last 2 areas of the array
+		let cost_so_far: (number|null)[][] = [];
+		for(let i = 0; i < Global.grid_size.x; i += 1){
+			cost_so_far.push([]);
+			for(let j = 0; j < Global.grid_size.y; j += 1){
+				cost_so_far[i].push(null);
+			}
+		}
+		let frontier: [[number, number], number][] = areas[areas.length-1].map(x => [x, 0]);
+		for(let f of frontier)
+			cost_so_far[f[0][0]][f[0][1]] = 0;
+	
+		let connected = false;
+		let territory1: [number, number][] = [];
+		let tmp;
+		while(tmp = frontier.pop()){
+			let current: [number, number] = tmp[0];
+
+			territory1.push(current);
+			if(current[0] == areas[areas.length-2][0][0] && current[1] == areas[areas.length-2][0][1]){
+				areas[areas.length-2].concat(areas[areas.length-1]);
+				//If the areas are linked, they're the same area
+				areas.pop();
+				connected = true;
+				break;
+			}
+
+			//Neighbours have to be from your territory and no from the dying cell (not changed yet)
+			let next = get_neighbours_coordinates(current).filter(([x, y])=> get_cell(x, y)!.player! === player &&
+																			 excludedCells.filter(([x1, y1])=> x==x1 && y==y1).length == 0);
+			for(let nextCell of next){
+				let new_cost: number = cost_so_far[current[0]][current[1]]! + 1;
+				if(cost_so_far[nextCell[0]][nextCell[1]] == null || new_cost < cost_so_far[nextCell[0]][nextCell[1]]!){
+					cost_so_far[nextCell[0]][nextCell[1]] = new_cost;
+					let priority = new_cost + get_relative_distance(areas[areas.length-2][0], nextCell);
+					frontier.push([nextCell, priority]);
+					frontier.sort(([x1, y1], [x2, y2]) => y1 - y2);
+				}
+			}
+		}
+
+		if(!connected){
+			//We execute flood fill algorithm to mesure the size of the second area
+			let frontier = areas[areas.length-2];
+			let visited: boolean[][] = [];
+
+			for(let i = 0; i < Global.grid_size.x; i += 1){
+				visited.push([]);
+				for(let j = 0; j < Global.grid_size.y; j += 1){
+					visited[i].push(false);
+				}
+			}
+			for(let exclude of excludedCells)
+				visited[exclude[0]][exclude[1]]=true;
+				
+			let territory2 = frontier;
+			for(let visit of frontier)
+				visited[visit[0]][visit[1]]=true;
+
+			while(frontier.length != 0){
+
+				let newFrontier: [number, number][] = [];
+
+				for(let f of frontier){
+					let cells = get_neighbours_coordinates(f);
+					for(let cell of cells){
+						if(visited[cell[0]][cell[1]] == false){
+							if (get_cell(cell[0], cell[1])!.player! == player){
+								newFrontier.push(cell);
+							}
+							visited[cell[0]][cell[1]] = true;
+						}
+					}
+
+				}
+				
+				territory2 = territory2.concat(newFrontier);
+				frontier = newFrontier;
+			}
+
+			//Only one territory remain between the two areas
+			if(territory1.length > territory2.length){
+				areas[areas.length-2] = areas[areas.length-1];
+				dyingCells = territory2;
+			}else{
+				dyingCells = territory1;
+			}
+			areas.pop();
+
+		}
+
+		//If there remain two area (3 at the start), we execute the algorithm again
+		dyingCells = dyingCells.concat(dying_cells(areas, excludedCells));
+		return dyingCells
+	}
+
+	return [];
 }
