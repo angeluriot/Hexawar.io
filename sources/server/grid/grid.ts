@@ -198,11 +198,13 @@ export function dying_cells(areas: [number, number][][], excludedCells: [number,
 	
 		let connected = false;
 		let territory1: [number, number][] = [];
+		let territory1Value: number = 0;
 		let tmp;
 		while(tmp = frontier.pop()){
 			let current: [number, number] = tmp[0];
 
 			territory1.push(current);
+			territory1Value += get_cell(current[0],current[1])!.nb_troops;
 			if(current[0] == areas[areas.length-2][0][0] && current[1] == areas[areas.length-2][0][1]){
 				areas[areas.length-2].concat(areas[areas.length-1]);
 				//If the areas are linked, they're the same area
@@ -227,7 +229,7 @@ export function dying_cells(areas: [number, number][][], excludedCells: [number,
 
 		if(!connected){
 			//We execute flood fill algorithm to mesure the size of the second area
-			let frontier = areas[areas.length-2];
+			let frontiers = areas[areas.length-2];
 			let visited: boolean[][] = [];
 
 			for(let i = 0; i < Global.grid_size.x; i += 1){
@@ -239,29 +241,33 @@ export function dying_cells(areas: [number, number][][], excludedCells: [number,
 			for(let exclude of excludedCells)
 				visited[exclude[0]][exclude[1]]=true;
 				
-			let territory2 = frontier;
-			for(let visit of frontier)
-				visited[visit[0]][visit[1]]=true;
+			let territory2 = frontiers;
+			let territory2Value: number = 0;
+			for(let frontier of frontiers){
+				territory2Value += get_cell(frontier[0],frontier[1])!.nb_troops;
+				visited[frontier[0]][frontier[1]]=true;
+			}
 
-			while(frontier.length != 0){
 
-				let newFrontier: [number, number][] = [];
+			while(frontiers.length != 0){
 
-				for(let f of frontier){
+				let newFrontiers: [number, number][] = [];
+
+				for(let f of frontiers){
 					let cells = get_neighbours_coordinates(f);
 					for(let cell of cells){
 						if(visited[cell[0]][cell[1]] == false){
 							if (get_cell(cell[0], cell[1])!.player! == player){
-								newFrontier.push(cell);
+								newFrontiers.push(cell);
+								territory2Value += get_cell(cell[0],cell[1])!.nb_troops;
 							}
 							visited[cell[0]][cell[1]] = true;
 						}
 					}
-
 				}
 				
-				territory2 = territory2.concat(newFrontier);
-				frontier = newFrontier;
+				territory2 = territory2.concat(newFrontiers);
+				frontiers = newFrontiers;
 			}
 
 			//Only one territory remain between the two areas
@@ -269,7 +275,16 @@ export function dying_cells(areas: [number, number][][], excludedCells: [number,
 				areas[areas.length-2] = areas[areas.length-1];
 				dyingCells = territory2;
 			}else{
-				dyingCells = territory1;
+				if(territory1.length < territory2.length){
+					dyingCells = territory1;
+				}else{
+					if(territory1Value > territory2Value){
+						areas[areas.length-2] = areas[areas.length-1];
+						dyingCells = territory2;
+					}else{
+						dyingCells = territory1;
+					}
+				}
 			}
 			areas.pop();
 
