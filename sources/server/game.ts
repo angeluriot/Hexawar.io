@@ -99,7 +99,7 @@ export function player_moves(player: Player)
 	{
 		let cell_from = Grid.get_cell(move.from.i, move.from.j);
 		let cell_to = Grid.get_cell(move.to.i, move.to.j);
-
+		let dyingCells: Change[] = [];
 		// If the move is valid
 		if (cell_from != null && cell_to != null && cell_from.player == player && Grid.are_neighbours(move.from, move.to) && cell_from.nb_troops > 1)
 		{
@@ -141,11 +141,65 @@ export function player_moves(player: Player)
 				// If the attack succeeds
 				if (change_from.nb_troops > change_to.nb_troops + 1)
 				{
+
+					let dyingPlayer = change_to.player;
+
+					//If we attack a player
+					if(cell_to.player!=null){
+						//Find the starting point of the area detection
+						let neighbours: [number, number][] = Grid.get_neighbours_coordinates([move.to.i, move.to.j]);
+						let playerCellOffset: number = 0; 
+						while(neighbours[playerCellOffset][0] != move.from.i && neighbours[playerCellOffset][0] != move.from.j )
+							playerCellOffset += 1;
+						//Detect the differents areas
+						let lastWasCell = false;
+						let areas: [number, number][][] = [];
+						let last_x = move.to.i;
+						let last_y = move.to.j;
+						for(let i=1; i < neighbours.length+1; i+=1){
+							let [x, y] = neighbours[(playerCellOffset + i) % neighbours.length];
+							if(Grid.get_cell(x, y)?.player == dyingPlayer){
+								if(lastWasCell){
+									//If we are not near a border (else jump between neighbours)
+									if(Grid.get_relative_distance([x, y], [last_x, last_y]) == 1){
+										areas[areas.length-1].push([x, y]);
+									}else{
+										areas.push([[x, y]]);
+									}
+								}else{
+										areas.push([[x, y]]);	
+								}
+								lastWasCell = true;
+							}else{
+								lastWasCell = false;
+							}
+							last_x = x;
+							last_y = y;
+						}
+
+						//Find dying cells
+						let toKill = Grid.dying_cells(areas, [[move.to.i, move.to.j]]);
+
+						//Add dyingCells to array
+						for(let killed of toKill){
+							dyingCells.push({
+								i: killed[0],
+								j: killed[1],
+								color: '#FFFFFF',
+								skin_id: -1,
+								player: null,
+								nb_troops: 0
+							});
+						}
+
+					}
+
 					change_to.nb_troops = change_from.nb_troops - change_to.nb_troops - 1;
 					change_from.nb_troops = 1;
 					change_to.color = change_from.color;
 					change_to.skin_id = change_from.skin_id;
 					change_to.player = change_from.player;
+
 				}
 
 				// If the attack fails
@@ -161,6 +215,9 @@ export function player_moves(player: Player)
 			}
 
 			Grid.set_cells([change_from, change_to], true);
+									
+			Grid.set_cells(dyingCells, false);
+
 		}
 	}
 
