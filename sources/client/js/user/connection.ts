@@ -25,7 +25,7 @@ function update_player_data()
 	{
 		Player.nickname = Global.user_data.nickname;
 		Player.color = Global.user_data.color;
-		Player.skin_id = Global.user_data.skin_id;
+		Player.set_skin(Global.user_data.skin_id);
 
 		const name_input = document.querySelector('.nickname_input') as HTMLInputElement;
 		const color_picker = document.querySelector('.color_input') as HTMLInputElement;
@@ -36,7 +36,7 @@ function update_player_data()
 		color_picker.value = Global.user_data.color;
 		color_div.style.backgroundColor = Global.user_data.color;
 
-		if (Color.is_color_dark(color_picker.value, Global.dark_color_limit))
+		if (Color.is_color_dark(color_picker.value))
 			color_text.style.color = '#ffffff';
 		else
 			color_text.style.color = '#000000';

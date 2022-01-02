@@ -58,7 +58,7 @@
 	left: 50%;
 	width: 300px;
 	height: 40px;
-	color: rgb(38, 50, 56);
+	color: rgb(45, 47, 58);
 	font-size: 16px;
 	background: rgba(126, 128, 136, 0.102);
 	padding: 10px 20px;
@@ -75,16 +75,16 @@
 	position: absolute;
 	transform: translate(-50%, -50%);
 	top: 330px;
-	left: 50%;
-	width: 150px;
+	left: 150px;
+	width: 125px;
 	height: 40px;
-	border: 2px solid rgba(0, 0, 0, 0.08);
+	border: 3px solid rgba(0, 0, 0, 0.08);
 	border-radius: 25px;
 }
 
 .color_div:hover
 {
-	border: 2px solid rgba(0, 0, 0, 0.35);
+	border: 3px solid rgba(0, 0, 0, 0.35);
 }
 
 .color_input
@@ -104,7 +104,38 @@
 	transform: translate(-50%, -50%);
 	top: 50%;
 	left: 50%;
+	width: 100%;
 	text-align: center;
+	font-family: "Roboto_medium";
+	font-size: 16px;
+}
+
+.skin_div
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: 330px;
+	left: calc(100% - 150px);
+	width: 125px;
+	height: 40px;
+	border: 3px solid rgba(0, 0, 0, 0.08);
+	border-radius: 25px;
+	cursor: pointer;
+	background-size: 105%;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.skin_div .skin_text
+{
+	pointer-events: none;
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+	text-align: center;
+	width: 100%;
+	color: rgb(45, 47, 58);
 	font-family: "Roboto_medium";
 	font-size: 16px;
 }

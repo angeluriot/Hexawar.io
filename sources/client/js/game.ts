@@ -75,7 +75,7 @@ export function join_game()
 }
 
 // Start the game
-export function start_game(nickname: string, color: string, skin_id: number)
+export function start_game(nickname: string, color: string)
 {
 	let canvas = document.getElementById('canvas') as HTMLCanvasElement;
 	canvas.width = window.innerWidth;
@@ -88,7 +88,6 @@ export function start_game(nickname: string, color: string, skin_id: number)
 		Player.nickname = Player.nickname.substring(0, 16);
 
 	Player.color = color;
-	Player.skin_id = skin_id;
 
 	join_game();
 

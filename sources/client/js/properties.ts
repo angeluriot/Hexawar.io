@@ -12,7 +12,7 @@ export class Global
 
 	// Cell
 	static hexagon_angle = 2 * Math.PI / 6.;
-	static border_color = '#D3D4DC';
+	static border_color = '#e1e2e8';
 	static dark_color_limit = 200;
 
 	// Grid
@@ -27,4 +27,8 @@ export class Global
 	static drag_from = { x: 0, y: 0 };
 	static drag_to = { x: 0, y: 0 };
 	static cell_from: null | Cell = null;
+
+	// Resources
+	static skins: HTMLImageElement[] = [];
+	static skin_colors: string[] = [];
 }

@@ -3,6 +3,7 @@ import { Cell, Change } from './cell.js';
 import { render } from '../renderer/renderer.js';
 import { Player } from '../player/player.js';
 import { Camera } from '../renderer/camera.js';
+import { PlayerCells } from './players.js';
 
 // Create the grid of cells
 export function create_grid()
@@ -30,53 +31,46 @@ export function create_grid()
 	Global.grid_boundaries.height = y + y_offset;
 }
 
-// Draw the grid on the screen
-export function draw_grid(context: CanvasRenderingContext2D)
+export function update_player_cells_and_draw_grid(context: CanvasRenderingContext2D)
 {
-	// Force Roboto loading
-	context.font = '0.75px Roboto_bold';
-	context.fillStyle = '#000000';
-	context.textAlign = 'center';
-	context.fillText('load', -10000, -10000);
+	PlayerCells.list = [];
+	PlayerCells.main = null;
 
-	// Before joining the game
-	if (!Player.playing)
-	{
-		for (let i = 0; i < Global.grid_size.x; i++)
-			for (let j = 0; j < Global.grid_size.y; j++)
-				if (Global.grid[i][j].player_id == '')
-					Global.grid[i][j].draw(context);
+	if (!Player.playing && Global.cell_from != null && Global.cell_from.player_id != Player.id)
+		Global.cell_from = null;
 
-		for (let i = 0; i < Global.grid_size.x; i++)
-			for (let j = 0; j < Global.grid_size.y; j++)
-				if (Global.grid[i][j].player_id != '')
-					Global.grid[i][j].draw(context);
-	}
+	/*for (let i = 0; i < Global.grid_size.x; i++)
+		for (let j = 0; j < Global.grid_size.y; j++)
+			if (Global.grid[i][j].player_id != '')
+				Global.grid[i][j].skin_id = 0;*/
 
-	// In game
-	else
-	{
-		if (Global.cell_from != null && Global.cell_from.player_id != Player.id)
-			Global.cell_from = null;
-
-		// Draw empty cells
-		for (let i = 0; i < Global.grid_size.x; i++)
-			for (let j = 0; j < Global.grid_size.y; j++)
-				if (Global.grid[i][j].player_id == '')
-					Global.grid[i][j].draw(context);
-
-		// Draw opponent's cells
-		for (let i = 0; i < Global.grid_size.x; i++)
-			for (let j = 0; j < Global.grid_size.y; j++)
-				if (Global.grid[i][j].player_id != '' && Global.grid[i][j].player_id != Player.id)
-					Global.grid[i][j].draw(context);
-
-		// Draw player's cells
-		for (let i = 0; i < Global.grid_size.x; i++)
-			for (let j = 0; j < Global.grid_size.y; j++)
+	for (let i = 0; i < Global.grid_size.x; i++)
+		for (let j = 0; j < Global.grid_size.y; j++)
+		{
+			if (Global.grid[i][j].player_id != '')
+			{
 				if (Global.grid[i][j].player_id == Player.id)
-					Global.grid[i][j].draw(context);
-	}
+				{
+					if (PlayerCells.main == null)
+						PlayerCells.main = new PlayerCells(Global.grid[i][j]);
+					else
+						PlayerCells.main.add_cell(Global.grid[i][j]);
+				}
+
+				else
+				{
+					let player_cells = PlayerCells.list.find(player_cells => player_cells.player_id == Global.grid[i][j].player_id);
+
+					if (player_cells == undefined)
+						PlayerCells.list.push(new PlayerCells(Global.grid[i][j]));
+					else
+						player_cells.add_cell(Global.grid[i][j]);
+				}
+			}
+
+			else
+				Global.grid[i][j].draw_empty(context);
+		}
 }
 
 // Give the cell at the given coordinates
@@ -172,22 +166,28 @@ export function are_neighbours(cell_1: Cell, cell_2: Cell)
 
 export function get_neighbours(cell: Cell)
 {
-	let temp: (Cell | null)[] = [];
+	let temp = get_all_neighbours(cell);
 	let neighbours: Cell[] = [];
-	temp.push(get_cell(cell.i - 1, cell.j + (((cell.i + 1) % 2 == 0) ? 1 : 0)));
-	temp.push(get_cell(cell.i    , cell.j - 1                                ));
-	temp.push(get_cell(cell.i - 1, cell.j - (((cell.i + 1) % 2 != 0) ? 1 : 0)));
-	temp.push(get_cell(cell.i    , cell.j + 1                                ));
-	temp.push(get_cell(cell.i + 1, cell.j + (((cell.i + 1) % 2 == 0) ? 1 : 0)));
-	temp.push(get_cell(cell.i + 1, cell.j - (((cell.i + 1) % 2 != 0) ? 1 : 0)));
 
-	for (let i = 0; i < temp.length; i++)
+	temp.forEach(cell =>
 	{
-		let cell = temp[i];
-
 		if (cell != null)
 			neighbours.push(cell);
-	}
+	});
+
+	return neighbours;
+}
+
+export function get_all_neighbours(cell: Cell)
+{
+	let neighbours: (Cell | null)[] = [];
+
+	neighbours.push(get_cell(cell.i + 1, cell.j + (cell.i % 2)));
+	neighbours.push(get_cell(cell.i    , cell.j + 1));
+	neighbours.push(get_cell(cell.i - 1, cell.j + (cell.i % 2)));
+	neighbours.push(get_cell(cell.i - 1, cell.j - ((cell.i + 1) % 2)));
+	neighbours.push(get_cell(cell.i    , cell.j - 1));
+	neighbours.push(get_cell(cell.i + 1, cell.j - ((cell.i + 1) % 2)));
 
 	return neighbours;
 }

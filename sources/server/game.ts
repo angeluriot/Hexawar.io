@@ -21,6 +21,8 @@ export function join(player: Player)
 	// Register the player
 	player.socket.on('join_game', (input_player: { nickname: string, color: string, skin_id: number }) =>
 	{
+		console.log(input_player);
+
 		player.nickname = input_player.nickname.trim();
 
 		if (player.nickname.length > 16)
