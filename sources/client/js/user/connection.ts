@@ -94,6 +94,7 @@ export function connection_events()
 		Global.user_data = null;
 		Menu.clear();
 		Menu.set_visible('.register_login');
+		Player.set_skin(-1);
 	});
 
 	Global.socket.on('logout_error', (message: string) =>
@@ -128,6 +129,7 @@ export function connection_events()
 		Global.user_data = null;
 		Menu.clear();
 		Menu.show_message('#06d17d', 'SUCCESS', 'Your account has been deleted.', '.register_login');
+		Player.set_skin(-1);
 	});
 
 	Global.socket.on('delete_account_error', (message: string) =>

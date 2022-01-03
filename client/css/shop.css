@@ -283,6 +283,25 @@
 	background: #3dc57b;
 }
 
+.shop .list_div .elements .skin .skin_text.used
+{
+	font-size: 16px;
+	height: 38px;
+	color: #40d381;
+	border: 3px solid #40d381;
+	padding: 7px 20px;
+	border-radius: 25px;
+	outline: none;
+	box-sizing: border-box;
+	text-align: center;
+	cursor: pointer;
+}
+
+.shop .list_div .elements .skin .skin_text.used:hover
+{
+	background: #f1f2f3;
+}
+
 .shop .veteran_list .elements .skin .skin_text.locked
 {
 	font-size: 18px;

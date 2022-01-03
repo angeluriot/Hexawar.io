@@ -1,4 +1,5 @@
 import { Global } from '../properties.js';
+import * as Shop from '../shop/menus.js'
 
 export class Player
 {
@@ -10,19 +11,29 @@ export class Player
 
 	static set_skin(skin_id: number)
 	{
-		const skin_div = document.querySelector('.skin_div') as HTMLDivElement;
-		const skin_text = document.querySelector('.skin_true_text') as HTMLSpanElement;
-		const skin_text_stroke = document.querySelector('.skin_text_stroke') as HTMLSpanElement;
+		const skin_hover = document.querySelector('.skin_div .skin_hover') as HTMLDivElement;
+		const skin_border = document.querySelector('.skin_div .skin_border') as HTMLDivElement;
+		const skin_text = document.querySelector('.skin_div .skin_true_text') as HTMLSpanElement;
+		const skin_text_stroke = document.querySelector('.skin_div .skin_text_stroke') as HTMLSpanElement;
+		const skin_background = document.querySelector('.skin_div .skin_background') as HTMLDivElement;
 		const color_div = document.querySelector('.color_div') as HTMLDivElement;
+
+		Shop.update_skin_button(Player.skin_id, false);
 
 		Player.skin_id = skin_id;
 
-		if (skin_id >= 0)
+		if (!Global.connected)
+			Player.skin_id = -1;
+
+		Shop.update_skin_button(Player.skin_id, true);
+
+		if (Player.skin_id >= 0)
 		{
 			skin_text.style.color = 'white';
 			skin_text_stroke.style.webkitTextStroke = `4.5px ${Global.skin_colors[Player.skin_id]}`;
-			skin_div.style.backgroundImage = `url('resources/skins/skin_${skin_id}.svg')`;
-			skin_div.style.border = `3px solid ${Global.skin_colors[Player.skin_id]}`;
+			skin_background.style.visibility = 'visible';
+			skin_hover.style.visibility = 'visible';
+			skin_border.style.border = `3px solid ${Global.skin_colors[Player.skin_id]}`;
 
 			color_div.style.pointerEvents = 'none';
 			color_div.style.opacity = '0.2';
@@ -32,8 +43,9 @@ export class Player
 		{
 			skin_text.style.color = 'rgb(45, 47, 58)';
 			skin_text_stroke.style.webkitTextStroke = '';
-			skin_div.style.background = 'none';
-			skin_div.style.border = '3px solid rgba(0, 0, 0, 0.08)';
+			skin_background.style.visibility = 'hidden';
+			skin_hover.style.visibility = 'hidden';
+			skin_border.style.border = '3px solid rgba(0, 0, 0, 0.08)';
 
 			color_div.style.pointerEvents = 'all';
 			color_div.style.opacity = '1';

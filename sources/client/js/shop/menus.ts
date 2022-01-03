@@ -148,16 +148,53 @@ function use_event()
 
 	for (let i = 0; i < nb_veteran_skins; i++)
 	{
-		let button = document.querySelector(`.shop .veteran_list .skin_${i} .unlocked`);
+		let button = document.querySelector(`.shop .veteran_list .skin_${i} .skin_text`);
 
 		if (button != null)
 		{
-			button.addEventListener('click', e =>
+			if (button.classList.contains('unlocked') || button.classList.contains('used'))
 			{
-				e.preventDefault();
-				Player.set_skin(i);
-			});
+				button.addEventListener('click', e =>
+				{
+					e.preventDefault();
+					const index = i;
+
+					if (index == Player.skin_id)
+						Player.set_skin(-1);
+					else
+						Player.set_skin(index);
+				});
+			}
 		}
+	}
+}
+
+export function update_skin_button(skin_id: number, used: boolean)
+{
+	if (skin_id < 0)
+		return;
+
+	let shop_button: HTMLSpanElement;
+
+	if (skin_id < nb_veteran_skins)
+		shop_button = document.querySelector(`.shop .veteran_list .skin_${skin_id} .skin_text`) as HTMLSpanElement;
+	else if (skin_id < nb_veteran_skins + nb_premium_skins)
+		shop_button = document.querySelector(`.shop .premium_list .skin_${skin_id - nb_veteran_skins} .skin_text`) as HTMLSpanElement;
+	else
+		return;
+
+	if (used)
+	{
+		shop_button.classList.remove('unlocked');
+		shop_button.classList.add('used');
+		shop_button.innerText = 'Cancel';
+	}
+
+	else
+	{
+		shop_button.classList.remove('used');
+		shop_button.classList.add('unlocked');
+		shop_button.innerText = 'Use';
 	}
 }
 
