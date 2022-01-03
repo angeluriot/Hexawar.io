@@ -141,7 +141,6 @@ export function player_moves(player: Player)
 				// If the attack succeeds
 				if (change_from.nb_troops > change_to.nb_troops + 1)
 				{
-
 					let dyingPlayer = change_to.player;
 
 					//If we attack a player
@@ -149,7 +148,7 @@ export function player_moves(player: Player)
 						//Find the starting point of the area detection
 						let neighbours: [number, number][] = Grid.get_neighbours_coordinates([move.to.i, move.to.j]);
 						let playerCellOffset: number = 0; 
-						while(neighbours[playerCellOffset][0] != move.from.i && neighbours[playerCellOffset][0] != move.from.j )
+						while(neighbours[playerCellOffset][0] != move.from.i && neighbours[playerCellOffset][1] != move.from.j )
 							playerCellOffset += 1;
 						//Detect the differents areas
 						let lastWasCell = false;

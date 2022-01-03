@@ -222,7 +222,7 @@ export function dying_cells(areas: [number, number][][], excludedCells: [number,
 					cost_so_far[nextCell[0]][nextCell[1]] = new_cost;
 					let priority = new_cost + get_relative_distance(areas[areas.length-2][0], nextCell);
 					frontier.push([nextCell, priority]);
-					frontier.sort(([x1, y1], [x2, y2]) => y1 - y2);
+					frontier.sort(([x1, y1], [x2, y2]) => y2 - y1);
 				}
 			}
 		}
@@ -287,7 +287,6 @@ export function dying_cells(areas: [number, number][][], excludedCells: [number,
 				}
 			}
 			areas.pop();
-
 		}
 
 		//If there remain two area (3 at the start), we execute the algorithm again
