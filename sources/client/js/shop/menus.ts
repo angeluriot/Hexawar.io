@@ -1,4 +1,5 @@
 import { Player } from "../player/player.js";
+import { Global } from "../properties.js";
 
 let tab_index = 0;
 
@@ -144,27 +145,22 @@ function exit_button()
 
 function use_event()
 {
-	let i = 0;
-
 	for (let i = 0; i < nb_veteran_skins; i++)
 	{
 		let button = document.querySelector(`.shop .veteran_list .skin_${i} .skin_text`);
 
 		if (button != null)
 		{
-			if (button.classList.contains('unlocked') || button.classList.contains('used'))
+			button.addEventListener('click', e =>
 			{
-				button.addEventListener('click', e =>
-				{
-					e.preventDefault();
-					const index = i;
+				e.preventDefault();
+				const index = i;
 
-					if (index == Player.skin_id)
-						Player.set_skin(-1);
-					else
-						Player.set_skin(index);
-				});
-			}
+				if (index == Player.skin_id)
+					Player.set_skin(-1);
+				else
+					Player.set_skin(index);
+			});
 		}
 	}
 }
@@ -196,6 +192,45 @@ export function update_skin_button(skin_id: number, used: boolean)
 		shop_button.classList.add('unlocked');
 		shop_button.innerText = 'Use';
 	}
+}
+
+export function update_skin_connection()
+{
+	function update_buttons(button: { button: HTMLSpanElement, index: number})
+	{
+		if (button.button != null)
+		{
+			if (Global.user_data != null && Global.user_data.skins.includes(button.index))
+			{
+				button.button.classList.remove('locked');
+				button.button.classList.remove('used');
+				button.button.classList.add('unlocked');
+				button.button.innerText = 'Use';
+			}
+
+			else
+			{
+				button.button.classList.remove('unlocked');
+				button.button.classList.remove('used');
+				button.button.classList.add('locked');
+
+				if (button.index < nb_veteran_skins)
+					button.button.innerText = `Level ${(button.index + 1) * 10}`;
+				else
+					button.button.innerText = `0.99€`;
+			}
+		}
+	}
+
+	let buttons: { button: HTMLSpanElement, index: number}[] = [];
+
+	for (let i = 0; i < nb_veteran_skins; i++)
+		buttons.push({ button: document.querySelector(`.shop .veteran_list .skin_${i} .skin_text`) as HTMLSpanElement, index: i });
+
+	for (let i = 0; i < nb_premium_skins; i++)
+		buttons.push({ button: document.querySelector(`.shop .premium_list .skin_${i} .skin_text`) as HTMLSpanElement, index: nb_veteran_skins + i });
+
+	buttons.forEach(update_buttons);
 }
 
 export function menus_events()

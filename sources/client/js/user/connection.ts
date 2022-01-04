@@ -4,6 +4,7 @@ import * as PlayerCookie from '../player/cookie.js';
 import * as Menu from './menu.js';
 import { Player } from '../player/player.js';
 import * as Color from '../utils/color.js';
+import * as Shop from '../shop/menus.js';
 
 export type UserData = {
 	username: string,
@@ -77,6 +78,7 @@ export function connection_events()
 		Global.user_data = data;
 		Menu.clear();
 		Menu.set_visible('.account');
+		Shop.update_skin_connection();
 		update_player_data();
 	});
 
@@ -95,6 +97,7 @@ export function connection_events()
 		Menu.clear();
 		Menu.set_visible('.register_login');
 		Player.set_skin(-1);
+		Shop.update_skin_connection();
 	});
 
 	Global.socket.on('logout_error', (message: string) =>
@@ -110,6 +113,7 @@ export function connection_events()
 		Global.user_data = data;
 		Menu.clear();
 		Menu.set_visible('.account');
+		Shop.update_skin_connection();
 		update_player_data();
 	});
 
@@ -130,6 +134,7 @@ export function connection_events()
 		Menu.clear();
 		Menu.show_message('#06d17d', 'SUCCESS', 'Your account has been deleted.', '.register_login');
 		Player.set_skin(-1);
+		Shop.update_skin_connection();
 	});
 
 	Global.socket.on('delete_account_error', (message: string) =>

@@ -306,6 +306,7 @@
 {
 	font-size: 18px;
 	color: #61626e;
+	pointer-events: none;
 }
 
 .shop .premium_list .elements .skin .skin_text.locked

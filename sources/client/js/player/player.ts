@@ -1,5 +1,5 @@
 import { Global } from '../properties.js';
-import * as Shop from '../shop/menus.js'
+import * as Shop from '../shop/menus.js';
 
 export class Player
 {
@@ -15,7 +15,7 @@ export class Player
 		const skin_border = document.querySelector('.skin_div .skin_border') as HTMLDivElement;
 		const skin_text = document.querySelector('.skin_div .skin_true_text') as HTMLSpanElement;
 		const skin_text_stroke = document.querySelector('.skin_div .skin_text_stroke') as HTMLSpanElement;
-		const skin_background = document.querySelector('.skin_div .skin_background') as HTMLDivElement;
+		const skin_background = document.querySelector('.skin_div .skin_background') as HTMLImageElement;
 		const color_div = document.querySelector('.color_div') as HTMLDivElement;
 
 		Shop.update_skin_button(Player.skin_id, false);
@@ -31,7 +31,7 @@ export class Player
 		{
 			skin_text.style.color = 'white';
 			skin_text_stroke.style.webkitTextStroke = `4.5px ${Global.skin_colors[Player.skin_id]}`;
-			skin_background.style.visibility = 'visible';
+			skin_background.src = `resources/skins/skin_${Player.skin_id}.svg`;
 			skin_hover.style.visibility = 'visible';
 			skin_border.style.border = `3px solid ${Global.skin_colors[Player.skin_id]}`;
 
@@ -43,7 +43,7 @@ export class Player
 		{
 			skin_text.style.color = 'rgb(45, 47, 58)';
 			skin_text_stroke.style.webkitTextStroke = '';
-			skin_background.style.visibility = 'hidden';
+			skin_background.src = `resources/skins/empty.svg`;
 			skin_hover.style.visibility = 'hidden';
 			skin_border.style.border = '3px solid rgba(0, 0, 0, 0.08)';
 
