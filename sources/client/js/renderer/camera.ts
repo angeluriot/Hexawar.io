@@ -108,7 +108,7 @@ export class Camera
 		window.addEventListener('mousemove', on_move_mouse);
 		window.addEventListener('keydown', on_key_down);
 		window.addEventListener('keyup', on_key_up);
-		window.addEventListener('mousewheel', on_zoom);
+		window.addEventListener('wheel', on_zoom);
 		requestAnimationFrame(update);
 		render();
 	}

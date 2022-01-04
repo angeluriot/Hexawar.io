@@ -60,6 +60,7 @@
 	top: 50%;
 	left: 0%;
 	width: 35px;
+	dominant-baseline: middle;
 	fill:rgb(51, 192, 248);
 }
 
