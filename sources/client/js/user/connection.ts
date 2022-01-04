@@ -4,6 +4,7 @@ import * as PlayerCookie from '../player/cookie.js';
 import * as Menu from './menu.js';
 import { Player } from '../player/player.js';
 import * as Color from '../utils/color.js';
+import * as Shop from '../shop/menus.js';
 
 export type UserData = {
 	username: string,
@@ -25,7 +26,7 @@ function update_player_data()
 	{
 		Player.nickname = Global.user_data.nickname;
 		Player.color = Global.user_data.color;
-		Player.skin_id = Global.user_data.skin_id;
+		Player.set_skin(Global.user_data.skin_id);
 
 		const name_input = document.querySelector('.nickname_input') as HTMLInputElement;
 		const color_picker = document.querySelector('.color_input') as HTMLInputElement;
@@ -36,7 +37,7 @@ function update_player_data()
 		color_picker.value = Global.user_data.color;
 		color_div.style.backgroundColor = Global.user_data.color;
 
-		if (Color.is_color_dark(color_picker.value, Global.dark_color_limit))
+		if (Color.is_color_dark(color_picker.value))
 			color_text.style.color = '#ffffff';
 		else
 			color_text.style.color = '#000000';
@@ -77,6 +78,7 @@ export function connection_events()
 		Global.user_data = data;
 		Menu.clear();
 		Menu.set_visible('.account');
+		Shop.update_skin_connection();
 		update_player_data();
 	});
 
@@ -94,6 +96,8 @@ export function connection_events()
 		Global.user_data = null;
 		Menu.clear();
 		Menu.set_visible('.register_login');
+		Player.set_skin(-1);
+		Shop.update_skin_connection();
 	});
 
 	Global.socket.on('logout_error', (message: string) =>
@@ -109,6 +113,7 @@ export function connection_events()
 		Global.user_data = data;
 		Menu.clear();
 		Menu.set_visible('.account');
+		Shop.update_skin_connection();
 		update_player_data();
 	});
 
@@ -128,6 +133,8 @@ export function connection_events()
 		Global.user_data = null;
 		Menu.clear();
 		Menu.show_message('#06d17d', 'SUCCESS', 'Your account has been deleted.', '.register_login');
+		Player.set_skin(-1);
+		Shop.update_skin_connection();
 	});
 
 	Global.socket.on('delete_account_error', (message: string) =>

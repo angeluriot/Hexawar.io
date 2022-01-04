@@ -1,0 +1,330 @@
+.shop_div
+{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-ms-user-select: none;
+	display: none;
+}
+
+.shop_div .entire_background
+{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background-color: #FFFFFF;
+	opacity: 0.5;
+	z-index: 999;
+}
+
+.shop
+{
+	position: fixed;
+	width: 809.4px;
+	height: 405.84px;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	top: 50%;
+	z-index: 1000;
+}
+
+.shop .background
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+	width: 100%;
+	fill: white;
+	filter: drop-shadow(0px 0px 30px rgba(0, 0, 0, 0.5));
+	-webkit-filter: drop-shadow(0px 0px 30px rgba(0, 0, 0, 0.5));
+}
+
+.shop .shop_title
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	top: 32px;
+	color: rgb(45, 47, 58);
+	font-size: 25px;
+	text-align: center;
+	font-family: "Roboto_bold";
+}
+
+.shop .exit_button
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	left: calc(100% - 130px);
+	top: 30px;
+	width: 30px;
+	cursor: pointer;
+}
+
+.shop .exit_button .exit_circle
+{
+	fill: #d3d5e0;
+}
+
+.shop .exit_button .exit_circle:hover
+{
+	fill: #b9bbc6;
+}
+
+.shop .exit_button .exit_line
+{
+	stroke-width: 3px;
+	stroke: white;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	pointer-events: none;
+}
+
+.shop .tab
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	top: 75px;
+	width: 620px;
+	height: 40px;
+}
+
+.shop .tab .tab_background
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+	width: 100%;
+}
+
+.shop .tab .tab_path_1
+{
+	stroke-width: 2px;
+	stroke: #babccc;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	fill: white;
+}
+
+.shop .tab .tab_path_2
+{
+	fill: #40d381;
+	cursor: pointer;
+}
+
+.shop .tab .tab_path_2:hover
+{
+	fill: #3dc57b;
+}
+
+.shop .tab .tab_background_premium
+{
+	visibility: hidden;
+}
+
+.shop .tab .text_veteran
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: calc(50% + 1px);
+	left: 189px;
+	color: rgb(45, 47, 58);
+	font-size: 15px;
+	text-align: center;
+	font-family: "Roboto_medium";
+	letter-spacing: 0.1px;
+	pointer-events: none;
+}
+
+.shop .tab .text_premium
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: calc(50% + 1px);
+	left: calc(100% - 189px);
+	color: white;
+	font-size: 15px;
+	text-align: center;
+	font-family: "Roboto_medium";
+	letter-spacing: 0.3px;
+	pointer-events: none;
+}
+
+.shop .arrow
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	width: 35px;
+}
+
+.shop .left_arrow
+{
+	left: 55px;
+}
+
+.shop .right_arrow
+{
+	left: calc(100% - 55px);
+}
+
+.shop .inactive_arrow
+{
+	fill: #dadae5;
+}
+
+.shop .active_arrow
+{
+	fill: #40d381;
+	cursor: pointer;
+}
+
+.shop .active_arrow:hover
+{
+	fill: #3dc57b;
+}
+
+.shop .list_div
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	top: calc(50% + 30px);
+	width: 616px;
+	height: 250px;
+	overflow: hidden;
+}
+
+.shop .premium_list
+{
+	visibility: hidden;
+}
+
+.shop .list_div .elements
+{
+	position: absolute;
+	height: 100%;
+	left: 0px;
+	transition: left 0.5s;
+}
+
+.shop .veteran_list .elements
+{
+	width: 1000px;
+}
+
+.shop .premium_list .elements
+{
+	width: 1000px;
+}
+
+.shop .list_div .elements .skin
+{
+	position: absolute;
+	width: 154px;
+	height: 100%;
+}
+
+.shop .list_div .elements .skin_0 { left: calc(154px * 0); }
+.shop .list_div .elements .skin_1 { left: calc(154px * 1); }
+.shop .list_div .elements .skin_2 { left: calc(154px * 2); }
+.shop .list_div .elements .skin_3 { left: calc(154px * 3); }
+.shop .list_div .elements .skin_4 { left: calc(154px * 4); }
+.shop .list_div .elements .skin_5 { left: calc(154px * 5); }
+.shop .list_div .elements .skin_6 { left: calc(154px * 6); }
+.shop .list_div .elements .skin_7 { left: calc(154px * 7); }
+.shop .list_div .elements .skin_8 { left: calc(154px * 8); }
+.shop .list_div .elements .skin_9 { left: calc(154px * 9); }
+
+.shop .list_div .elements .skin .skin_icon
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: calc(50% - 30px);
+	left: 50%;
+	width: 93%;
+}
+
+.shop .list_div .elements .skin .skin_text
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	top: calc(100% - 30px);
+	width: 110px;
+	text-align: center;
+	font-family: "Roboto_medium";
+}
+
+.shop .list_div .elements .skin .skin_text.unlocked
+{
+	font-size: 16px;
+	height: 38px;
+	color: white;
+	background: #40d381;
+	padding: 10px 20px;
+	border-radius: 25px;
+	outline: none;
+	box-sizing: border-box;
+	text-align: center;
+	cursor: pointer;
+}
+
+.shop .list_div .elements .skin .skin_text.unlocked:hover
+{
+	background: #3dc57b;
+}
+
+.shop .list_div .elements .skin .skin_text.used
+{
+	font-size: 16px;
+	height: 38px;
+	color: #40d381;
+	border: 3px solid #40d381;
+	padding: 7px 20px;
+	border-radius: 25px;
+	outline: none;
+	box-sizing: border-box;
+	text-align: center;
+	cursor: pointer;
+}
+
+.shop .list_div .elements .skin .skin_text.used:hover
+{
+	background: #f1f2f3;
+}
+
+.shop .veteran_list .elements .skin .skin_text.locked
+{
+	font-size: 18px;
+	color: #61626e;
+	pointer-events: none;
+}
+
+.shop .premium_list .elements .skin .skin_text.locked
+{
+	font-size: 16px;
+	height: 38px;
+	color: white;
+	background: #EF7A2B;
+	padding: 10px 20px;
+	border-radius: 25px;
+	outline: none;
+	box-sizing: border-box;
+	text-align: center;
+	cursor: pointer;
+}
+
+.shop .premium_list .elements .skin .skin_text.locked:hover
+{
+	background: #ef692b;
+}
+

@@ -1,3 +1,5 @@
+import { Global } from '../properties.js'
+
 // Give a random color
 export function random_color()
 {
@@ -34,16 +36,16 @@ export function rgb_to_hexa(rgb: { r: number, g: number, b: number })
 }
 
 // Tell if color is dark or light
-export function is_color_dark(color: string, level: number)
+export function is_color_dark(color: string)
 {
 	let rgb = hexa_to_rgb(color);
 	let brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000.;
 
-	return brightness < level;
+	return brightness < Global.dark_color_limit;
 }
 
 // Lighten or darken the color
-export function change_color(color: string, dark_level: number, change_level: number)
+export function change_color(color: string, change_level: number)
 {
 	function apply_change(value: number, target: number, change_level: number)
 	{
@@ -64,7 +66,7 @@ export function change_color(color: string, dark_level: number, change_level: nu
 	if (change_level > 1.)
 		change_level = 1.;
 
-	if (is_color_dark(color, dark_level))
+	if (is_color_dark(color))
 		return rgb_to_hexa({ r: apply_change(rgb.r, 255, change_level), g: apply_change(rgb.g, 255, change_level), b: apply_change(rgb.b, 255, change_level) });
 
 	return rgb_to_hexa({ r: apply_change(rgb.r, 0, change_level), g: apply_change(rgb.g, 0, change_level), b: apply_change(rgb.b, 0, change_level) });

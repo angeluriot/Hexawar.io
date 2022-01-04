@@ -36,7 +36,7 @@
 	transform: translate(-50%, -50%);
 	left: 50%;
 	top: 148px;
-	color: rgb(38, 50, 56);
+	color: rgb(45, 47, 58);
 	font-size: 15.5px;
 	text-align: center;
 	font-family: "Roboto_bold";
@@ -124,7 +124,7 @@
 	position: absolute;
 	z-index: 300;
 	left: 54px;
-	color: rgb(38, 50, 56);
+	color: rgb(45, 47, 58);
 	font-size: 15.5px;
 	font-family: "Roboto_bold";
 }
@@ -133,7 +133,7 @@
 {
 	position: absolute;
 	z-index: 300;
-	color: rgb(38, 50, 56);
+	color: rgb(45, 47, 58);
 	font-size: 15.5px;
 	font-family: "Roboto_medium";
 }

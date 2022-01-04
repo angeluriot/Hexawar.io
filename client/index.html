@@ -22,6 +22,7 @@
 		<link rel="stylesheet" type="text/css" href="css/user/message.css"/>
 		<link rel="stylesheet" type="text/css" href="css/user/delete_account.css"/>
 		<link rel="stylesheet" type="text/css" href="css/leaderboard.css"/>
+		<link rel="stylesheet" type="text/css" href="css/shop.css"/>
 		<link rel="stylesheet" type="text/css" href="css/style.css"/>
 
 		<script type="module" src="js/main.js"></script>
@@ -89,6 +90,15 @@
 				<div class="color_div" title="Your color">
 					<input class="color_input" type="color">
 					<span class="color_text">Your color</span>
+				</div>
+
+				<div class="skin_div" title="Your skin">
+					<div class="skin_border">
+						<img class="skin_background" src="resources/skins/empty.svg"/>
+					</div>
+					<span class="skin_text skin_text_stroke">Your skin</span>
+					<span class="skin_text skin_true_text">Your skin</span>
+					<div class="skin_hover"></div>
 				</div>
 
 				<svg class="svg_button" title="Play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 69.49 76.44">
@@ -217,6 +227,148 @@
 							<tspan x="34.745" dy="1.1em">account</tspan>
 						</text>
 					</svg>
+				</div>
+			</div>
+
+			<div class="shop_div">
+				<div class="entire_background"></div>
+
+				<div class="shop">
+					<svg class="background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 674.47 338.18"><g><path d="M669.88,186.22,592.05,321a34.29,34.29,0,0,1-29.68,17.14H112.11A34.3,34.3,0,0,1,82.42,321L4.59,186.22a34.28,34.28,0,0,1,0-34.27L82.42,17.14A34.28,34.28,0,0,1,112.11,0H562.37a34.26,34.26,0,0,1,29.68,17.14L669.88,152A34.23,34.23,0,0,1,669.88,186.22Z"/></g></svg>
+
+					<span class="shop_title">Skins</span>
+
+					<svg class="exit_button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27.77 27.77">
+						<circle class="exit_circle" cx="13.88" cy="13.88" r="13.88"/>
+						<line class="exit_line" x1="19.24" y1="8.53" x2="8.53" y2="19.24"/>
+						<line class="exit_line" x1="19.24" y1="19.24" x2="8.53" y2="8.53"/>
+					</svg>
+
+					<div class="tab">
+						<svg class="tab_background tab_background_veteran" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 531.08 31.25"><g>
+							<path class="tab_path_2" d="M303.81,28.75A11.79,11.79,0,0,0,314,22.86L322.37,8.4a11.8,11.8,0,0,1,10.21-5.9h72.2A11.78,11.78,0,0,1,415,8.4l8.35,14.46a11.79,11.79,0,0,0,10.21,5.89"/>
+							<path class="tab_path_1" class="cls-2" d="M2.5,28.75h95a11.79,11.79,0,0,0,10.21-5.89L116.09,8.4A11.78,11.78,0,0,1,126.3,2.5h72.2a11.8,11.8,0,0,1,10.21,5.9l8.35,14.46a11.79,11.79,0,0,0,10.21,5.89H528.58"/>
+						</g></svg>
+
+						<svg class="tab_background tab_background_premium" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 531.08 31.25"><g>
+							<path class="tab_path_2" d="M97.53,28.75a11.79,11.79,0,0,0,10.21-5.89L116.09,8.4A11.78,11.78,0,0,1,126.3,2.5h72.2a11.8,11.8,0,0,1,10.21,5.9l8.35,14.46a11.79,11.79,0,0,0,10.21,5.89"/>
+							<path class="tab_path_1" class="cls-2" d="M2.5,28.75H303.81A11.79,11.79,0,0,0,314,22.86L322.37,8.4a11.8,11.8,0,0,1,10.21-5.9h72.2A11.78,11.78,0,0,1,415,8.4l8.35,14.46a11.79,11.79,0,0,0,10.21,5.89h95"/>
+						</g></svg>
+
+						<span class="text_veteran">Veteran</span>
+						<span class="text_premium">Premium</span>
+					</div>
+
+					<svg class="arrow left_arrow inactive_arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28.15 77.25"><g><path d="M18.71,2.54,1.84,31.75a13.78,13.78,0,0,0,0,13.75L18.71,74.71a5.06,5.06,0,0,0,9.44-2.53V5.07A5.06,5.06,0,0,0,18.71,2.54Z"/></g></svg>
+					<svg class="arrow right_arrow active_arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28.15 77.25"><g><path d="M9.44,74.71,26.3,45.5a13.73,13.73,0,0,0,0-13.75L9.44,2.54A5.06,5.06,0,0,0,0,5.07V72.18A5.06,5.06,0,0,0,9.44,74.71Z"/></g></svg>
+
+					<div class="veteran_list list_div">
+						<div class="elements">
+							<div class="skin skin_0">
+								<img class="skin_icon" src="resources/skin_icons/skin_0.svg"/>
+								<span class="skin_text locked">Level 10</span>
+							</div>
+
+							<div class="skin skin_1">
+								<img class="skin_icon" src="resources/skin_icons/skin_1.svg"/>
+								<span class="skin_text locked">Level 20</span>
+							</div>
+
+							<div class="skin skin_2">
+								<img class="skin_icon" src="resources/skin_icons/skin_2.svg"/>
+								<span class="skin_text locked">Level 30</span>
+							</div>
+
+							<div class="skin skin_3">
+								<img class="skin_icon" src="resources/skin_icons/skin_3.svg"/>
+								<span class="skin_text locked">Level 40</span>
+							</div>
+
+							<div class="skin skin_4">
+								<img class="skin_icon" src="resources/skin_icons/skin_4.svg"/>
+								<span class="skin_text locked">Level 50</span>
+							</div>
+
+							<div class="skin skin_5">
+								<img class="skin_icon" src="resources/skin_icons/skin_5.svg"/>
+								<span class="skin_text locked">Level 60</span>
+							</div>
+
+							<div class="skin skin_6">
+								<img class="skin_icon" src="resources/skin_icons/skin_6.svg"/>
+								<span class="skin_text locked">Level 70</span>
+							</div>
+
+							<div class="skin skin_7">
+								<img class="skin_icon" src="resources/skin_icons/skin_7.svg"/>
+								<span class="skin_text locked">Level 80</span>
+							</div>
+
+							<div class="skin skin_8">
+								<img class="skin_icon" src="resources/skin_icons/skin_8.svg"/>
+								<span class="skin_text locked">Level 90</span>
+							</div>
+
+							<div class="skin skin_9">
+								<img class="skin_icon" src="resources/skin_icons/skin_9.svg"/>
+								<span class="skin_text locked">Level 100</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="premium_list list_div">
+						<div class="elements">
+							<div class="skin skin_0">
+								<img class="skin_icon" src="resources/skin_icons/empty.svg"/>
+								<span class="skin_text locked">0.99€</span>
+							</div>
+
+							<div class="skin skin_1">
+								<img class="skin_icon" src="resources/skin_icons/empty.svg"/>
+								<span class="skin_text locked">0.99€</span>
+							</div>
+
+							<div class="skin skin_2">
+								<img class="skin_icon" src="resources/skin_icons/empty.svg"/>
+								<span class="skin_text locked">0.99€</span>
+							</div>
+
+							<div class="skin skin_3">
+								<img class="skin_icon" src="resources/skin_icons/empty.svg"/>
+								<span class="skin_text locked">0.99€</span>
+							</div>
+
+							<div class="skin skin_4">
+								<img class="skin_icon" src="resources/skin_icons/empty.svg"/>
+								<span class="skin_text locked">0.99€</span>
+							</div>
+
+							<div class="skin skin_5">
+								<img class="skin_icon" src="resources/skin_icons/empty.svg"/>
+								<span class="skin_text locked">0.99€</span>
+							</div>
+
+							<div class="skin skin_6">
+								<img class="skin_icon" src="resources/skin_icons/empty.svg"/>
+								<span class="skin_text locked">0.99€</span>
+							</div>
+
+							<div class="skin skin_7">
+								<img class="skin_icon" src="resources/skin_icons/empty.svg"/>
+								<span class="skin_text locked">0.99€</span>
+							</div>
+
+							<div class="skin skin_8">
+								<img class="skin_icon" src="resources/skin_icons/empty.svg"/>
+								<span class="skin_text locked">0.99€</span>
+							</div>
+
+							<div class="skin skin_9">
+								<img class="skin_icon" src="resources/skin_icons/empty.svg"/>
+								<span class="skin_text locked">0.99€</span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="global_background"></div>

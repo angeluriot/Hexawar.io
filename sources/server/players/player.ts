@@ -83,6 +83,9 @@ export class Player
 				{
 					this.user.xp -= Utils.get_required_xp(this.user.xp_level + 1);
 					this.user.xp_level++;
+
+					if (this.user.xp_level % 10 == 0 && this.user.xp_level <= 100)
+						this.user.skins.push((this.user.xp_level / 10) - 1);
 				}
 
 				this.user.save();
