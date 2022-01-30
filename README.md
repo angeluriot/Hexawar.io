@@ -37,17 +37,23 @@ First, choose a name and a color (or a skin if you had any) for your player.
 	<img src="https://i.imgur.com/rJG21M9.png" width="500">
 </p>
 
+<br/>
+
 Then, you will get a cell in the map, this 10 troops.
 
 <p align="center">
 	<img src="https://i.imgur.com/itzT1aK.png" width="500">
 </p>
 
+<br/>
+
 You can use theses troops to expend your territory, by clicking on cells around you.
 
 <p align="center">
 	<img src="https://i.imgur.com/T1CdjTo.png" width="500">
 </p>
+
+<br/>
 
 You can also use them to attack other players and beat them in the global ranking.
 
