@@ -3,7 +3,7 @@
 ![Release](https://img.shields.io/badge/Release-v1.0-blueviolet)
 ![Language](https://img.shields.io/badge/Language-JavaScript-ffcc14)
 ![Frameworks](https://img.shields.io/badge/Frameworks-NodeJS_Socket.io-00cf2c)
-![Size](https://img.shields.io/badge/Size-2Mo-f12222)
+![Size](https://img.shields.io/badge/Size-3Mo-f12222)
 ![Open Source](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)
 
 This repository contains the source code of a multiplayer browser game of land capture.
@@ -31,7 +31,29 @@ The game is online on [**Hexawar.io**](https://hexawar.io).
 
 # How to play?
 
-...
+First, choose a name and a color (or a skin if you had any) for your player.
+
+<p align="center">
+	<img src="https://i.imgur.com/rJG21M9.png" width="500">
+</p>
+
+Then, you will get a cell in the map, this 10 troops.
+
+<p align="center">
+	<img src="https://i.imgur.com/itzT1aK.png" width="500">
+</p>
+
+You can use theses troops to expend your territory, by clicking on cells around you.
+
+<p align="center">
+	<img src="https://i.imgur.com/T1CdjTo.png" width="500">
+</p>
+
+You can also use them to attack other players and beat them in the global ranking.
+
+<p align="center">
+	<img src="https://i.imgur.com/FT8w8Lk.png" width="500">
+</p>
 
 <br/>
 
