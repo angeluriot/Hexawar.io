@@ -6,6 +6,8 @@
 ![Size](https://img.shields.io/badge/Size-3Mo-f12222)
 ![Open Source](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)
 
+<br/>
+
 This project is a massively multiplayer game that runs directly on the browser, it takes up the concept of *.io* games: everyone plays on a large map and the goal is to be the first of the global ranking. It is a simple land capture game where you can attack other territories with your troops.
 
 The game is available on [**Hexawar.io**](https://hexawar.io).
