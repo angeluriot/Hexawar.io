@@ -15,7 +15,7 @@ The game is available on [**Hexawar.io**](https://hexawar.io).
 <br/>
 
 <p align="center">
-	<img src="https://www.angeluriot.com/storage/shapes/hexawar_logo.svg" width="500">
+	<img src="https://raw.githubusercontent.com/angeluriot/Hexawar.io/main/resources/misc/hexawar_logo.svg" width="500">
 </p>
 
 <br/>
