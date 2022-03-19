@@ -1,0 +1,159 @@
+.match_results_div
+{
+	visibility: hidden;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	z-index: 99;
+}
+
+.match_results
+{
+	position: absolute;
+	width: 550px;
+	height: 635px;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	top: 50%;
+	z-index: 100;
+}
+
+.match_results .logo
+{
+	position: absolute;
+	transform: translate(-50%, -200%);
+	top: 50%;
+	left: 50%;
+	width: 80%;
+	z-index: 100;
+	fill: white;
+}
+
+.match_results_hex
+{
+	position: fixed;
+	fill: white;
+	width: 100%;
+	height: 100%;
+	filter: drop-shadow(0px 0px 30px rgba(0, 0, 0, 0.4));
+	-webkit-filter: drop-shadow(0px 0px 30px rgba(0, 0, 0, 0.4));
+}
+
+.match_results .stats
+{
+	position: relative;
+	z-index: 100;
+	left: 25%;
+	top: 30%;
+}
+
+.match_results .stat
+{
+	position: absolute;
+	z-index: 100;
+	color: rgb(45, 47, 58);
+	font-size: 22px;
+	font-family: "Roboto_bold";
+}
+
+.match_results .stat_value
+{
+	position: absolute;
+	left: 40%;
+	z-index: 100;
+	color: rgb(45, 47, 58);
+	font-size: 22px;
+	font-family: "Roboto_medium";
+}
+
+.match_results .stat_2
+{
+	transform: translate(0%, 100%);
+}
+
+.match_results .stat_value_2
+{
+	transform: translate(0%, 100%);
+}
+
+.match_results .stat_3
+{
+	transform: translate(0%, 200%);
+}
+
+.match_results .stat_value_3
+{
+	transform: translate(0%, 200%);
+}
+
+.match_results .stat_4
+{
+	transform: translate(0%, 300%);
+}
+
+.match_results .stat_value_4
+{
+	transform: translate(0%, 300%);
+}
+
+.match_results .score
+{
+	position: absolute;
+    z-index: 99;
+    left: 15%;
+    right: 15%;
+    top: 49%;
+    bottom: 30%;
+}
+
+.match_results .canvas
+{
+	position: absolute;
+	width: 385px;
+	height: 127px;
+}
+
+.match_results_button_text
+{
+	font-family: "Roboto_medium";
+}
+
+.match_results_button
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: 80%;
+	left: 50%;
+	width: 90px;
+	z-index: 100;
+	cursor: pointer;
+	dominant-baseline: middle;
+	filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.25));
+	-webkit-filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.25));
+	transition: width 0.2s, fill 0.2s;
+	fill: rgb(6, 209, 125);
+}
+
+.match_results_button:hover
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 100px;
+	fill: rgb(115, 229, 131);
+}
+
+.match_results_button:active
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 90px;
+	fill: rgb(115, 229, 131);
+}
+
+.match_results_background
+{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background-color: #FFFFFF;
+	opacity: 0.75;
+	z-index: 98;
+}

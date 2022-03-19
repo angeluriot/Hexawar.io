@@ -99,7 +99,7 @@ export class Player
 		if (this.playing)
 		{
 			this.leave();
-			this.socket.emit('die');
+			this.socket.emit('die', this.conquered_lands, this.max_size);
 		}
 	}
 
@@ -136,8 +136,8 @@ export class Player
 				if (player_to.size > player_to.max_size)
 					player_to.max_size = player_to.size;
 
-				if (player_to.user != null)
-					player_to.conquered_lands++;
+				//if (player_to.user != null)
+				player_to.conquered_lands++;
 			}
 
 			// Player replace player
@@ -149,8 +149,8 @@ export class Player
 				if (player_to.size > player_to.max_size)
 					player_to.max_size = player_to.size;
 
-				if (player_to.user != null)
-					player_to.conquered_lands++;
+				//if (player_to.user != null)
+				player_to.conquered_lands++;
 
 				if (player_from.size == 0)
 					player_from.die();

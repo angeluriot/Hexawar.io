@@ -8,6 +8,11 @@ export class Player
 	static color = '';
 	static skin_id = -1;
 	static playing = false;
+	static conquered_lands: number = 1;
+	static highest_score: number = 1;
+	static highest_rank: number = Number.MAX_SAFE_INTEGER;
+	static time_alive: number = 0;
+	static score: number[] = [];
 
 	static set_skin(skin_id: number)
 	{
