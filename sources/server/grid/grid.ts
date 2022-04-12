@@ -71,6 +71,26 @@ export function get_random_cell()
 	return { i: Utils.random_int(0, Global.grid_size.x), j: Utils.random_int(0, Global.grid_size.y) };
 }
 
+// Gives a cell by prioritising empty cells
+export function get_spawn_cell()
+{
+	let cell = Global.grid[0][0];
+	let res: {i: number, j: number} = {i: 0, j: 0};
+
+	for(let i = 0; i < 50; i++)
+	{	
+		res = {i: Utils.random_int(0, Global.grid_size.x), j: Utils.random_int(0, Global.grid_size.y)};
+		let x: number = Utils.random_int(0, Global.grid_size.x);
+		let y: number = Utils.random_int(0, Global.grid_size.y);
+
+		cell = Global.grid[x][y];
+		
+		if (cell.player == null)
+			return {i: x, j: y};
+	}
+	return res;
+}
+
 // Tell if the cell are neighbours
 export function are_neighbours(cell_1: { i: number, j: number }, cell_2: { i: number, j: number })
 {
