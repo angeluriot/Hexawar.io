@@ -1,7 +1,7 @@
 // Give the token from cookie
 export function get_token()
 {
-	var cookies = document.cookie.split(';');
+	let cookies = document.cookie.split(';');
 	let token = '';
 
 	for (let i = 0; i < cookies.length; i++)

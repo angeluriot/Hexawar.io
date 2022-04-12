@@ -6,7 +6,7 @@ import { Camera } from './renderer/camera.js';
 import { Player } from './player/player.js';
 import { Change } from './grid/cell.js';
 import * as Menu from './user/menu.js';
-import * as MatchResult from './match_results/menu.js';
+import * as MatchResult from './player/match_result.js';
 
 export type Move = {
 	from: { i: number, j: number },
@@ -92,14 +92,10 @@ export function start_game(nickname: string, color: string)
 	Player.conquered_lands = 1;
 	Player.highest_score = 1;
 	Player.highest_rank = Number.MAX_SAFE_INTEGER;
-	Player.time_alive = 0;
+	Player.start_time = Date.now();
 	Player.score = [];
 
 	join_game();
-	
-	setInterval(() => {
-		Player.time_alive++;
-	}, 1000);
 
 	// If the player dies
 	Global.socket.on('die', (conquered_lands: number, max_size: number) =>

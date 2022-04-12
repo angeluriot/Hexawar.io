@@ -25,7 +25,7 @@ export function create_cookie()
 // Get cookie data
 export function get_cookie()
 {
-	var cookies = document.cookie.split(';');
+	let cookies = document.cookie.split(';');
 	let player = '';
 
 	for (let i = 0; i < cookies.length; i++)

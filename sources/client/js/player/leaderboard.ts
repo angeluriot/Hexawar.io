@@ -164,8 +164,8 @@ export function update_leaderboard()
 				set_height(Math.min(best_players.length, 10));
 			}
 
-			if ((index+1) < Player.highest_rank)
-				Player.highest_rank = index+1;
+			if ((index + 1) < Player.highest_rank)
+				Player.highest_rank = index + 1;
 
 			Player.score.push(best_players[index].size);
 		}
