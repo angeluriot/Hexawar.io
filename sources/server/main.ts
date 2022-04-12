@@ -18,7 +18,6 @@ Global.io = new Server(server);
 // Set static folder
 const __dirname = Path.resolve();
 app.use(express.static(Path.join(__dirname, '/client')));
-console.log(__dirname);
 
 // Redirect all 404
 app.get('*', function(req, res)
