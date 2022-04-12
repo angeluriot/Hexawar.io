@@ -10,6 +10,7 @@ import * as Leaderboard from './player/leaderboard.js';
 import * as Resources from './renderer/resources.js';
 import * as Shop from './shop/menus.js'
 import { Player } from './player/player.js';
+import * as Spectator from './player/spectator_mode.js'
 
 Global.socket = io();
 
@@ -24,6 +25,7 @@ window.onload = function()
 		PlayerConnection.form_events();
 		Leaderboard.update_leaderboard();
 		Shop.menus_events();
+		Spectator.events();
 	});
 }
 

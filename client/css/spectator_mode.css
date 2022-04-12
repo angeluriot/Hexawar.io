@@ -1,0 +1,34 @@
+.spectator_menu
+{
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	transform: translate(-50%, -50%);
+	right: 0px;
+	top:100px;
+	z-index: 100;
+}
+
+.spectator_game
+{
+    visibility: hidden;
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	bottom: 0px;
+	z-index: 100;
+}
+
+.spectator_menu .svg_button
+{
+	right: 0px;
+	top: 50px;
+}
+
+.spectator_game .svg_button
+{
+	left: 50%;
+	top: 75px;
+}

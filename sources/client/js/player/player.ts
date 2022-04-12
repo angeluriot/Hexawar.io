@@ -8,6 +8,7 @@ export class Player
 	static color = '';
 	static skin_id = -1;
 	static playing = false;
+	static spectator = false;
 
 	static set_skin(skin_id: number)
 	{
