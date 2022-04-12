@@ -21,9 +21,10 @@
 		<link rel="stylesheet" type="text/css" href="css/user/account.css"/>
 		<link rel="stylesheet" type="text/css" href="css/user/message.css"/>
 		<link rel="stylesheet" type="text/css" href="css/user/delete_account.css"/>
+		<link rel="stylesheet" type="text/css" href="css/user/match_results.css"/>
 		<link rel="stylesheet" type="text/css" href="css/leaderboard.css"/>
 		<link rel="stylesheet" type="text/css" href="css/shop.css"/>
-		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>		
 
 		<script type="module" src="js/main.js"></script>
 	</head>
@@ -370,8 +371,35 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</div>		
 			<div class="global_background"></div>
+		</div>
+		
+		<div class="match_results_div">
+			<div class="match_results">
+				<svg class="match_results_hex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 629.01 802.7"><g><path d="M629,597.05V205.65a56.93,56.93,0,0,0-28.48-49.32L343,7.63a57,57,0,0,0-57,0L28.48,156.33A56.93,56.93,0,0,0,0,205.65v391.4a56.94,56.94,0,0,0,28.48,49.32L286,795.07a57,57,0,0,0,57,0l257.55-148.7A56.94,56.94,0,0,0,629,597.05Z"/></g></svg>
+
+				<a href="https://hexawar.io">
+					<img class="logo" title="Hexawar.io" src="resources/shapes/main_logo.svg">
+				</a>
+
+				<div class="stats">
+					<span class="stat stat_1">Conquered lands:</span><span class="stat_value stat_value_1"></span>
+					<span class="stat stat_2">Highest score:</span><span class="stat_value stat_value_2"></span>
+					<span class="stat stat_3">Highest rank:</span><span class="stat_value stat_value_3"></span>
+					<span class="stat stat_4">Time alive:</span><span class="stat_value stat_value_4"></span>
+				</div>
+
+				<div class="score">
+					<canvas class="canvas" width="385" height="127"></canvas>
+				</div>
+
+				<svg class="match_results_button" title="Back" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 69.49 76.44">
+					<g><path d="M0,25.24v26A12.27,12.27,0,0,0,6.13,61.82l22.49,13a12.24,12.24,0,0,0,12.25,0l22.49-13a12.27,12.27,0,0,0,6.13-10.61v-26a12.25,12.25,0,0,0-6.13-10.61l-22.49-13a12.24,12.24,0,0,0-12.25,0l-22.49,13A12.25,12.25,0,0,0,0,25.24Z"/></g>
+					<text class="match_results_button_text" x="34.745" y="38.22" font-size="17" fill="#FFFFFF" text-anchor="middle" alignment-baseline="middle">Back</text>
+				</svg>
+			</div>
+			<div class="match_results_background"></div>
 		</div>
 	</body>
 </html>
