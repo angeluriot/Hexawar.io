@@ -214,7 +214,7 @@ export function player_moves(player: Player)
 			}
 
 			Grid.set_cells([change_from, change_to], true);
-									
+
 			Grid.set_cells(dyingCells, false);
 
 		}
@@ -238,6 +238,10 @@ export function troops_spawn()
 		// If the cell isn't empty
 		if (cell != null && cell.player != null)
 		{
+			let map_size = Global.grid_size.x * Global.grid_size.y;
+			let territory = cell.player.size;
+			let spawn_chance = Utils.random_int(0, map_size);
+
 			// Add the change to the list
 			let change = {
 				i: i,
@@ -249,7 +253,7 @@ export function troops_spawn()
 			};
 
 			// Add troops if there are not enough
-			if (change.nb_troops < Global.troops_spawn_max)
+			if (change.nb_troops < Global.troops_spawn_max && spawn_chance > ((map_size ** 3) * territory) ** (1/4))
 			{
 				change.nb_troops++;
 				changes.push(change);
@@ -261,6 +265,7 @@ export function troops_spawn()
 				change.nb_troops--;
 				changes.push(change);
 			}
+
 		}
 	}
 
