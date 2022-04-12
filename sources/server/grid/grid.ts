@@ -75,16 +75,16 @@ export function get_random_cell()
 export function get_spawn_cell()
 {
 	let cell = Global.grid[0][0];
-	let res: {i: number, j: number} = {i: 0, j: 0};
+	let res: { i: number, j: number } = { i: 0, j: 0 };
 
-	for(let i = 0; i < 50; i++)
-	{	
-		res = {i: Utils.random_int(0, Global.grid_size.x), j: Utils.random_int(0, Global.grid_size.y)};
+	for (let i = 0; i < 50; i++)
+	{
+		res = { i: Utils.random_int(0, Global.grid_size.x), j: Utils.random_int(0, Global.grid_size.y) };
 		let x: number = Utils.random_int(0, Global.grid_size.x);
 		let y: number = Utils.random_int(0, Global.grid_size.y);
 
 		cell = Global.grid[x][y];
-		
+
 		if (cell.player == null)
 			return {i: x, j: y};
 	}
@@ -168,21 +168,20 @@ export function get_neighbours_coordinates(cell: [number, number]){
 	let neighbours: [number, number][] = [];
 	let parity = cell[0] % 2;
 	let offsets: number[][][] = [
-		// even cols 
-		[[+1,  0], [+1, -1], [ 0, -1], 
+		// even cols
+		[[+1,  0], [+1, -1], [ 0, -1],
 		 [-1, -1], [-1,  0], [ 0, +1]],
-		// odd cols 
-		[[+1, +1], [+1,  0], [ 0, -1], 
+		// odd cols
+		[[+1, +1], [+1,  0], [ 0, -1],
 		 [-1,  0], [-1, +1], [ 0, +1]],
 	]
 
 	for (let i = 0; i < offsets[parity].length; i++)
 	{
-		if(get_cell(cell[0] + offsets[parity][i][0], cell[1] + offsets[parity][i][1]) != null){
+		if(get_cell(cell[0] + offsets[parity][i][0], cell[1] + offsets[parity][i][1]) != null)
 			neighbours.push([cell[0] + offsets[parity][i][0], cell[1] + offsets[parity][i][1]]);
-		}
-			
 	}
+
 	return neighbours;
 
 }
@@ -193,9 +192,9 @@ export function get_relative_distance(cell_1: [number,number], cell_2: [number,n
 	let axial_1:  [number,number] = [cell_1[0], cell_1[1] - (cell_1[0] - (cell_1[0] & 1)) / 2];
 	let axial_2:  [number,number] = [cell_2[0], cell_2[1] - (cell_2[0] - (cell_2[0] & 1)) / 2];
 
-	return (Math.abs(axial_1[0] - axial_2[0]) 
-          + Math.abs(axial_1[0] + axial_1[1] - axial_2[0] - axial_2[1])
-          + Math.abs(axial_1[1] - axial_2[1])) / 2;
+	return (Math.abs(axial_1[0] - axial_2[0])
+		+ Math.abs(axial_1[0] + axial_1[1] - axial_2[0] - axial_2[1])
+		+ Math.abs(axial_1[1] - axial_2[1])) / 2;
 }
 
 //Return array of dying cells
@@ -215,7 +214,7 @@ export function dying_cells(areas: [number, number][][], excludedCells: [number,
 		let frontier: [[number, number], number][] = areas[areas.length-1].map(x => [x, 0]);
 		for(let f of frontier)
 			cost_so_far[f[0][0]][f[0][1]] = 0;
-	
+
 		let connected = false;
 		let territory1: [number, number][] = [];
 		let territory1Value: number = 0;
@@ -260,7 +259,7 @@ export function dying_cells(areas: [number, number][][], excludedCells: [number,
 			}
 			for(let exclude of excludedCells)
 				visited[exclude[0]][exclude[1]]=true;
-				
+
 			let territory2 = frontiers;
 			let territory2Value: number = 0;
 			for(let frontier of frontiers){
@@ -285,7 +284,7 @@ export function dying_cells(areas: [number, number][][], excludedCells: [number,
 						}
 					}
 				}
-				
+
 				territory2 = territory2.concat(newFrontiers);
 				frontiers = newFrontiers;
 			}
