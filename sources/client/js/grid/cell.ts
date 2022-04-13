@@ -9,6 +9,7 @@ export type Change = {
 	color: string,
 	skin_id: number,
 	player_id: string,
+	player_nickname: string,
 	nb_troops: number
 };
 
@@ -22,10 +23,11 @@ export class Cell
 	color: string;
 	skin_id: number;
 	player_id: string;
+	player_nickname: string;
 	nb_troops: number;
 
 	// Contruct a cell
-	constructor(i: number, j: number, x: number, y: number, color: string, skin_id: number, player_id: string, nb_troops: number)
+	constructor(i: number, j: number, x: number, y: number, color: string, skin_id: number, player_id: string,player_nickname: string, nb_troops: number)
 	{
 		this.i = i;
 		this.j = j;
@@ -34,6 +36,7 @@ export class Cell
 		this.color = color;
 		this.skin_id = skin_id;
 		this.player_id = player_id;
+		this.player_nickname = player_nickname;
 		this.nb_troops = nb_troops;
 	}
 
@@ -93,20 +96,24 @@ export class Cell
 	{
 		context.font = '0.75px Roboto_bold';
 		context.textAlign = 'center';
-
+		
+		context.lineWidth = 0.14;
+		context.lineCap = 'round';
+		context.lineJoin = 'round';
+		
 		if (this.skin_id == -1)
+		{
+			context.strokeStyle = this.color;
 			context.fillStyle = Color.is_color_dark(this.color) ? 'white' : 'black';
+		}
 
 		else
 		{
 			context.fillStyle = 'white';
 			context.strokeStyle = this.skin_id == -1 ? 'black' : Global.skin_colors[this.skin_id];
-			context.lineWidth = 0.14;
-			context.lineCap = 'round';
-			context.lineJoin = 'round';
-			context.strokeText(this.nb_troops.toString(), this.x, this.y + 0.26);
 		}
-
+		
+		context.strokeText(this.nb_troops.toString(), this.x, this.y + 0.26);
 		context.fillText(this.nb_troops.toString(), this.x, this.y + 0.26);
 	}
 

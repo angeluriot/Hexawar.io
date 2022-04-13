@@ -15,6 +15,7 @@ export type ClientChange = {
 	color: string,
 	skin_id: number,
 	player_id: string,
+	player_nickname: string;
 	nb_troops: number
 };
 
@@ -26,6 +27,7 @@ export function to_client(change: Change): ClientChange
 		color: change.color,
 		skin_id: change.skin_id,
 		player_id: (change.player == null ? '' : change.player.socket.id),
+		player_nickname: (change.player == null ? '' : change.player.nickname),
 		nb_troops: change.nb_troops
 	};
 }

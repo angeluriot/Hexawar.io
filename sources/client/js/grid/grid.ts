@@ -20,7 +20,7 @@ export function create_grid()
 
 		for (let j = 0; j < Global.grid_size.y; j++)
 		{
-			Global.grid[i].push(new Cell(i, j, x, y + y_offset, '#FFFFFF', -1, '', 0));
+			Global.grid[i].push(new Cell(i, j, x, y + y_offset, '#FFFFFF', -1, '', '', 0));
 			y += Math.sin(Global.hexagon_angle) * 2;
 		}
 
@@ -91,6 +91,7 @@ export function set_cell(change: Change)
 	Global.grid[change.i][change.j].color = change.color;
 	Global.grid[change.i][change.j].skin_id = change.skin_id;
 	Global.grid[change.i][change.j].player_id = change.player_id;
+	Global.grid[change.i][change.j].player_nickname = change.player_nickname;
 	Global.grid[change.i][change.j].nb_troops = change.nb_troops;
 
 	return Global.grid[change.i][change.j];
@@ -134,6 +135,7 @@ export function update_grid_from_server()
 				Global.grid[i][j].color = server_grid[i][j].color;
 				Global.grid[i][j].skin_id = server_grid[i][j].skin_id;
 				Global.grid[i][j].player_id = server_grid[i][j].player_id;
+				Global.grid[i][j].player_nickname = server_grid[i][j].player_nickname;
 				Global.grid[i][j].nb_troops = server_grid[i][j].nb_troops;
 			}
 

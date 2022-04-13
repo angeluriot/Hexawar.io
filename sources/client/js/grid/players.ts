@@ -6,6 +6,7 @@ import * as Color from '../utils/color.js';
 export class PlayerCells
 {
 	player_id: string;
+	player_nickname: string;
 	color: string;
 	skin_id: number;
 	border_path: { x: number, y: number }[];
@@ -17,6 +18,7 @@ export class PlayerCells
 	constructor(cell: Cell)
 	{
 		this.player_id = cell.player_id;
+		this.player_nickname = cell.player_nickname;
 		this.color = cell.color;
 		this.skin_id = cell.skin_id;
 		this.border_path = [];
@@ -66,6 +68,9 @@ export class PlayerCells
 
 		// Lower opacity of the inside borders
 		this.draw_background(context, image_parameters, is_main ? opacity : (opacity * 0.9));
+		
+		// Draw player's name
+		this.draw_nickname(context, image_parameters);
 
 		// Draw the numbers
 		for (let i = 0; i < this.cell_list.length; i++)
@@ -122,6 +127,20 @@ export class PlayerCells
 		context.strokeStyle = color;
 		context.stroke();
 		context.globalAlpha = 1;
+	}
+
+	draw_nickname(context: CanvasRenderingContext2D, image_parameters: { x: number, y: number, width: number, height: number })
+	{
+		let size:number = 0.75 + (Math.max(image_parameters.height, image_parameters.width)-2)/4;
+		context.font = size + 'px Roboto_bold';
+		context.textAlign = 'center';
+		context.fillStyle = 'white';
+		context.strokeStyle = this.color;
+		context.lineWidth = 0.14;
+		context.lineCap = 'round';
+		context.lineJoin = 'round';
+		context.strokeText(this.player_nickname, image_parameters.x + image_parameters.width/2, image_parameters.y + image_parameters.height/2 + 0.26);
+		context.fillText(this.player_nickname, image_parameters.x + image_parameters.width/2, image_parameters.y + image_parameters.height/2 + 0.26);
 	}
 
 	static draw_players(context: CanvasRenderingContext2D)
