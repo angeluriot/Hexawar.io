@@ -1,0 +1,96 @@
+.tutorial
+{
+	position: fixed;
+	width: 290px;
+	height: 420.27px;
+	transform: translate(-50%, -50%);
+	left: calc(50% + 415px);
+	top: 50%;
+	z-index: 100;
+}
+
+.tutorial .background
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+	width: 100%;
+	fill: white;
+	filter: drop-shadow(0px 0px 30px rgba(0, 0, 0, 0.4));
+	-webkit-filter: drop-shadow(0px 0px 30px rgba(0, 0, 0, 0.4));
+}
+
+.tutorial .button
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: 320px;
+	left: 50%;
+	width: 80px;
+	cursor: pointer;
+	dominant-baseline: middle;
+	filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.25));
+	-webkit-filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.25));
+	transition: width 0.2s, fill 0.2s;
+	fill: rgb(6, 209, 125);
+}
+
+.tutorial .button:hover
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 84px;
+	fill: rgb(3, 192, 120);
+}
+
+.tutorial .button:active
+{
+	transition: width 0.2s, fill 0.2s;
+	width: 80px;
+	fill: rgb(6, 209, 125);
+}
+
+.tutorial .next_button
+{
+	left: 69.5%;
+}
+
+.tutorial .back_button
+{
+	left: 30.5%;
+}
+
+.tutorial .tuto_start
+{
+    visibility: visible;
+}
+
+.tutorial .tuto_navigate
+{
+    visibility: hidden;
+}
+
+.tutorial .title
+{
+	position: absolute;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	top: 17.5%;
+	color: rgb(45, 47, 58);
+	font-size: 25px;
+	text-align: center;
+	font-family: "Roboto_bold";
+}
+
+.tutorial .image
+{
+    position: absolute;
+	transform: translate(-50%, -50%);
+	top: calc(50% - 25px);
+    width: 200px;
+    height: 150px;
+	left: 50%;
+    background-color: rgb(223, 223, 223);
+	border-radius: 15px;
+	overflow: hidden;
+}
