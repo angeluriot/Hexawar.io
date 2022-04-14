@@ -97,29 +97,36 @@ export function set_cell(change: Change)
 }
 
 // Give the cell from the mouse position
-export function get_cell_from_mouse(x: number, y: number)
-{
+export function get_cell_from_mouse(x : number, y : number) {
 	let mouse_pos = Camera.screen_to_canvas(x, y);
 
-	let distance = 100000;
-	let index = { x: 0, y: 0 };
+    if(mouse_pos.x + 1 < 0 || mouse_pos.y + Math.sqrt(3) / 2 < 0)
+        return null;
 
-	for (let i = 0; i < Global.grid_size.x; i++)
-		for (let j = 0; j < Global.grid_size.y; j++)
-		{
-			let temp = Math.sqrt(Math.pow(mouse_pos.x - Global.grid[i][j].x, 2) + Math.pow(mouse_pos.y - Global.grid[i][j].y, 2));
+	mouse_pos.x += 1;
+    mouse_pos.y += Math.sqrt(3)/2;
 
-			if (temp < distance)
-			{
-				distance = temp;
-				index = { x: i, y: j };
-			}
-		}
+    let i = Math.floor((2 * mouse_pos.x) / 3);
+    let j = Math.floor((2 * mouse_pos.y) / Math.sqrt(3));
 
-	if (distance > 1.)
-		return null;
+    let u = mouse_pos.x - (i * 1.5);
+    let v = mouse_pos.y - (j * Math.sqrt(3) / 2)
 
-	return Global.grid[index.x][index.y];
+    let up = u * 2 / 3;
+    let vp = v * 2/ Math.sqrt(3);
+
+    let lowerhalf = (mouse_pos.y) / Math.sqrt(3) % 1 > 0.5;
+    if(mouse_pos.x % 3 > 1.5 ) lowerhalf = !lowerhalf;
+
+    if(lowerhalf && vp > 3 * up  || !lowerhalf && (1 - vp) > 3 * up ) i -= 1;
+    
+    j = Math.floor((j - (i % 2)) / 2);
+
+
+    if (i < 0 || i >= Global.grid_size.x || j < 0 || j >= Global.grid_size.y)
+        return null;
+
+	return Global.grid[i][j];
 }
 
 // Update the grid from the server data
