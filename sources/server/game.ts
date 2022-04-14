@@ -253,7 +253,7 @@ export function troops_spawn()
 			};
 
 			// Add troops if there are not enough
-			if (change.nb_troops < Global.troops_spawn_max && spawn_chance > ((map_size ** 3) * territory) ** (1/4))
+			if (change.nb_troops < Global.troops_spawn_max && spawn_chance > (map_size * territory) ** (1/2))
 			{
 				change.nb_troops++;
 				changes.push(change);

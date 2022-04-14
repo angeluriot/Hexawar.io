@@ -27,8 +27,10 @@ export class Global
 	static drag_from = { x: 0, y: 0 };
 	static drag_to = { x: 0, y: 0 };
 	static cell_from: null | Cell = null;
+	static mouse_pos = { x: 0, y: 0 };
 
 	// Resources
+	static arrow: HTMLImageElement;
 	static skins: HTMLImageElement[] = [];
 	static skin_colors: string[] = [];
 }

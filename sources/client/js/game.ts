@@ -270,6 +270,7 @@ export function move()
 	window.addEventListener('mousemove', e =>
 	{
 		e.preventDefault();
+		Global.mouse_pos = Camera.screen_to_canvas(e.clientX, e.clientY);
 		when_dragging(e);
 	});
 
