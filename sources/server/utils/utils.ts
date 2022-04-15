@@ -24,3 +24,8 @@ export function get_required_xp(level: number)
 {
 	return Math.round(Math.sqrt(level) * 500 - 500);
 }
+
+export function delay (ms: number)
+{
+	return new Promise( resolve => setTimeout(resolve, ms) );
+}

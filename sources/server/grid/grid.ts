@@ -30,10 +30,11 @@ export function set_cell(change: Change)
 	cell.player = change.player;
 	cell.nb_troops = change.nb_troops;
 
-	if (Bot.nb_bots < 1)
+	if (Bot.nb_bots < Bot.max_nb_bots)
 	{
 		let bot = new Bot();
 		bot.spawn();
+		console.log(Bot.nb_bots);
 	}
 
 	Global.io.emit('change', to_client(change));
@@ -119,7 +120,7 @@ export function are_neighbours(cell_1: { i: number, j: number }, cell_2: { i: nu
 }
 
 // Remove all the cells of a player
-export function remove_player_from_grid(player: Player)
+export function remove_player_from_grid(player: Player | Bot)
 {
 	let changes: Change[] = [];
 

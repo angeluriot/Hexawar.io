@@ -125,7 +125,7 @@ export class Player
 			{
 				player_from.size--;
 
-				if (player_from.size == 0)
+				if (player_from.size == 0 && !(player_from instanceof Bot))
 					player_from.die();
 			}
 

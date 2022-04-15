@@ -3,6 +3,7 @@ import { Player } from './players/player.js';
 import { Global } from './properties.js';
 import { Change } from './grid/cell.js';
 import * as Utils from './utils/utils.js';
+import { Bot } from './bots/bot.js';
 
 export type Move = {
 	from: { i: number, j: number },
@@ -143,11 +144,15 @@ export function player_moves(player: Player)
 				{
 					let dyingPlayer = change_to.player;
 
+					// If the attacked player is a bot, remove their cell from their cell list
+					if (cell_to.player instanceof Bot)
+						cell_to.player.remove_cell(change_to.i, change_to.j);
+
 					//If we attack a player
 					if(cell_to.player!=null){
 						//Find the starting point of the area detection
 						let neighbours: [number, number][] = Grid.get_neighbours_coordinates([move.to.i, move.to.j]);
-						let playerCellOffset: number = 0; 
+						let playerCellOffset: number = 0;
 						while(neighbours[playerCellOffset][0] != move.from.i && neighbours[playerCellOffset][1] != move.from.j )
 							playerCellOffset += 1;
 						//Detect the differents areas
@@ -166,7 +171,7 @@ export function player_moves(player: Player)
 										areas.push([[x, y]]);
 									}
 								}else{
-										areas.push([[x, y]]);	
+										areas.push([[x, y]]);
 								}
 								lastWasCell = true;
 							}else{
@@ -189,6 +194,10 @@ export function player_moves(player: Player)
 								player: null,
 								nb_troops: 0
 							});
+
+							// If the attacked player is a bot, remove their cell from their cell list
+							if (cell_to.player instanceof Bot)
+								cell_to.player.remove_cell(killed[0], killed[1]);
 						}
 
 					}
