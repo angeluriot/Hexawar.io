@@ -1,11 +1,12 @@
 import { Player } from '../players/player.js';
+import { Bot } from '../bots/bot.js';
 
 export type Change = {
 	i: number,
 	j: number,
 	color: string,
 	skin_id: number,
-	player: Player | null,
+	player: Player | Bot | null,
 	nb_troops: number
 };
 
@@ -25,7 +26,7 @@ export function to_client(change: Change): ClientChange
 		j: change.j,
 		color: change.color,
 		skin_id: change.skin_id,
-		player_id: (change.player == null ? '' : change.player.socket.id),
+		player_id: (change.player == null ? '' : change.player instanceof Bot ? "bot" : change.player.socket.id),
 		nb_troops: change.nb_troops
 	};
 }
@@ -35,7 +36,7 @@ export class Cell
 {
 	color: string;
 	skin_id: number;
-	player: Player | null;
+	player: Player | Bot | null;
 	nb_troops: number;
 
 	// Contruct a cell

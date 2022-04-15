@@ -1,6 +1,7 @@
 import { Socket } from 'socket.io';
 import * as Utils from '../utils/utils.js';
 import { UserInterface } from '../../models/user.js';
+import { Bot } from '../bots/bot.js';
 
 export class Player
 {
@@ -115,7 +116,7 @@ export class Player
 	}
 
 	// Update player sizes
-	static update_sizes(player_from: Player | null, player_to: Player | null)
+	static update_sizes(player_from: Player | Bot | null, player_to: Player | Bot | null)
 	{
 		if (player_from != player_to)
 		{
