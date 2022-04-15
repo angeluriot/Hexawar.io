@@ -49,13 +49,13 @@ export function join_game()
 	Global.socket.on('send_spawn', (spawn: {i: number, j: number}) =>
 	{
 		const form_div = document.querySelector('.connect_div') as HTMLDivElement;
-		const spectator_mode = document.querySelector('.spectator_mode') as HTMLDivElement;
+		const spectator_div = document.querySelector('.spectator_div') as HTMLDivElement;
 		const leaderboard = document.querySelector('.leaderboard') as HTMLDivElement;
 
 		Player.playing = true;
 		form_div.style.display = 'none';
 		leaderboard.style.visibility = 'visible';
-		spectator_mode.style.display = 'none';
+		spectator_div.style.display = 'none';
 
 		game_events();
 		Cookie.create_cookie();

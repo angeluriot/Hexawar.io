@@ -219,6 +219,27 @@
 	font-family: "Roboto_medium";
 }
 
+.play .svg_button
+{
+	left: 36%;
+}
+
+.spectator .svg_button
+{
+	left: 64%;
+	fill: #F4BE27;
+}
+
+.spectator .svg_button:hover
+{
+	fill: rgb(247, 175, 39);
+}
+
+.spectator .svg_button:active
+{
+	fill: #F4BE27;
+}
+
 .global_background
 {
 	position: fixed;
