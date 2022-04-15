@@ -34,7 +34,6 @@ export function set_cell(change: Change)
 	{
 		let bot = new Bot();
 		bot.spawn();
-		console.log(Bot.nb_bots);
 	}
 
 	Global.io.emit('change', to_client(change));
@@ -157,7 +156,7 @@ export function get_client_grid()
 			grid[i].push({
 				color: cell.color,
 				skin_id: cell.skin_id,
-				player_id: ((cell.player == null || cell.player instanceof Bot) ? '' : cell.player.socket.id),
+				player_id: (cell.player == null ? '' : cell.player instanceof Bot ? cell.player.bot_id as unknown as string : cell.player.socket.id),
 				nb_troops: cell.nb_troops
 			});
 		}

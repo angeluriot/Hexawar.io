@@ -292,7 +292,22 @@ export function update_leaderboard()
 		};
 	});
 
-	players_data.sort((a, b) => b.size - a.size);
+	let bots_data = Bot.list.map(bot =>
+	{
+		return {
+			id: bot.bot_id as unknown as string,
+			nickname: bot.nickname,
+			size: bot.size,
+			admin: true
+		};
+	});
 
-	Global.io.emit('leaderboard', players_data);
+	let all_data = players_data;
+
+	for (let bot_data in bots_data)
+		all_data.push(bots_data[bot_data]);
+
+	all_data.sort((a, b) => b.size - a.size);
+
+	Global.io.emit('leaderboard', all_data);
 }

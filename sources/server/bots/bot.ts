@@ -1,8 +1,8 @@
 import * as Grid from '../grid/grid.js';
 import { Global } from '../properties.js';
-import { delay, random_int } from '../utils/utils.js';
+import { delay, random_int, shuffle_array } from '../utils/utils.js';
 import { Move } from '../game.js';
-
+import { random_color } from '../utils/utils.js';
 import { Change } from '../grid/cell.js';
 import { Player } from '../players/player.js';
 
@@ -13,6 +13,8 @@ export type Coordinates = {
 
 export class Bot
 {
+	bot_id: number;
+	static last_id: number = 0;
 	nickname: string;
 	color: string;
 	skin_id: number;
@@ -22,26 +24,70 @@ export class Bot
 	is_alive: boolean;
 	cells: Coordinates[] = [];
 
-	//static list: Bot[] = [];
+	static list: Bot[] = [];
 
 	static nb_bots: number = 0;     // Current number of bots
-	static max_nb_bots: number = 1; // Maximum number of bots allowed in game
-	static wait: number = 5000;     // Delay of bots between each action
+	static max_nb_bots: number = 7; // Maximum number of bots allowed in game
+	static wait: number = 1000;     // Delay of bots between each action
+
+	static nickname_map: Map<string, boolean> = new Map<string, boolean>(
+	[
+		["Bender", 				true],
+		["Wall-e", 				true],
+		["EVE", 				true],
+		["R2-D2", 				true],
+		["C3PO", 				true],
+		["R4-P17", 				true],
+		["General Grievous", 	true],
+		["T-1000", 				true],
+		["Ultron", 				true],
+		["Jarvis", 				true],
+		["Skynet", 				true],
+		["Optimus Prime", 		true],
+		["Vision", 				true]
+	]);
 
 	constructor()
 	{
-		this.nickname = '';
-		this.color = '#ff0000';
+		this.bot_id = Bot.last_id + 1;
+		Bot.last_id++;
+		this.nickname = Bot.select_nickname();
+		this.color = random_color();
 		this.skin_id = -1;
 		this.size = 0;
 		this.max_size = 0;
 		this.conquered_lands = 0;
 		this.is_alive = true;
+
+		Bot.list.push(this);
+	}
+
+	static select_nickname()
+	{
+		let nickname_list = [];
+
+		for (let nickname_pair of Bot.nickname_map)
+			nickname_list.push(nickname_pair[0]);
+
+		shuffle_array(nickname_list);
+
+		for (let nickname of nickname_list)
+		{
+			if (Bot.nickname_map.get(nickname))
+			{
+				Bot.nickname_map.set(nickname, false);
+				return nickname;
+			}
+		}
+
+		return '';
 	}
 
 	// When a bot spawns
-	spawn()
+	async spawn()
 	{
+		await delay(2000);
+
 		Bot.nb_bots++;
 
 		// Gives the bot a spawn cell
@@ -67,16 +113,29 @@ export class Bot
 	// When a bot dies
 	die()
 	{
+		Bot.nickname_map.set(this.nickname, true);
 		Bot.nb_bots--;
-		console.log(Bot.nb_bots);
 		this.is_alive = false;
 		Grid.remove_player_from_grid(this);
+
+		Bot.remove_bot(this.bot_id);
 
 		if (Player.list.length > 0 && Bot.nb_bots < Bot.max_nb_bots)
 		{
 			let bot = new Bot();
 			bot.spawn();
-			console.log(Bot.nb_bots);
+		}
+	}
+
+	static remove_bot(id: number)
+	{
+		for (let i = 0; i < Bot.list.length; i++)
+		{
+			if (Bot.list[i].bot_id == id)
+			{
+				Bot.list.slice(i, 1);
+				return;
+			}
 		}
 	}
 
@@ -142,7 +201,7 @@ export class Bot
 
 				for (let neighbour of neighbours)
 					if (Grid.get_cell(neighbour[0], neighbour[1]) != null)
-						if (!(Grid.get_cell(neighbour[0], neighbour[1])!.player instanceof Bot)) // TODO : bot_id pour que les bots puissent s'attaquer entre eux
+						if (Grid.get_cell(neighbour[0], neighbour[1])!.player != this)
 						{
 							let play: Move = { from: { i: cell.i, j: cell.j }, to: { i: neighbour[0], j: neighbour[1] } };
 							plays.push(play);
