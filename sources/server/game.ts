@@ -295,7 +295,7 @@ export function update_leaderboard()
 	let bots_data = Bot.list.map(bot =>
 	{
 		return {
-			id: bot.bot_id as unknown as string,
+			id: bot.id as unknown as string,
 			nickname: bot.nickname,
 			size: bot.size,
 			admin: true

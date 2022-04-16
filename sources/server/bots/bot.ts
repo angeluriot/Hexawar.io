@@ -13,7 +13,7 @@ export type Coordinates = {
 
 export class Bot
 {
-	bot_id: number;
+	id: number;
 	static last_id: number = 0;
 	nickname: string;
 	color: string;
@@ -32,11 +32,11 @@ export class Bot
 
 	static nickname_map: Map<string, boolean> = new Map<string, boolean>(
 	[
-		["Bender", 				true],
-		["Wall-e", 				true],
+		["Bender", 				true], // string is the nickname and boolean if it is already taken or not
+		["Wall-E", 				true],
 		["EVE", 				true],
 		["R2-D2", 				true],
-		["C3PO", 				true],
+		["C3-PO", 				true],
 		["R4-P17", 				true],
 		["General Grievous", 	true],
 		["T-1000", 				true],
@@ -44,12 +44,18 @@ export class Bot
 		["Jarvis", 				true],
 		["Skynet", 				true],
 		["Optimus Prime", 		true],
-		["Vision", 				true]
+		["Vision", 				true],
+		["Bumblebee", 			true],
+		["Mettaton", 			true],
+		["IG-11", 				true],
+		["GLaDOS", 				true],
+		["Bastion", 			true],
+		["T-800", 				true]
 	]);
 
 	constructor()
 	{
-		this.bot_id = Bot.last_id + 1;
+		this.id = Bot.last_id + 1;
 		Bot.last_id++;
 		this.nickname = Bot.select_nickname();
 		this.color = random_color();
@@ -118,7 +124,7 @@ export class Bot
 		this.is_alive = false;
 		Grid.remove_player_from_grid(this);
 
-		Bot.remove_bot(this.bot_id);
+		Bot.remove_bot(this.id);
 
 		if (Player.list.length > 0 && Bot.nb_bots < Bot.max_nb_bots)
 		{
@@ -131,7 +137,7 @@ export class Bot
 	{
 		for (let i = 0; i < Bot.list.length; i++)
 		{
-			if (Bot.list[i].bot_id == id)
+			if (Bot.list[i].id == id)
 			{
 				Bot.list.slice(i, 1);
 				return;
@@ -174,17 +180,64 @@ export class Bot
 	// Find the "best play" at a given time
 	best_play()
 	{
+		let best_score = 0;
+		let score = 0;
+
 		let plays = this.get_all_plays();
 
 		if (plays.length > 0)
 		{
-			let best_play_index = random_int(0, plays.length);
+			let best_plays = [];
 
-			return plays[best_play_index];
+			for (let play of plays)
+			{
+
+				score = Bot.analyse_play(play)
+
+				if (score > best_score)
+				{
+					best_score = score;
+					best_plays = [];
+					best_plays.push(play);
+				}
+
+				else if (score == best_score)
+					best_plays.push(play);
+
+			}
+
+			if (best_plays.length > 0) // if there are good or decent plays, picks one at random
+			{
+				let best_play_index = random_int(0, best_plays.length);
+
+				return best_plays[best_play_index];
+			}
+
+			else
+				return null;	// if all plays are bad (better to do nothing)
 		}
 
 		else
-			return null;
+			return null;		// if there is no possible play
+	}
+
+	// Gives a score to a play at a given time
+	static analyse_play(play: Move)
+	{
+		let cell_from = Grid.get_cell(play.from.i, play.from.j)!;
+		let cell_to = Grid.get_cell(play.to.i, play.to.j)!;
+
+		if (cell_to.player == null)
+			return 0; 												// if the cell is empty, then the play is decent
+
+		else
+		{
+			if (cell_from.nb_troops < cell_to.nb_troops + 2)
+				return -1; 											// if the bot's cell does not have 2 more troops than the attacked cell, then the attack will fail, so the play is bad
+
+			else
+				return 1;											// the attack succeeds, so the play is good
+		}
 	}
 
 	// Get coordinates of all cells that can be captured
@@ -213,7 +266,6 @@ export class Bot
 		return plays;
 	}
 
-	// tmp
 	move_event(move: Move)
 	{
 		let cell_from = Grid.get_cell(move.from.i, move.from.j);

@@ -26,7 +26,7 @@ export function to_client(change: Change): ClientChange
 		j: change.j,
 		color: change.color,
 		skin_id: change.skin_id,
-		player_id: (change.player == null ? '' : change.player instanceof Bot ? change.player.bot_id as unknown as string : change.player.socket.id),
+		player_id: (change.player == null ? '' : change.player instanceof Bot ? change.player.id as unknown as string : change.player.socket.id),
 		nb_troops: change.nb_troops
 	};
 }
