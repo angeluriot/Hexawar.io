@@ -43,6 +43,15 @@ export function join(player: Player)
 		{
 			// Gives the player a spawn cell
 			let spawn = Grid.get_spawn_cell();
+			console.log(spawn);
+			let spawnArea : [number, number][][] = [];
+			spawnArea.push([]);
+			spawnArea[0].push([Global.grid_size.x, Global.grid_size.y]);
+
+			while((Grid.dying_cells(spawnArea, [[spawn.i, spawn.j]])).length > 0){
+				console.log("spawn boucle", spawn);
+				spawn = Grid.get_spawn_cell();
+			}
 
 			// Set the change
 			const change = {
