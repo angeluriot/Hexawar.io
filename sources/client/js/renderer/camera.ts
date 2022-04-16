@@ -29,6 +29,7 @@ export class Camera
 			{
 				Camera.x += e.movementX;
 				Camera.y += e.movementY;
+				Camera.clamp();
 				render();
 			}
 
@@ -84,7 +85,10 @@ export class Camera
 					Camera.y -= camera_speed;
 
 				if (left || right || up || down)
+				{
+					Camera.clamp();
 					render();
+				}
 			}
 
 			requestAnimationFrame(update);
@@ -100,6 +104,7 @@ export class Camera
 				let pos = Camera.screen_to_canvas(Camera.mouse_pos.x, Camera.mouse_pos.y);
 				Camera.x += (pos.x - temp.x) * Camera.zoom;
 				Camera.y += (pos.y - temp.y) * Camera.zoom;
+				Camera.clamp();
 				render();
 			}
 		}
@@ -133,5 +138,100 @@ export class Camera
 		pos.x = (x - this.x) / this.zoom;
 		pos.y = (y - this.y) / this.zoom;
 		return pos;
+	}
+
+	// Keep the camera inside the player's territory
+	static clamp()
+	{
+		let pos =
+		{
+			x: - (Camera.x - window.innerWidth / 2) / Camera.zoom,
+			y: - (Camera.y - window.innerHeight / 2) / Camera.zoom
+		};
+		
+		let borders =
+		{
+			x1: 0,
+			y1: 0,
+			x2: Global.grid_size.x,
+			y2: Global.grid_size.y,
+			off1: false,
+			off2: true
+		};
+
+		let offset: number = Math.sin(Global.hexagon_angle);
+
+		if (Player.playing)
+			get_player_borders(borders);
+
+		Camera.move(
+			clamp(pos.x, borders.x1 * (1 + Math.cos(Global.hexagon_angle)), borders.x2 * (1 + Math.cos(Global.hexagon_angle))),
+			clamp(pos.y, borders.y1 * Math.sin(Global.hexagon_angle) * 2 + (borders.off1 ? offset : 0), borders.y2 * Math.sin(Global.hexagon_angle) * 2 + (borders.off2 ? offset : 0))
+		);
+	}
+}
+
+// Clamp number between two values
+const clamp = (value: number, min: number, max: number) => Math.max(min,(Math.min(max, value)));
+
+
+// Set borders to the player's borders
+function get_player_borders(borders: {x1:number, y1: number, x2: number, y2: number, off1: boolean, off2: boolean})
+{
+	get_one_cell(borders);
+
+	for (let i = 0; i < Global.grid_size.x; i++)
+		for (let j = 0; j < Global.grid_size.y; j++)
+			if (Global.grid[i][j].player_id == Player.id)
+				update_borders(i,j, borders);
+}
+
+// Set the borders of a player to the first cell found
+function get_one_cell(borders: {x1:number, y1: number, x2: number, y2: number, off1: boolean, off2: boolean})
+{
+	for (let i = 0; i < Global.grid_size.x; i++)
+		for (let j = 0; j < Global.grid_size.y; j++)
+			if (Global.grid[i][j].player_id == Player.id) 
+			{
+				borders.x1 = i;
+				borders.x2 = i;
+
+				borders.y1 = j;
+				borders.y2 = j;
+
+				if (i % 2)
+				{
+					borders.off1 = true;
+					borders.off2 = true;
+				} 
+				else
+				{
+					borders.off1 = false;
+					borders.off2 = false;
+				}
+
+				return;
+			}
+}
+
+// Update borders according to a player's cell
+function update_borders(i: number, j: number, borders: {x1:number, y1: number, x2: number, y2: number, off1: boolean, off2: boolean})
+{
+	if (i < borders.x1)
+		borders.x1  = i;
+
+	if (i > borders.x2)
+		borders.x2  = i;
+
+	if (j < borders.y1)
+	{
+		borders.y1  = j;
+		borders.off1 = (i % 2 == 1);
+	}
+
+	if (j > borders.y2)
+	{
+		borders.y2  = j;
+		borders.off2 = (i % 2 == 1);
 	}
 }
