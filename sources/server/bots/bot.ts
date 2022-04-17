@@ -183,7 +183,6 @@ export class Bot
 			if (best_play != null)
 				this.move_event(best_play);
 
-
 			if (Player.list.length == 0)
 				this.die();
 
@@ -240,8 +239,7 @@ export class Bot
 
 		if (this.has_regrouped)
 		{
-			console.log(this.army_coords);
-			if (!Grid.are_neighbours(this.army_coords, this.lost_cell))
+			if (!Grid.are_neighbours(this.army_coords, this.lost_cell) && Grid.get_cell(this.army_coords.i, this.army_coords.j)!.player == this)
 				this.advance(this.army_coords.i, this.army_coords.j);
 
 			else
@@ -444,7 +442,6 @@ export class Bot
 				{
 					this.move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j }});
 					this.army_coords = { i: i - 1, j: j };
-					return;
 				}
 			}
 		}
@@ -488,8 +485,6 @@ export class Bot
 					change_from.nb_troops += change_to.nb_troops - Global.troops_max;
 					change_to.nb_troops = Global.troops_max;
 				}
-
-				this.cells.push({ i: change_to.i, j: change_to.j });
 			}
 
 			// If it's an attack
