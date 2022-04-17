@@ -1,0 +1,30 @@
+.warning_popup
+{
+	visibility: hidden;
+	position: absolute;
+	z-index: 10;
+	right: 20px;
+	bottom: 20px;
+	width: 312px;
+	height: 100px;
+}
+
+.warning_popup .warning_background
+{
+	position: absolute;
+	width: 312px;
+	height: 100px;
+	fill: orange;
+	opacity: 0.4;
+	z-index: 102;
+}
+
+.warning_popup .warning_text
+{
+	font-family: "Roboto_bold";
+	letter-spacing: 0.5px;
+	padding: 16px 50px;
+	font-size: 17;
+	fill: black;
+	z-index: 200;
+}
