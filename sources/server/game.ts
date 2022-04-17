@@ -146,7 +146,12 @@ export function player_moves(player: Player)
 
 					// If the attacked player is a bot, remove their cell from their cell list
 					if (cell_to.player instanceof Bot)
+					{
 						cell_to.player.remove_cell(change_to.i, change_to.j);
+
+						if (!cell_to.player.is_attacked)
+							cell_to.player.alert(change_to.i, change_to.j);
+					}
 
 					//If we attack a player
 					if(cell_to.player!=null){

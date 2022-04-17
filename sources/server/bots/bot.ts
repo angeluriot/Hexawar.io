@@ -24,10 +24,15 @@ export class Bot
 	is_alive: boolean;
 	cells: Coordinates[] = [];
 
+	is_attacked: boolean;
+	has_regrouped: boolean;
+	lost_cell: Coordinates;
+	army_coords: Coordinates;
+
 	static list: Bot[] = [];
 
 	static nb_bots: number = 0;     // Current number of bots
-	static max_nb_bots: number = 7; // Maximum number of bots allowed in game
+	static max_nb_bots: number = 1; // Maximum number of bots allowed in game
 	static wait: number = 1000;     // Delay of bots between each action
 
 	static nickname_map: Map<string, boolean> = new Map<string, boolean>(
@@ -64,6 +69,10 @@ export class Bot
 		this.max_size = 0;
 		this.conquered_lands = 0;
 		this.is_alive = true;
+		this.is_attacked = false;
+		this.has_regrouped = false;
+		this.lost_cell = { i: -1, j: -1 };
+		this.army_coords = { i: -1, j: -1 };
 
 		Bot.list.push(this);
 	}
@@ -158,6 +167,12 @@ export class Bot
 		}
 	}
 
+	alert(i: number, j: number)
+	{
+		this.is_attacked = true;
+		this.lost_cell = { i, j };
+	}
+
 	// Main play loop
 	async play()
 	{
@@ -177,22 +192,32 @@ export class Bot
 		}
 	}
 
-	// Find the "best play" at a given time
+	// Finds the "best play" at a given time
 	best_play()
 	{
+		let is_regrouping = false;
+		let regroup_cell = { i: -1, j: -1 };
 		let best_score = 0;
 		let score = 0;
 
 		let plays = this.get_all_plays();
+		let best_plays = [];
+
+		if (this.is_attacked && !this.has_regrouped)
+		{
+			regroup_cell = this.find_regroup_cell();
+			is_regrouping = true;
+			best_score = 2;
+		}
+
+		if (this.has_regrouped)
+			best_score = 2;
 
 		if (plays.length > 0)
-		{
-			let best_plays = [];
-
 			for (let play of plays)
 			{
 
-				score = Bot.analyse_play(play)
+				score = this.analyse_play(play)
 
 				if (score > best_score)
 				{
@@ -206,38 +231,63 @@ export class Bot
 
 			}
 
-			if (best_plays.length > 0) // if there are good or decent plays, picks one at random
-			{
-				let best_play_index = random_int(0, best_plays.length);
+		if (best_plays.length > 0) // if there are good or decent plays, picks one at random
+		{
+			let best_play_index = random_int(0, best_plays.length);
 
-				return best_plays[best_play_index];
-			}
-
-			else
-				return null;	// if all plays are bad (better to do nothing)
+			return best_plays[best_play_index];
 		}
 
-		else
-			return null;		// if there is no possible play
+		if (this.has_regrouped)
+		{
+			console.log(this.army_coords);
+			if (!Grid.are_neighbours(this.army_coords, this.lost_cell))
+				this.advance(this.army_coords.i, this.army_coords.j);
+
+			else
+			{
+				this.is_attacked = false;
+				this.has_regrouped = false;
+			}
+		}
+
+		if (is_regrouping)
+		{
+			this.regroup(regroup_cell);
+			this.has_regrouped = true;
+			this.army_coords = regroup_cell;
+		}
+
+		//console.log("has_regrouped : ", this.has_regrouped);
+		//console.log("is_regrouping : ", is_regrouping);
+		return null;
 	}
 
 	// Gives a score to a play at a given time
-	static analyse_play(play: Move)
+	analyse_play(play: Move)
 	{
 		let cell_from = Grid.get_cell(play.from.i, play.from.j)!;
 		let cell_to = Grid.get_cell(play.to.i, play.to.j)!;
 
 		if (cell_to.player == null)
-			return 0; 												// if the cell is empty, then the play is decent
+			return 0; 												// if the cell is empty, decent play
 
-		else
+		else if (cell_from.nb_troops > cell_to.nb_troops + 1)
 		{
-			if (cell_from.nb_troops < cell_to.nb_troops + 2)
-				return -1; 											// if the bot's cell does not have 2 more troops than the attacked cell, then the attack will fail, so the play is bad
+			if (this.is_attacked)
+				if (this.lost_cell == play.to)
+				{
+					this.is_attacked = false;
+					this.has_regrouped = false;
+					this.army_coords = { i: -1, j: -1 };
 
-			else
-				return 1;											// the attack succeeds, so the play is good
+					return 3;										// if bot can recapture the lost cell
+				}
+
+			return 1;												// if the cell belongs to a player, good play
 		}
+
+		return -1;													// if the bot's cell does not have 2 more troops than the attacked cell, then the attack will fail, bad play
 	}
 
 	// Get coordinates of all cells that can be captured
@@ -264,6 +314,140 @@ export class Bot
 		}
 
 		return plays;
+	}
+
+	find_regroup_cell()
+	{
+		let best_cell_index = 0;
+		let max_troops = 1;
+		let index = 0;
+
+		for (let cell of this.cells)
+		{
+			let troops = Grid.get_cell(cell.i, cell.j)!.nb_troops;
+
+			if (troops > max_troops)
+			{
+				best_cell_index = index;
+				max_troops = troops;
+			}
+
+			index++;
+		}
+
+		return this.cells[best_cell_index];
+	}
+
+	regroup(regroup_cell: Coordinates)
+	{
+		let cell_to = Grid.get_cell(regroup_cell.i, regroup_cell.j)!;
+		let cells_from = Grid.get_neighbours_coordinates([regroup_cell.i, regroup_cell.j]);
+
+		for (let i = 0; i < cells_from.length; i++)
+		{
+			let cell_from = Grid.get_cell(cells_from[i][0], cells_from[i][1]);
+			if (cell_from != null)
+				if (cell_from.player instanceof Bot && cell_to.player instanceof Bot)
+					if (cell_from.player.id == cell_to.player!.id)
+						this.move_event({
+							from: { i: cells_from[i][0], j: cells_from[i][1] },
+							to: { i: regroup_cell.i, j: regroup_cell.j }
+						});
+		}
+	}
+
+	advance(i: number, j: number)
+	{
+		if (i == this.lost_cell.i)
+		{
+			if (j < this.lost_cell.j)
+			{
+				this.move_event({ from: { i: i, j: j}, to: { i: i, j: j + 1 }});
+				this.army_coords = { i: i, j: j + 1};
+				return;
+			}
+
+			else
+			{
+				this.move_event({ from: { i: i, j: j}, to: { i: i, j: j - 1 }});
+				this.army_coords = { i: i, j: j - 1};
+				return;
+			}
+		}
+
+		if (i % 2 == 0)
+		{
+			if (i < this.lost_cell.i)
+			{
+				if (j <= this.lost_cell.j)
+				{
+					this.move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j }});
+					this.army_coords = { i: i + 1, j: j};
+					return;
+				}
+
+				else
+				{
+					this.move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j - 1 }});
+					this.army_coords = { i: i + 1, j: j - 1};
+					return;
+				}
+			}
+
+			else
+			{
+				if (j <= this.lost_cell.j)
+				{
+					this.move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j }});
+					this.army_coords = { i: i - 1, j: j};
+					return;
+				}
+
+				else
+				{
+					this.move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j - 1 }});
+					this.army_coords = { i: i - 1, j: j - 1 };
+					return;
+				}
+			}
+		}
+
+		else
+		{
+			if (i < this.lost_cell.i)
+			{
+				if (j < this.lost_cell.j)
+				{
+					this.move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j + 1 }});
+					this.army_coords = { i: i + 1, j: j + 1 };
+					return;
+				}
+
+				else
+				{
+					this.move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j }});
+					this.army_coords = { i: i + 1, j: j };
+					return;
+				}
+			}
+
+			else
+			{
+				if (j < this.lost_cell.j)
+				{
+					this.move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j + 1 }});
+					this.army_coords = { i: i - 1, j: j + 1 };
+					return;
+				}
+
+				else
+				{
+					this.move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j }});
+					this.army_coords = { i: i - 1, j: j };
+					return;
+				}
+			}
+		}
 	}
 
 	move_event(move: Move)
