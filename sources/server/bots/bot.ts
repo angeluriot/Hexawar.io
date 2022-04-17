@@ -25,9 +25,12 @@ export class Bot
 	cells: Coordinates[] = [];
 
 	is_attacked: boolean;
-	has_regrouped: boolean;
+	is_defending: boolean;
+	is_spreading: boolean;
 	lost_cell: Coordinates;
+	objective_cell: Coordinates;
 	army_coords: Coordinates;
+	spread_coords: Coordinates;
 
 	static list: Bot[] = [];
 
@@ -70,9 +73,12 @@ export class Bot
 		this.conquered_lands = 0;
 		this.is_alive = true;
 		this.is_attacked = false;
-		this.has_regrouped = false;
+		this.is_defending = false;
+		this.is_spreading = false;
 		this.lost_cell = { i: -1, j: -1 };
+		this.objective_cell = { i: -1, j: -1 };
 		this.army_coords = { i: -1, j: -1 };
+		this.spread_coords = { i: -1, j: -1 };
 
 		Bot.list.push(this);
 	}
@@ -148,7 +154,7 @@ export class Bot
 		{
 			if (Bot.list[i].id == id)
 			{
-				Bot.list.slice(i, 1);
+				Bot.list.splice(i, 1);
 				return;
 			}
 		}
@@ -202,14 +208,17 @@ export class Bot
 		let plays = this.get_all_plays();
 		let best_plays = [];
 
-		if (this.is_attacked && !this.has_regrouped)
+		if (this.is_attacked && !this.is_defending)
 		{
 			regroup_cell = this.find_regroup_cell();
 			is_regrouping = true;
-			best_score = 2;
+			best_score = 3;
 		}
 
-		if (this.has_regrouped)
+		else if (this.is_defending)
+			best_score = 3;
+
+		else if (this.is_spreading)
 			best_score = 2;
 
 		if (plays.length > 0)
@@ -237,27 +246,47 @@ export class Bot
 			return best_plays[best_play_index];
 		}
 
-		if (this.has_regrouped)
+		if (this.is_defending)
 		{
 			if (!Grid.are_neighbours(this.army_coords, this.lost_cell) && Grid.get_cell(this.army_coords.i, this.army_coords.j)!.player == this)
-				this.advance(this.army_coords.i, this.army_coords.j);
+				this.advance(this.army_coords.i, this.army_coords.j, this.lost_cell.i, this.lost_cell.j);
 
 			else
 			{
 				this.is_attacked = false;
-				this.has_regrouped = false;
+				this.is_defending = false;
 			}
 		}
 
-		if (is_regrouping)
+		else if (is_regrouping)
 		{
 			this.regroup(regroup_cell);
-			this.has_regrouped = true;
+			this.is_defending = true;
 			this.army_coords = regroup_cell;
 		}
 
-		//console.log("has_regrouped : ", this.has_regrouped);
-		//console.log("is_regrouping : ", is_regrouping);
+		else if (this.is_spreading)
+		{
+			if (this.is_isolated(this.spread_coords))
+				this.advance(this.spread_coords.i, this.spread_coords.j, this.objective_cell.i, this.objective_cell.j);
+
+			else
+				this.is_spreading = false;
+		}
+
+		else
+		{
+			regroup_cell = this.find_regroup_cell();
+
+			if (Grid.get_cell(regroup_cell.i, regroup_cell.j)!.nb_troops > 2)
+			{
+				this.regroup(regroup_cell);
+				this.is_spreading = true;
+				this.objective_cell = this.find_objective_cell(regroup_cell);
+				this.spread_coords = regroup_cell;
+			}
+		}
+
 		return null;
 	}
 
@@ -276,10 +305,10 @@ export class Bot
 				if (this.lost_cell == play.to)
 				{
 					this.is_attacked = false;
-					this.has_regrouped = false;
+					this.is_defending = false;
 					this.army_coords = { i: -1, j: -1 };
 
-					return 3;										// if bot can recapture the lost cell
+					return 4;										// if bot can recapture the lost cell
 				}
 
 			return 1;												// if the cell belongs to a player, good play
@@ -336,115 +365,140 @@ export class Bot
 		return this.cells[best_cell_index];
 	}
 
+	find_objective_cell(regroup_cell: Coordinates)
+	{
+		if (regroup_cell.i > Global.grid_size.x / 3 && regroup_cell.i < 2 * Global.grid_size.x / 3 && regroup_cell.j > Global.grid_size.y / 3 && regroup_cell.j < 2 * Global.grid_size.y / 3)
+		{
+			let left_or_right = random_int(0, 1);
+			let up_or_down = random_int(0, 1);
+
+			return { i: left_or_right * Global.grid_size.x, j: up_or_down * Global.grid_size.y };
+		}
+
+		return { i: Math.floor(Global.grid_size.x / 2), j: Math.floor(Global.grid_size.y / 2)}
+	}
+
 	regroup(regroup_cell: Coordinates)
 	{
 		let cell_to = Grid.get_cell(regroup_cell.i, regroup_cell.j)!;
 		let cells_from = Grid.get_neighbours_coordinates([regroup_cell.i, regroup_cell.j]);
 
-		for (let i = 0; i < cells_from.length; i++)
+		for (let k = 0; k < cells_from.length; k++)
 		{
-			let cell_from = Grid.get_cell(cells_from[i][0], cells_from[i][1]);
+			let cell_from = Grid.get_cell(cells_from[k][0], cells_from[k][1]);
 			if (cell_from != null)
 				if (cell_from.player instanceof Bot && cell_to.player instanceof Bot)
 					if (cell_from.player.id == cell_to.player!.id)
 						this.move_event({
-							from: { i: cells_from[i][0], j: cells_from[i][1] },
+							from: { i: cells_from[k][0], j: cells_from[k][1] },
 							to: { i: regroup_cell.i, j: regroup_cell.j }
 						});
 		}
 	}
 
-	advance(i: number, j: number)
+	is_isolated(cell_coords: Coordinates)
 	{
-		if (i == this.lost_cell.i)
+		for (let neighbour of Grid.get_neighbours_coordinates([cell_coords.i, cell_coords.j]))
 		{
-			if (j < this.lost_cell.j)
+			let cell = Grid.get_cell(neighbour[0], neighbour[1]);
+			if (cell != null)
+				if (cell.player != this)
+					return false;
+		}
+
+		return true;
+	}
+
+	advance(i: number, j: number, i_dest: number, j_dest: number)
+	{
+		let new_coords = { i: i, j: j };
+
+		if (i == i_dest)
+		{
+			if (j < j_dest)
 			{
 				this.move_event({ from: { i: i, j: j}, to: { i: i, j: j + 1 }});
-				this.army_coords = { i: i, j: j + 1};
-				return;
+				new_coords = { i: i, j: j + 1};
 			}
 
 			else
 			{
 				this.move_event({ from: { i: i, j: j}, to: { i: i, j: j - 1 }});
-				this.army_coords = { i: i, j: j - 1};
-				return;
+				new_coords = { i: i, j: j - 1};
 			}
 		}
 
-		if (i % 2 == 0)
+		else if (i % 2 == 0)
 		{
-			if (i < this.lost_cell.i)
+			if (i < i_dest)
 			{
-				if (j <= this.lost_cell.j)
+				if (j <= j_dest)
 				{
 					this.move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j }});
-					this.army_coords = { i: i + 1, j: j};
-					return;
+					new_coords = { i: i + 1, j: j};
 				}
 
 				else
 				{
 					this.move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j - 1 }});
-					this.army_coords = { i: i + 1, j: j - 1};
-					return;
+					new_coords = { i: i + 1, j: j - 1};
 				}
 			}
 
 			else
 			{
-				if (j <= this.lost_cell.j)
+				if (j <= j_dest)
 				{
 					this.move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j }});
-					this.army_coords = { i: i - 1, j: j};
-					return;
+					new_coords = { i: i - 1, j: j};
 				}
 
 				else
 				{
 					this.move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j - 1 }});
-					this.army_coords = { i: i - 1, j: j - 1 };
-					return;
+					new_coords = { i: i - 1, j: j - 1 };
 				}
 			}
 		}
 
 		else
 		{
-			if (i < this.lost_cell.i)
+			if (i < i_dest)
 			{
-				if (j < this.lost_cell.j)
+				if (j < j_dest)
 				{
 					this.move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j + 1 }});
-					this.army_coords = { i: i + 1, j: j + 1 };
-					return;
+					new_coords = { i: i + 1, j: j + 1 };
 				}
 
 				else
 				{
 					this.move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j }});
-					this.army_coords = { i: i + 1, j: j };
-					return;
+					new_coords = { i: i + 1, j: j };
 				}
 			}
 
 			else
 			{
-				if (j < this.lost_cell.j)
+				if (j < j_dest)
 				{
 					this.move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j + 1 }});
-					this.army_coords = { i: i - 1, j: j + 1 };
-					return;
+					new_coords = { i: i - 1, j: j + 1 };
 				}
 
 				else
 				{
 					this.move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j }});
-					this.army_coords = { i: i - 1, j: j };
+					new_coords = { i: i - 1, j: j };
 				}
 			}
 		}
+
+		if (this.is_defending)
+			this.army_coords = new_coords;
+
+		else
+			this.spread_coords = new_coords;
 	}
 
 	move_event(move: Move)
