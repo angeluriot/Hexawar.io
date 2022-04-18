@@ -4,6 +4,7 @@ import { render } from '../renderer/renderer.js';
 import { Player } from '../player/player.js';
 import { Camera } from '../renderer/camera.js';
 import { PlayerCells } from './players.js';
+import { ClientSocket, ServerSocket } from '../properties.js';
 
 // Create the grid of cells
 export function create_grid()
@@ -83,17 +84,18 @@ export function get_cell(x: number, y: number)
 }
 
 // Set cell values from a change
-export function set_cell(change: Change)
+export function set_cells(changes: Change[])
 {
-	if (change.i < 0 || change.i >= Global.grid_size.x || change.j < 0 || change.j >= Global.grid_size.y)
-		return null;
+	changes.forEach(change => {
+		if (change.i < 0 || change.i >= Global.grid_size.x || change.j < 0 || change.j >= Global.grid_size.y)
+			return;
 
-	Global.grid[change.i][change.j].color = change.color;
-	Global.grid[change.i][change.j].skin_id = change.skin_id;
-	Global.grid[change.i][change.j].player_id = change.player_id;
-	Global.grid[change.i][change.j].nb_troops = change.nb_troops;
+		Global.grid[change.i][change.j].color = change.color;
+		Global.grid[change.i][change.j].skin_id = change.skin_id;
+		Global.grid[change.i][change.j].player_id = change.player_id;
+		Global.grid[change.i][change.j].nb_troops = change.nb_troops;
+	});
 
-	return Global.grid[change.i][change.j];
 }
 
 // Give the cell from the mouse position
@@ -133,22 +135,35 @@ export function get_cell_from_mouse(x : number, y : number) {
 export function update_grid_from_server()
 {
 	// When the server send the grid
-	Global.socket.on('grid_to_client', (server_grid: Cell[][]) =>
+	Global.socket.on(ServerSocket.GRID, (server_grid: Cell[]) =>
 	{
+		let gridValIdx = 0
 		for (let i = 0; i < Global.grid_size.x; i++)
-			for (let j = 0; j < Global.grid_size.y; j++)
 			{
-				Global.grid[i][j].color = server_grid[i][j].color;
-				Global.grid[i][j].skin_id = server_grid[i][j].skin_id;
-				Global.grid[i][j].player_id = server_grid[i][j].player_id;
-				Global.grid[i][j].nb_troops = server_grid[i][j].nb_troops;
+				for (let j = 0; j < Global.grid_size.y; j++)
+				{
+					if(gridValIdx < server_grid.length && server_grid[gridValIdx].i == i && server_grid[gridValIdx].j == j) {
+						Global.grid[i][j].color = server_grid[gridValIdx].color;
+						Global.grid[i][j].skin_id = server_grid[gridValIdx].skin_id;
+						Global.grid[i][j].player_id = server_grid[gridValIdx].player_id;
+						Global.grid[i][j].nb_troops = server_grid[gridValIdx].nb_troops;
+						gridValIdx += 1
+					} 
+					else {
+						Global.grid[i][j].color = '#FFFFFF';
+						Global.grid[i][j].skin_id = -1;
+						Global.grid[i][j].player_id = '';
+						Global.grid[i][j].nb_troops = 0;
+					}
+					
+				}
 			}
 
 		render();
 	});
 
 	// Ask the server for the grid
-	Global.socket.emit('ask_for_grid');
+	Global.socket.emit(ClientSocket.GRID_REQUEST);
 }
 
 // Tell if the cell are neighbours

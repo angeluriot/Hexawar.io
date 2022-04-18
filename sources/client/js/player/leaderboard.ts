@@ -1,3 +1,4 @@
+import { ServerSocket } from "../properties.js";
 import { Global } from "../properties.js";
 import { Player } from "./player.js";
 
@@ -98,7 +99,7 @@ export function update_leaderboard()
 		}
 	}
 
-	Global.socket.on("leaderboard", (best_players: { id: string, nickname: string, size: number, admin: boolean }[]) =>
+	Global.socket.on(ServerSocket.LEADERBOARD, (best_players: { id: string, nickname: string, size: number, admin: boolean }[]) =>
 	{
 		clear();
 

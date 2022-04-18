@@ -1,6 +1,7 @@
 import { Socket } from 'socket.io';
 import * as Utils from '../utils/utils.js';
 import { UserInterface } from '../../models/user.js';
+import { ServerSocket } from '../properties.js';
 
 export class Player
 {
@@ -14,6 +15,8 @@ export class Player
 	playing: boolean;
 	user: UserInterface | null;
 	static list: Player[] = [];
+	last_message: number;
+	latency: number;
 
 	constructor(socket: Socket)
 	{
@@ -26,6 +29,8 @@ export class Player
 		this.conquered_lands = 0;
 		this.playing = false;
 		this.user = null;
+		this.last_message = Date.now();
+		this.latency = 0;
 	}
 
 	// Handle player connection
@@ -99,7 +104,7 @@ export class Player
 		if (this.playing)
 		{
 			this.leave();
-			this.socket.emit('die', this.conquered_lands, this.max_size);
+			this.socket.emit(ServerSocket.DEATH, this.conquered_lands, this.max_size);
 		}
 	}
 

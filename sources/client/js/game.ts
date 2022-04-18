@@ -7,6 +7,7 @@ import { Player } from './player/player.js';
 import { Change } from './grid/cell.js';
 import * as Menu from './user/menu.js';
 import * as MatchResult from './player/match_result.js';
+import { ClientSocket, ServerSocket } from './properties.js';
 
 export type Move = {
 	from: { i: number, j: number },
@@ -25,29 +26,19 @@ export function load_background()
 	Grid.update_grid_from_server();
 
 	// Changes from server
-	Global.socket.on('change', (change: Change) =>
+	Global.socket.on(ServerSocket.CHANGES, (changes: Change[]) =>
 	{
-		Grid.set_cell(change);
+	 	Grid.set_cells(changes);
 		render();
 	});
 
-	Global.socket.on('changes', (changes: Change[], is_move: boolean) =>
-	{
-		for (let i = 0; i < changes.length; i++)
-			Grid.set_cell(changes[i]);
-
-		if (Player.playing && is_move && changes[0].player_id == Player.id && changes[1].player_id == Player.id)
-			Global.cell_from = Grid.get_cell(changes[1].i, changes[1].j);
-
-		render();
-	});
 }
 
 // Join the game
 export function join_game()
 {
 	// When the server sends the spawn data
-	Global.socket.on('send_spawn', (spawn: {i: number, j: number}) =>
+	Global.socket.on(ServerSocket.SPAWN, (spawn: {i: number, j: number}) =>
 	{
 		const form_div = document.querySelector('.connect_div') as HTMLDivElement;
 		const leaderboard = document.querySelector('.leaderboard') as HTMLDivElement;
@@ -65,14 +56,14 @@ export function join_game()
 
 		if (cell != null)
 			Camera.move(cell.x, cell.y);
-
+		
 		render();
 	});
 
 	Menu.clear();
-
+	
 	// Tell the server that the player has joined
-	Global.socket.emit('join_game', Player.get_object());
+	Global.socket.emit(ClientSocket.JOIN_GAME, Player.get_object());
 }
 
 // Start the game
@@ -97,9 +88,15 @@ export function start_game(nickname: string, color: string)
 
 	join_game();
 
+	//Send ping to server
+	let ping_interval = setInterval(() => {
+		Global.socket.emit(ClientSocket.PING, Date.now());
+	}, 1000);
+
 	// If the player dies
-	Global.socket.on('die', (conquered_lands: number, max_size: number) =>
+	Global.socket.on(ServerSocket.DEATH, (conquered_lands: number, max_size: number) =>
 	{
+		clearInterval(ping_interval);
 		Player.conquered_lands = conquered_lands;
 		Player.highest_score = max_size;
 		MatchResult.display_results();
@@ -132,7 +129,7 @@ export function move()
 						to: { i: cell_to.i, j: cell_to.j }
 					});
 
-			Global.socket.emit('moves', moves);
+			Global.socket.emit(ClientSocket.MOVES, moves);
 			render();
 		}
 	}
@@ -181,10 +178,10 @@ export function move()
 
 			// Send the move data to the server
 			if (cell != null && Global.cell_from != null)
-				Global.socket.emit('move', {
+				Global.socket.emit(ClientSocket.MOVES, [{
 					from: { i: Global.cell_from.i, j: Global.cell_from.j },
 					to: { i: cell.i, j: cell.j }
-				});
+				}]);
 
 			Global.show_drag = false;
 			Global.dragging = false;
@@ -203,10 +200,10 @@ export function move()
 			{
 				// Simple move
 				if (Global.cell_from != null && Grid.are_neighbours(cell, Global.cell_from) && Global.cell_from.nb_troops > 1)
-					Global.socket.emit('move', {
+					Global.socket.emit(ClientSocket.MOVES, [{
 						from: { i: Global.cell_from.i, j: Global.cell_from.j },
 						to: { i: cell.i, j: cell.j }
-					});
+					}]);
 
 				// Change selected cell
 				else
@@ -221,10 +218,10 @@ export function move()
 			{
 				// The selected cell is close
 				if (Global.cell_from != null && Grid.are_neighbours(cell, Global.cell_from) && Global.cell_from.nb_troops > 1)
-					Global.socket.emit('move', {
+					Global.socket.emit(ClientSocket.MOVES, [{
 						from: { i: Global.cell_from.i, j: Global.cell_from.j },
 						to: { i: cell.i, j: cell.j }
-					});
+					}]);
 
 				// The selected cell is far (choose the cell with the most troops)
 				else
@@ -241,10 +238,10 @@ export function move()
 						}
 
 					if (best_cell != null)
-						Global.socket.emit('move', {
+						Global.socket.emit(ClientSocket.MOVES, [{
 							from: { i: best_cell.i, j: best_cell.j },
 							to: { i: cell.i, j: cell.j }
-						});
+						}]);
 				}
 			}
 		}

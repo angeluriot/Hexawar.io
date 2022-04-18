@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Player } from '../players/player.js';
-import { Global } from '../properties.js';
+import { ClientSocket, Global, ServerSocket } from '../properties.js';
 import * as Users from './users.js'
 
 function is_ascii(input: string)
@@ -15,31 +15,31 @@ function is_ascii(input: string)
 
 function register(player: Player)
 {
-	player.socket.on('register', (username: string, password: string) =>
+	player.socket.on(ClientSocket.REGISTER, (username: string, password: string) =>
 	{
 		username = username.trim();
 
 		if (player.playing)
 		{
-			player.socket.emit('register_error', "You cannot register while playing.");
+			player.socket.emit(ServerSocket.REGISTER_ERROR, "You cannot register while playing.");
 			return;
 		}
 
 		if (player.user != null)
 		{
-			player.socket.emit('register_error', "You are already logged in.");
+			player.socket.emit(ServerSocket.REGISTER_ERROR, "You are already logged in.");
 			return;
 		}
 
 		if (username.length < 4 || username.length > 16 || !is_ascii(username))
 		{
-			player.socket.emit('register_error', "Invalid username.");
+			player.socket.emit(ServerSocket.REGISTER_ERROR, "Invalid username.");
 			return;
 		}
 
 		if (password.length < 4 || password.length > 32 || !is_ascii(password))
 		{
-			player.socket.emit('register_error', "Invalid password.");
+			player.socket.emit(ServerSocket.REGISTER_ERROR, "Invalid password.");
 			return;
 		}
 
@@ -47,7 +47,7 @@ function register(player: Player)
 		{
 			if (hash_error != undefined)
 			{
-				player.socket.emit('register_error', 'Your password could not be hashed.');
+				player.socket.emit(ServerSocket.REGISTER_ERROR, 'Your password could not be hashed.');
 				return;
 			}
 
@@ -62,18 +62,18 @@ function register(player: Player)
 				{
 					if (token_error != null)
 					{
-						player.socket.emit('registered', null, null, null);
+						player.socket.emit(ServerSocket.REGISTERED, null, null, null);
 						return;
 					}
 
-					player.socket.emit('registered', token, date.toUTCString(), Users.get_data(user));
+					player.socket.emit(ServerSocket.REGISTERED, token, date.toUTCString(), Users.get_data(user));
 				});
 			}, (error) =>
 			{
 				if (error.code == 11000)
-					player.socket.emit('register_error', 'This username is already taken.');
+					player.socket.emit(ServerSocket.REGISTER_ERROR, 'This username is already taken.');
 				else
-					player.socket.emit('register_error', 'Your account could not be created.');
+					player.socket.emit(ServerSocket.REGISTER_ERROR, 'Your account could not be created.');
 			});
 		});
 	});
@@ -81,31 +81,31 @@ function register(player: Player)
 
 function login(player: Player)
 {
-	player.socket.on('login', (username: string, password: string) =>
+	player.socket.on(ClientSocket.LOGIN, (username: string, password: string) =>
 	{
 		username = username.trim();
 
 		if (player.playing)
 		{
-			player.socket.emit('login_error', "You cannot login while playing.");
+			player.socket.emit(ServerSocket.LOGIN_ERROR, "You cannot login while playing.");
 			return;
 		}
 
 		if (player.user != null)
 		{
-			player.socket.emit('login_error', "You are already logged in.");
+			player.socket.emit(ServerSocket.LOGIN_ERROR, "You are already logged in.");
 			return;
 		}
 
 		if (username.length < 4 || username.length > 16 || !is_ascii(username))
 		{
-			player.socket.emit('login_error', "Invalid username.");
+			player.socket.emit(ServerSocket.LOGIN_ERROR, "Invalid username.");
 			return;
 		}
 
 		if (password.length < 4 || password.length > 32 || !is_ascii(password))
 		{
-			player.socket.emit('login_error', "Invalid password.");
+			player.socket.emit(ServerSocket.LOGIN_ERROR, "Invalid password.");
 			return;
 		}
 
@@ -115,7 +115,7 @@ function login(player: Player)
 			{
 				if (hash_error != undefined || !result)
 				{
-					player.socket.emit('login_error', 'Wrong password.');
+					player.socket.emit(ServerSocket.LOGIN_ERROR, 'Wrong password.');
 					return;
 				}
 
@@ -128,54 +128,54 @@ function login(player: Player)
 				{
 					if (token_error != null)
 					{
-						player.socket.emit('logged', null, null, null);
+						player.socket.emit(ServerSocket.LOGGED, null, null, null);
 						return;
 					}
 
-					player.socket.emit('logged', token, date.toUTCString(), Users.get_data(user));
+					player.socket.emit(ServerSocket.LOGGED, token, date.toUTCString(), Users.get_data(user));
 				});
 			});
 		}, (error) =>
 		{
-			player.socket.emit('login_error', "This user does not exist.");
+			player.socket.emit(ServerSocket.LOGIN_ERROR, "This user does not exist.");
 		});
 	});
 }
 
 function logout(player: Player)
 {
-	player.socket.on('logout', () =>
+	player.socket.on(ClientSocket.LOGOUT, () =>
 	{
 		if (player.playing)
 		{
-			player.socket.emit('logout_error', "You cannot logout while playing.");
+			player.socket.emit(ServerSocket.LOGOUT_ERROR, "You cannot logout while playing.");
 			return;
 		}
 
 		if (player.user == null)
 		{
-			player.socket.emit('logout_error', "You are already logged out.");
+			player.socket.emit(ServerSocket.LOGOUT_ERROR, "You are already logged out.");
 			return;
 		}
 
-		player.socket.emit('unlogged');
+		player.socket.emit(ServerSocket.UNLOGGED);
 		player.user = null;
 	});
 }
 
 function auto_login(player: Player)
 {
-	player.socket.on('auto_login', (token: string) =>
+	player.socket.on(ClientSocket.AUTO_LOGIN, (token: string) =>
 	{
 		if (player.playing)
 		{
-			player.socket.emit('auto_login_error');
+			player.socket.emit(ServerSocket.AUTO_LOGIN_ERROR);
 			return;
 		}
 
 		if (player.user != null)
 		{
-			player.socket.emit('auto_login_error');
+			player.socket.emit(ServerSocket.AUTO_LOGIN_ERROR);
 			return;
 		}
 
@@ -183,18 +183,18 @@ function auto_login(player: Player)
 		{
 			if (err != null)
 			{
-				player.socket.emit('auto_login_error');
+				player.socket.emit(ServerSocket.AUTO_LOGIN_ERROR);
 				return;
 			}
 
 			Users.get_user(decoded.data, (user) =>
 			{
 				player.user = user;
-				player.socket.emit('auto_logged', Users.get_data(user));
+				player.socket.emit(ServerSocket.AUTO_LOGGED, Users.get_data(user));
 			},
 			(error) =>
 			{
-				player.socket.emit('auto_login_error');
+				player.socket.emit(ServerSocket.AUTO_LOGIN_ERROR);
 			});
 		});
 	});
@@ -202,23 +202,23 @@ function auto_login(player: Player)
 
 function delete_account(player: Player)
 {
-	player.socket.on('delete_account', (password) =>
+	player.socket.on(ClientSocket.DELETE_ACCOUNT, (password) =>
 	{
 		if (player.playing)
 		{
-			player.socket.emit('delete_account_error', "You cannot delete your account while playing.");
+			player.socket.emit(ServerSocket.DELETE_ACCOUNT_ERROR, "You cannot delete your account while playing.");
 			return;
 		}
 
 		if (player.user == null)
 		{
-			player.socket.emit('delete_account_error', "You are not logged in.");
+			player.socket.emit(ServerSocket.DELETE_ACCOUNT_ERROR, "You are not logged in.");
 			return;
 		}
 
 		if (password.length < 4 || password.length > 32 || !is_ascii(password))
 		{
-			player.socket.emit('delete_account_error', "Invalid password.");
+			player.socket.emit(ServerSocket.DELETE_ACCOUNT_ERROR, "Invalid password.");
 			return;
 		}
 
@@ -228,28 +228,28 @@ function delete_account(player: Player)
 			{
 				if (player.user == null)
 				{
-					player.socket.emit('delete_account_error', "You are not logged in.");
+					player.socket.emit(ServerSocket.DELETE_ACCOUNT_ERROR, "You are not logged in.");
 					return;
 				}
 
 				if (hash_error != undefined || !result)
 				{
-					player.socket.emit('delete_account_error', 'Wrong password.');
+					player.socket.emit(ServerSocket.DELETE_ACCOUNT_ERROR, 'Wrong password.');
 					return;
 				}
 
 				Users.remove_user(player.user.username, (user) =>
 				{
-					player.socket.emit('account_deleted');
+					player.socket.emit(ServerSocket.ACCOUNT_DELETED);
 					player.user = null;
 				}, (error) =>
 				{
-					player.socket.emit('delete_account_error', 'Your account could not be deleted.');
+					player.socket.emit(ServerSocket.DELETE_ACCOUNT_ERROR, 'Your account could not be deleted.');
 				});
 			});
 		}, (error) =>
 		{
-			player.socket.emit('delete_account_error', "This user does not exist.");
+			player.socket.emit(ServerSocket.DELETE_ACCOUNT_ERROR, "This user does not exist.");
 		});
 	});
 }

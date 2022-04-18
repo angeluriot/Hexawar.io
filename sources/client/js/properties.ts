@@ -31,4 +31,49 @@ export class Global
 	// Resources
 	static skins: HTMLImageElement[] = [];
 	static skin_colors: string[] = [];
+
+	//Server
+	static last_message: number = Date.now();
+	static last_response: number = Date.now();
+	 
+}
+
+
+export enum ClientSocket {
+	DISCONNECT = '0',
+	JOIN_GAME = '1',
+	REGISTER = '2',
+	LOGIN = '3',
+	LOGOUT = '4',
+	AUTO_LOGIN = '5',
+	DELETE_ACCOUNT = '6',
+
+	PING = '7',
+	MOVES = '8',
+	GRID_REQUEST = '9',
+
+}
+
+export enum ServerSocket {
+	CHANGES = '0',
+	GRID = '1',
+	SPAWN = '2',
+	DEATH = '3',
+	LEADERBOARD = '4',
+	
+
+	REGISTER_ERROR = '5',
+	REGISTERED = '6',
+
+	LOGIN_ERROR = '7',
+	LOGGED = '8',
+
+	LOGOUT_ERROR = '9',
+	UNLOGGED = 'A',
+
+	AUTO_LOGIN_ERROR = 'B',
+	AUTO_LOGGED = 'C',
+
+	DELETE_ACCOUNT_ERROR = 'D',
+	ACCOUNT_DELETED = 'E',
 }

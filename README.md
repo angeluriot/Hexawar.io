@@ -128,5 +128,5 @@ $ npm run fstart
 * [**Angel Uriot**](https://github.com/angeluriot) : Co-creator of the project.
 * [**Arthur Azambre**](https://github.com/arthurazambre) : Co-creator of the project.
 * [**Gaétan Renard**](https://github.com/G-rnd) : Co-creator of the project.
-* [**Pierre Surer**](https://github.com/PignoulMarcel) : Co-creator of the project.
+* [**Pierre Surer**](https://github.com/PierreSurer) : Co-creator of the project.
 * [**Thomas Mostowfi**](https://github.com/nuuye) : Co-creator of the project.
