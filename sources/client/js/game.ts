@@ -29,6 +29,13 @@ export function load_background()
 	Global.socket.on(ServerSocket.CHANGES, (changes: Change[]) =>
 	{
 	 	Grid.set_cells(changes);
+		
+		changes.forEach((change) => {
+			if(change.player_id == Player.id && Player.last_move.i == change.i && Player.last_move.j == change.j)
+				Global.cell_from = Grid.get_cell(change.i, change.j);
+		});
+
+
 		render();
 	});
 
@@ -128,7 +135,8 @@ export function move()
 						from: { i: cells_from[i].i, j: cells_from[i].j },
 						to: { i: cell_to.i, j: cell_to.j }
 					});
-
+			
+			Player.last_move = { i: cell_to.i, j: cell_to.j };
 			Global.socket.emit(ClientSocket.MOVES, moves);
 			render();
 		}
@@ -177,12 +185,14 @@ export function move()
 			let cell = Grid.get_cell_from_mouse(e.clientX, e.clientY);
 
 			// Send the move data to the server
-			if (cell != null && Global.cell_from != null)
+			if (cell != null && Global.cell_from != null) {
 				Global.socket.emit(ClientSocket.MOVES, [{
 					from: { i: Global.cell_from.i, j: Global.cell_from.j },
 					to: { i: cell.i, j: cell.j }
 				}]);
-
+				Player.last_move = { i: cell.i, j: cell.j };
+			}
+			
 			Global.show_drag = false;
 			Global.dragging = false;
 			render();
@@ -199,13 +209,15 @@ export function move()
 			if (cell.player_id == Player.id)
 			{
 				// Simple move
-				if (Global.cell_from != null && Grid.are_neighbours(cell, Global.cell_from) && Global.cell_from.nb_troops > 1)
+				if (Global.cell_from != null && Grid.are_neighbours(cell, Global.cell_from) && Global.cell_from.nb_troops > 1) {
 					Global.socket.emit(ClientSocket.MOVES, [{
 						from: { i: Global.cell_from.i, j: Global.cell_from.j },
 						to: { i: cell.i, j: cell.j }
 					}]);
 
+					Player.last_move = { i: cell.i, j: cell.j };
 				// Change selected cell
+				}
 				else
 				{
 					Global.cell_from = cell;
@@ -217,13 +229,14 @@ export function move()
 			else
 			{
 				// The selected cell is close
-				if (Global.cell_from != null && Grid.are_neighbours(cell, Global.cell_from) && Global.cell_from.nb_troops > 1)
+				if (Global.cell_from != null && Grid.are_neighbours(cell, Global.cell_from) && Global.cell_from.nb_troops > 1) {
 					Global.socket.emit(ClientSocket.MOVES, [{
 						from: { i: Global.cell_from.i, j: Global.cell_from.j },
 						to: { i: cell.i, j: cell.j }
 					}]);
-
+					Player.last_move = { i: cell.i, j: cell.j };
 				// The selected cell is far (choose the cell with the most troops)
+				}
 				else
 				{
 					let cells_from = Grid.get_neighbours(cell);
@@ -237,11 +250,13 @@ export function move()
 							best_cell = cells_from[i];
 						}
 
-					if (best_cell != null)
+					if (best_cell != null) {
 						Global.socket.emit(ClientSocket.MOVES, [{
 							from: { i: best_cell.i, j: best_cell.j },
 							to: { i: cell.i, j: cell.j }
 						}]);
+						Player.last_move = { i: cell.i, j: cell.j };
+					}
 				}
 			}
 		}
