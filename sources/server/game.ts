@@ -23,6 +23,12 @@ export function join(player: Player)
 	player.socket.on(ClientSocket.JOIN_GAME, (input_player: { nickname: string, color: string, skin_id: number }) =>
 	{
 
+		if(!input_player)
+			return;
+			
+		if(typeof input_player.nickname != 'string' || typeof input_player.color != 'string' || typeof input_player.skin_id != 'number')
+			return;
+
 		player.nickname = input_player.nickname.trim();
 
 		if (player.nickname.length > 16)
@@ -91,7 +97,7 @@ export function check_timeout() {
 	Player.list.map(player =>
 		{
 			if(Date.now() - (player.last_message - player.latency) > Global.timeout_delay) {
-				player.leave();
+				player.die();
 				Grid.remove_player_from_grid(player);
 			}
 		});
@@ -126,9 +132,8 @@ export function game_loop()
 export function leave_game(player: Player)
 {
 	// When client disconnects
-	player.socket.on(ClientSocket.DISCONNECT, () =>
+	player.socket.on('disconnect', () =>
 	{
-		player.last_message = Date.now();
 		player.leave();
 		Grid.remove_player_from_grid(player);
 	});
@@ -137,6 +142,12 @@ export function leave_game(player: Player)
 // Handle player ping
 export function player_ping(player: Player) {
 	player.socket.on(ClientSocket.PING, (send_date: number) => {
+		if(!send_date)
+			return;
+
+		if(typeof send_date != 'number')
+			return;
+
 		player.latency = Date.now() - send_date;
 		player.last_message = Date.now();
 	});
@@ -272,10 +283,31 @@ export function player_moves(player: Player)
 		}
 	}
 
-	player.socket.on(ClientSocket.MOVES, (moves: Move[]) => { 
+	player.socket.on(ClientSocket.MOVES, (moves: any) => { 
+		if(!moves)
+			return;
+
+		if(!Array.isArray(moves))
+			return;
+
+		for(let move of moves) {
+			if(!is_move(move))
+				return;
+		}
+
 		player.last_message = Date.now();
 		moves.forEach(move => move_event(move)); 
 	});
+}
+
+// Check incoming Move packet type
+function is_move(move : any) : move is Move {
+	let is_valid = typeof (move as Move).from.i == 'number';
+	is_valid = is_valid && typeof (move as Move).from.j == 'number';
+	is_valid = is_valid && typeof (move as Move).to.i == 'number';
+	is_valid = is_valid && typeof (move as Move).to.j == 'number';
+
+	return is_valid;
 }
 
 // Handle troops spawning

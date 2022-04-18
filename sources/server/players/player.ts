@@ -12,7 +12,6 @@ export class Player
 	size: number;
 	max_size: number;
 	conquered_lands: number;
-	playing: boolean;
 	user: UserInterface | null;
 	static list: Player[] = [];
 	last_message: number;
@@ -27,48 +26,41 @@ export class Player
 		this.size = 0;
 		this.max_size = 0;
 		this.conquered_lands = 0;
-		this.playing = false;
 		this.user = null;
 		this.last_message = Date.now();
 		this.latency = 0;
 	}
 
+	// Verify if current player is playing
+	is_playing() {
+		return Player.list.includes(this);
+	}
+
+
 	// Handle player connection
-	join()
-	{
-		if (!this.playing)
-		{
-			this.playing = true;
-
-			if (this.user != null)
-				for (let i = 0; i < Player.list.length; i++)
-				{
-					let player = Player.list[i];
-
+	join() {
+		if (!this.is_playing()) {
+			if (this.user != null) {
+				for (let player of Player.list) {
 					if (player.user != null && player.user.username == this.user.username)
-						this.playing = false;
+						return false;
 				}
+			}	
+
+			Player.list.push(this);
+			return true;
 		}
 
-		else
-			this.playing = false;
-
-		if (this.playing)
-			Player.list.push(this);
-
-		return this.playing;
+		return false;
 	}
 
 	// Handle player disconnection
 	leave()
 	{
-		if (this.playing)
+		if (this.is_playing())
 		{
 			const index = Player.list.indexOf(this);
-			this.playing = false;
-
-			if (index != -1)
-				Player.list.splice(index, 1);
+			Player.list.splice(index, 1);
 
 			if (this.user != null)
 			{
@@ -101,7 +93,7 @@ export class Player
 	// When a player dies
 	die()
 	{
-		if (this.playing)
+		if (this.is_playing())
 		{
 			this.leave();
 			this.socket.emit(ServerSocket.DEATH, this.conquered_lands, this.max_size);

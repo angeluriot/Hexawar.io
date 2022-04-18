@@ -17,9 +17,21 @@ function register(player: Player)
 {
 	player.socket.on(ClientSocket.REGISTER, (username: string, password: string) =>
 	{
+		if(!username)
+			return;
+
+		if(typeof username != 'string')
+			return;
+
+		if(!password)
+			return;
+
+		if(typeof password != 'string')
+			return;
+
 		username = username.trim();
 
-		if (player.playing)
+		if (player.is_playing())
 		{
 			player.socket.emit(ServerSocket.REGISTER_ERROR, "You cannot register while playing.");
 			return;
@@ -83,9 +95,21 @@ function login(player: Player)
 {
 	player.socket.on(ClientSocket.LOGIN, (username: string, password: string) =>
 	{
+		if(!username)
+			return;
+
+		if(typeof username != 'string')
+			return;
+		
+		if(!password)
+			return;
+
+		if(typeof password != 'string')
+			return;
+
 		username = username.trim();
 
-		if (player.playing)
+		if (player.is_playing())
 		{
 			player.socket.emit(ServerSocket.LOGIN_ERROR, "You cannot login while playing.");
 			return;
@@ -146,7 +170,7 @@ function logout(player: Player)
 {
 	player.socket.on(ClientSocket.LOGOUT, () =>
 	{
-		if (player.playing)
+		if (player.is_playing())
 		{
 			player.socket.emit(ServerSocket.LOGOUT_ERROR, "You cannot logout while playing.");
 			return;
@@ -167,7 +191,14 @@ function auto_login(player: Player)
 {
 	player.socket.on(ClientSocket.AUTO_LOGIN, (token: string) =>
 	{
-		if (player.playing)
+
+		if(!token)
+			return;
+
+		if(typeof token != 'string')
+			return;
+
+		if (player.is_playing())
 		{
 			player.socket.emit(ServerSocket.AUTO_LOGIN_ERROR);
 			return;
@@ -202,9 +233,15 @@ function auto_login(player: Player)
 
 function delete_account(player: Player)
 {
-	player.socket.on(ClientSocket.DELETE_ACCOUNT, (password) =>
+	player.socket.on(ClientSocket.DELETE_ACCOUNT, (password : string) =>
 	{
-		if (player.playing)
+		if(!password)
+			return;
+
+		if(typeof password != 'string')
+			return;
+
+		if (player.is_playing())
 		{
 			player.socket.emit(ServerSocket.DELETE_ACCOUNT_ERROR, "You cannot delete your account while playing.");
 			return;
