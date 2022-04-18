@@ -40,17 +40,16 @@ export class Global
 
 
 export enum ClientSocket {
-	DISCONNECT = '0',
-	JOIN_GAME = '1',
-	REGISTER = '2',
-	LOGIN = '3',
-	LOGOUT = '4',
-	AUTO_LOGIN = '5',
-	DELETE_ACCOUNT = '6',
+	JOIN_GAME = '0',
+	REGISTER = '1',
+	LOGIN = '2',
+	LOGOUT = '3',
+	AUTO_LOGIN = '4',
+	DELETE_ACCOUNT = '5',
 
-	PING = '7',
-	MOVES = '8',
-	GRID_REQUEST = '9',
+	PING = '6',
+	MOVES = '7',
+	GRID_REQUEST = '8',
 
 }
 
