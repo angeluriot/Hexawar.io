@@ -43,8 +43,8 @@ export function join(player: Player)
 		{
 			// Gives the player a spawn cell
 			let spawn = { i:5, j:5 };
-
-			//Cut territory by spawn
+			
+			// Cut territories by spawn
 			let spawnAreaNeighbours : [number, number][][] = [];
 			let counter : number = 0;
 			let spawnNeighboursCoordinates : [number, number][] = Grid.get_neighbours_coordinates([spawn.i, spawn.j])
@@ -56,19 +56,22 @@ export function join(player: Player)
 					counter += 1;
 				}
 			}
-			
+
 			let spawnAreaNeighbours2 : [number, number][][] = [];
 			let spawnAreaNeighbours3 : [number, number][][] = [];
 			for(let c=0; c<spawnAreaNeighbours.length - 1;c++){
 				if((Grid.get_cell(spawnAreaNeighbours[c][0][0],spawnAreaNeighbours[c][0][1])?.player?.socket.id
 					!= Grid.get_cell(spawnAreaNeighbours[c+1][0][0],spawnAreaNeighbours[c+1][0][1])?.player?.socket.id)
-					&& spawnAreaNeighbours.length > 2 )
+					&& spawnAreaNeighbours.length > 1 )
 					{
 					spawnAreaNeighbours2.push(spawnAreaNeighbours[0]);
 					spawnAreaNeighbours.shift();
 					break;
 				}
 			}
+
+			
+				
 			
 			if(spawnAreaNeighbours2.length > 0){
 				let coord : number = 0;
@@ -98,7 +101,6 @@ export function join(player: Player)
 							== Grid.get_cell(spawnAreaNeighbours3[0][0][0],spawnAreaNeighbours3[0][0][1])?.player?.socket.id){
 								spawnAreaNeighbours3.push(spawnAreaNeighbours.splice(coord2,1)[0]);
 								coord2 -= 1;
-								
 							}
 						coord2+=1
 						}
@@ -155,9 +157,6 @@ export function join(player: Player)
 				Grid.set_cells(changes,false);
 				
 			}
-
-			
-			
 
 			// Set the change
 			const change = {
