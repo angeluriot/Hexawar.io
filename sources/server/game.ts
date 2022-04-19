@@ -42,7 +42,7 @@ export function join(player: Player)
 		if (player.join())
 		{
 			// Gives the player a spawn cell
-			let spawn = { i:5, j:5 };
+			let spawn = Grid.get_spawn_cell();
 			
 			// Cut territories by spawn
 			let spawnAreaNeighbours : [number, number][][] = [];
@@ -69,9 +69,6 @@ export function join(player: Player)
 					break;
 				}
 			}
-
-			
-				
 			
 			if(spawnAreaNeighbours2.length > 0){
 				let coord : number = 0;
@@ -110,7 +107,6 @@ export function join(player: Player)
 				
 				
 			}
-			
 
 			let spawnDyingCells = Grid.dying_cells(spawnAreaNeighbours, [[spawn.i, spawn.j]]);
 			let spawnDyingCells2 = Grid.dying_cells(spawnAreaNeighbours2, [[spawn.i, spawn.j]]);
