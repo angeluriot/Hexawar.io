@@ -147,7 +147,7 @@ export function player_moves(player: Player)
 					if(cell_to.player!=null){
 						//Find the starting point of the area detection
 						let neighbours: [number, number][] = Grid.get_neighbours_coordinates([move.to.i, move.to.j]);
-						let playerCellOffset: number = 0; 
+						let playerCellOffset: number = 0;
 						while(neighbours[playerCellOffset][0] != move.from.i && neighbours[playerCellOffset][1] != move.from.j )
 							playerCellOffset += 1;
 						//Detect the differents areas
@@ -166,7 +166,7 @@ export function player_moves(player: Player)
 										areas.push([[x, y]]);
 									}
 								}else{
-										areas.push([[x, y]]);	
+										areas.push([[x, y]]);
 								}
 								lastWasCell = true;
 							}else{

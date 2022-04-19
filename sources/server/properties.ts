@@ -18,4 +18,9 @@ export class Global
 	// Grid
 	static grid_size = { x: 60, y: 30 };
 	static grid: Cell[][] = [];
+
+	// Skins
+	static nb_veteran_skins = 10;
+	static nb_premium_skins = 10;
+	static skin_price = 99;
 }

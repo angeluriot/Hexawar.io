@@ -165,6 +165,43 @@ function use_event()
 	}
 }
 
+export function premium_buy_use_event()
+{
+	let strated_payment = false;
+
+	for (let i = 0; i < nb_premium_skins; i++)
+	{
+		let button = document.querySelector(`.shop .premium_list .skin_${i} .skin_text`);
+
+		if (button != null)
+		{
+			button.addEventListener('click', e =>
+			{
+				e.preventDefault();
+				const index = i + nb_veteran_skins;
+
+				if (Global.user_data != null && Global.user_data.skins.includes(index))
+				{
+					if (index == Player.skin_id)
+						Player.set_skin(-1);
+					else
+						Player.set_skin(index);
+				}
+
+				else if (!strated_payment)
+				{
+					Global.socket.emit('payment', index);
+					strated_payment = true;
+				}
+			});
+		}
+	}
+
+	Global.socket.on('payment_session', (url: any) => {
+		window.location.href = url;
+	})
+}
+
 export function update_skin_button(skin_id: number, used: boolean)
 {
 	if (skin_id < 0)
@@ -231,6 +268,8 @@ export function update_skin_connection()
 		buttons.push({ button: document.querySelector(`.shop .premium_list .skin_${i} .skin_text`) as HTMLSpanElement, index: nb_veteran_skins + i });
 
 	buttons.forEach(update_buttons);
+
+	premium_buy_use_event();
 }
 
 export function menus_events()

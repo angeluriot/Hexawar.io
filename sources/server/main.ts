@@ -8,6 +8,7 @@ import * as Connection from './users/connection.js';
 import mongoose from 'mongoose';
 import { Global } from './properties.js';
 import { Player } from './players/player.js';
+import * as Payment from './users/payment.js';
 import { config } from 'dotenv';
 
 config();
@@ -36,6 +37,7 @@ function init()
 		let player = new Player(socket);
 
 		Connection.connection_events(player);
+		Payment.buy_skin_events(player);
 
 		Game.join(player);
 		Game.game_events(player);
