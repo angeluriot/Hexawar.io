@@ -14,6 +14,7 @@ export class Player
 	static start_time: number = Date.now();
 	static score: number[] = [];
 	static spectator = false;
+	static last_move = { i: 0, j: 0 };
 
 	static set_skin(skin_id: number)
 	{

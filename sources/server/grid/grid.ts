@@ -1,7 +1,7 @@
 import * as Utils from '../utils/utils.js';
 import { Cell, Change, ClientChange, to_client, ClientCell } from './cell.js';
 import { Player } from '../players/player.js';
-import { Global } from '../properties.js';
+import { Global, ServerSocket } from '../properties.js';
 
 // Create the grid of cells
 export function create_grid()
@@ -15,27 +15,9 @@ export function create_grid()
 	}
 }
 
-// Set cell values from a change
-export function set_cell(change: Change)
-{
-	if (change.i < 0 || change.i >= Global.grid_size.x || change.j < 0 || change.j >= Global.grid_size.y)
-		return;
-
-	let cell = Global.grid[change.i][change.j];
-	Player.update_sizes(cell.player, change.player);
-
-	cell.color = change.color;
-	cell.skin_id = change.skin_id;
-	cell.player = change.player;
-	cell.nb_troops = change.nb_troops;
-
-	Global.io.emit('change', to_client(change));
-}
-
 // Set cells values from changes
-export function set_cells(changes: Change[], is_move: boolean)
+export function set_cells(changes: Change[])
 {
-	let valid_changes: ClientChange[] = [];
 
 	for (let i = 0; i < changes.length; i++)
 	{
@@ -50,10 +32,9 @@ export function set_cells(changes: Change[], is_move: boolean)
 		cell.player = changes[i].player;
 		cell.nb_troops = changes[i].nb_troops;
 
-		valid_changes.push(to_client(changes[i]));
+		Global.changes_list.push(changes[i]);
 	}
 
-	Global.io.emit('changes', valid_changes, is_move);
 }
 
 // Give the cell at the given coordinates
@@ -131,27 +112,31 @@ export function remove_player_from_grid(player: Player)
 			}
 
 	// Set the changes
-	set_cells(changes, false);
+	set_cells(changes);
 }
 
-export function get_client_grid()
+export function get_client_grid() : ClientChange[]
 {
-	let grid: ClientCell[][] = [];
+	let grid: ClientChange[] = [];
 
 	for (let i = 0; i < Global.grid_size.x; i++)
 	{
-		grid.push([]);
 
 		for (let j = 0; j < Global.grid_size.y; j++)
 		{
 			let cell = Global.grid[i][j];
-
-			grid[i].push({
-				color: cell.color,
-				skin_id: cell.skin_id,
-				player_id: (cell.player == null ? '' : cell.player.socket.id),
-				nb_troops: cell.nb_troops
-			});
+			if(cell.nb_troops > 0) {
+				
+				grid.push({
+					i: i,
+					j: j,
+					color: cell.color,
+					skin_id: cell.skin_id,
+					player_id: (cell.player == null ? '' : cell.player.socket.id),
+					nb_troops: cell.nb_troops
+				});
+				
+			}
 		}
 	}
 

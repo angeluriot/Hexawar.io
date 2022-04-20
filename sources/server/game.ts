@@ -1,7 +1,7 @@
 import * as Grid from './grid/grid.js';
 import { Player } from './players/player.js';
-import { Global } from './properties.js';
-import { Change } from './grid/cell.js';
+import { Global, ClientSocket, ServerSocket } from './properties.js';
+import { Change, ClientChange, to_client } from './grid/cell.js';
 import * as Utils from './utils/utils.js';
 
 export type Move = {
@@ -13,14 +13,22 @@ export type Move = {
 export function join(player: Player)
 {
 	// Send the grid
-	player.socket.on('ask_for_grid', () =>
+	player.socket.on(ClientSocket.GRID_REQUEST, () =>
 	{
-		player.socket.emit('grid_to_client', Grid.get_client_grid());
+		player.last_message = Date.now();
+		player.socket.emit(ServerSocket.GRID, Grid.get_client_grid());
 	});
 
 	// Register the player
-	player.socket.on('join_game', (input_player: { nickname: string, color: string, skin_id: number }) =>
+	player.socket.on(ClientSocket.JOIN_GAME, (input_player: { nickname: string, color: string, skin_id: number }) =>
 	{
+
+		if(!input_player)
+			return;
+			
+		if(typeof input_player.nickname != 'string' || typeof input_player.color != 'string' || typeof input_player.skin_id != 'number')
+			return;
+
 		player.nickname = input_player.nickname.trim();
 
 		if (player.nickname.length > 16)
@@ -54,8 +62,8 @@ export function join(player: Player)
 				nb_troops: Global.initial_nb_troops
 			};
 
-			Grid.set_cell(change);
-			player.socket.emit('send_spawn', spawn);
+			Grid.set_cells([change]);
+			player.socket.emit(ServerSocket.SPAWN, spawn);
 			update_leaderboard();
 		}
 	});
@@ -65,6 +73,34 @@ export function join(player: Player)
 export function game_events(player: Player)
 {
 	player_moves(player);
+	player_ping(player);
+}
+
+// Send changes to clients
+export function send_changes() {
+	let clientList : ClientChange [] = [];
+	Global.changes_list.forEach(e => {
+		clientList.push(to_client(e));
+	});
+	if(clientList.length > 0)
+		Global.io.emit(ServerSocket.CHANGES, clientList)
+}
+
+// Reset changes list
+export function reset_changes() {
+	Global.changes_list = [];
+	
+}
+
+//Disconnect client if timed out
+export function check_timeout() {
+	Player.list.map(player =>
+		{
+			if(Date.now() - (player.last_message - player.latency) > Global.timeout_delay) {
+				player.die();
+				Grid.remove_player_from_grid(player);
+			}
+		});
 }
 
 // Loops of the game
@@ -74,6 +110,17 @@ export function game_loop()
 	{
 		troops_spawn();
 	}, 1000);
+
+	setInterval(() =>
+	{
+		send_changes();
+		reset_changes();
+	}, Global.update_rate);
+
+	setInterval(() =>
+	{
+		check_timeout();
+	}, 2000);
 
 	setInterval(() =>
 	{
@@ -92,6 +139,21 @@ export function leave_game(player: Player)
 	});
 }
 
+// Handle player ping
+export function player_ping(player: Player) {
+	player.socket.on(ClientSocket.PING, (send_date: number) => {
+		if(!send_date)
+			return;
+
+		if(typeof send_date != 'number')
+			return;
+
+		player.latency = Date.now() - send_date;
+		player.last_message = Date.now();
+	});
+
+}
+
 // Handle player moves
 export function player_moves(player: Player)
 {
@@ -99,7 +161,6 @@ export function player_moves(player: Player)
 	{
 		let cell_from = Grid.get_cell(move.from.i, move.from.j);
 		let cell_to = Grid.get_cell(move.to.i, move.to.j);
-		let dyingCells: Change[] = [];
 		// If the move is valid
 		if (cell_from != null && cell_to != null && cell_from.player == player && Grid.are_neighbours(move.from, move.to) && cell_from.nb_troops > 1)
 		{
@@ -142,7 +203,7 @@ export function player_moves(player: Player)
 				if (change_from.nb_troops > change_to.nb_troops + 1)
 				{
 					let dyingPlayer = change_to.player;
-
+					let dyingCells: Change[] = [];
 					//If we attack a player
 					if(cell_to.player!=null){
 						//Find the starting point of the area detection
@@ -150,6 +211,7 @@ export function player_moves(player: Player)
 						let playerCellOffset: number = 0;
 						while(neighbours[playerCellOffset][0] != move.from.i && neighbours[playerCellOffset][1] != move.from.j )
 							playerCellOffset += 1;
+
 						//Detect the differents areas
 						let lastWasCell = false;
 						let areas: [number, number][][] = [];
@@ -198,7 +260,8 @@ export function player_moves(player: Player)
 					change_to.color = change_from.color;
 					change_to.skin_id = change_from.skin_id;
 					change_to.player = change_from.player;
-
+					
+					Grid.set_cells(dyingCells);
 				}
 
 				// If the attack fails
@@ -211,17 +274,40 @@ export function player_moves(player: Player)
 					if (change_to.nb_troops == 0)
 						change_to.nb_troops = 1;
 				}
+
+
 			}
 
-			Grid.set_cells([change_from, change_to], true);
-
-			Grid.set_cells(dyingCells, false);
+			Grid.set_cells([change_from, change_to]);
 
 		}
 	}
 
-	player.socket.on('move', (move: Move) => { move_event(move); });
-	player.socket.on('moves', (moves: Move[]) => { moves.forEach(move => move_event(move)); });
+	player.socket.on(ClientSocket.MOVES, (moves: any) => { 
+		if(!moves)
+			return;
+
+		if(!Array.isArray(moves))
+			return;
+
+		for(let move of moves) {
+			if(!is_move(move))
+				return;
+		}
+
+		player.last_message = Date.now();
+		moves.forEach(move => move_event(move)); 
+	});
+}
+
+// Check incoming Move packet type
+function is_move(move : any) : move is Move {
+	let is_valid = typeof (move as Move).from.i == 'number';
+	is_valid = is_valid && typeof (move as Move).from.j == 'number';
+	is_valid = is_valid && typeof (move as Move).to.i == 'number';
+	is_valid = is_valid && typeof (move as Move).to.j == 'number';
+
+	return is_valid;
 }
 
 // Handle troops spawning
@@ -268,7 +354,7 @@ export function troops_spawn()
 		}
 	}
 
-	Grid.set_cells(changes, false);
+	Grid.set_cells(changes);
 }
 
 export function update_leaderboard()
@@ -285,5 +371,5 @@ export function update_leaderboard()
 
 	players_data.sort((a, b) => b.size - a.size);
 
-	Global.io.emit('leaderboard', players_data);
+	Global.io.emit(ServerSocket.LEADERBOARD, players_data);
 }

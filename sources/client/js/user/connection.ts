@@ -5,6 +5,7 @@ import * as Menu from './menu.js';
 import { Player } from '../player/player.js';
 import * as Color from '../utils/color.js';
 import * as Shop from '../shop/menus.js';
+import { ClientSocket, ServerSocket } from '../properties.js';
 
 export type UserData = {
 	username: string,
@@ -50,7 +51,7 @@ export function connection_events()
 {
 	// Register
 
-	Global.socket.on('registered', (token: string | null, expiration: string | null, data: UserData | null) =>
+	Global.socket.on(ServerSocket.REGISTERED, (token: string | null, expiration: string | null, data: UserData | null) =>
 	{
 		if (token != null && expiration != null && data != null)
 			Cookie.create_token_cookie(token, expiration);
@@ -62,14 +63,14 @@ export function connection_events()
 		update_player_data();
 	});
 
-	Global.socket.on('register_error', (message: string) =>
+	Global.socket.on(ServerSocket.REGISTER_ERROR, (message: string) =>
 	{
 		Menu.show_message('#ED2E2E', 'ERROR', message, '.register');
 	});
 
 	// Login
 
-	Global.socket.on('logged', (token: string | null, expiration: string | null, data: UserData | null) =>
+	Global.socket.on(ServerSocket.LOGGED, (token: string | null, expiration: string | null, data: UserData | null) =>
 	{
 		if (token != null && expiration != null && data != null)
 			Cookie.create_token_cookie(token, expiration);
@@ -82,14 +83,14 @@ export function connection_events()
 		update_player_data();
 	});
 
-	Global.socket.on('login_error', (message: string) =>
+	Global.socket.on(ServerSocket.LOGIN_ERROR, (message: string) =>
 	{
 		Menu.show_message('#ED2E2E', 'ERROR', message, '.login');
 	});
 
 	// Logout
 
-	Global.socket.on('unlogged', () =>
+	Global.socket.on(ServerSocket.UNLOGGED, () =>
 	{
 		Cookie.erase_token_cookie();
 		Global.connected = false;
@@ -100,14 +101,14 @@ export function connection_events()
 		Shop.update_skin_connection();
 	});
 
-	Global.socket.on('logout_error', (message: string) =>
+	Global.socket.on(ServerSocket.LOGOUT_ERROR, (message: string) =>
 	{
 		Menu.show_message('#ED2E2E', 'ERROR', message, '.account');
 	});
 
 	// Auto login
 
-	Global.socket.on('auto_logged', (data: UserData) =>
+	Global.socket.on(ServerSocket.AUTO_LOGGED, (data: UserData) =>
 	{
 		Global.connected = true;
 		Global.user_data = data;
@@ -117,7 +118,7 @@ export function connection_events()
 		update_player_data();
 	});
 
-	Global.socket.on('auto_login_error', () =>
+	Global.socket.on(ServerSocket.AUTO_LOGIN_ERROR, () =>
 	{
 		Cookie.erase_token_cookie();
 		Menu.clear();
@@ -126,7 +127,7 @@ export function connection_events()
 
 	// Delete account
 
-	Global.socket.on('account_deleted', () =>
+	Global.socket.on(ServerSocket.ACCOUNT_DELETED, () =>
 	{
 		Cookie.erase_token_cookie();
 		Global.connected = false;
@@ -137,7 +138,7 @@ export function connection_events()
 		Shop.update_skin_connection();
 	});
 
-	Global.socket.on('delete_account_error', (message: string) =>
+	Global.socket.on(ServerSocket.DELETE_ACCOUNT_ERROR, (message: string) =>
 	{
 		Menu.clear();
 		Menu.show_message('#ED2E2E', 'ERROR', message, '.account');
@@ -146,7 +147,7 @@ export function connection_events()
 	let token = Cookie.get_token();
 
 	if (token != null)
-		Global.socket.emit('auto_login', token);
+		Global.socket.emit(ClientSocket.AUTO_LOGIN, token);
 	else
 	{
 		Menu.clear();
@@ -156,20 +157,20 @@ export function connection_events()
 
 export function register(username: string, password: string)
 {
-	Global.socket.emit('register', username, password);
+	Global.socket.emit(ClientSocket.REGISTER, username, password);
 }
 
 export function login(username: string, password: string)
 {
-	Global.socket.emit('login', username, password);
+	Global.socket.emit(ClientSocket.LOGIN, username, password);
 }
 
 export function logout()
 {
-	Global.socket.emit('logout');
+	Global.socket.emit(ClientSocket.LOGOUT);
 }
 
 export function delete_account(password: string)
 {
-	Global.socket.emit('delete_account', password);
+	Global.socket.emit(ClientSocket.DELETE_ACCOUNT, password);
 }

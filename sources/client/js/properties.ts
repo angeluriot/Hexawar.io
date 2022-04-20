@@ -33,4 +33,48 @@ export class Global
 	static arrow: HTMLImageElement;
 	static skins: HTMLImageElement[] = [];
 	static skin_colors: string[] = [];
+
+	//Server
+	static last_message: number = Date.now();
+	static last_response: number = Date.now();
+	 
+}
+
+
+export enum ClientSocket {
+	JOIN_GAME = '0',
+	REGISTER = '1',
+	LOGIN = '2',
+	LOGOUT = '3',
+	AUTO_LOGIN = '4',
+	DELETE_ACCOUNT = '5',
+
+	PING = '6',
+	MOVES = '7',
+	GRID_REQUEST = '8',
+
+}
+
+export enum ServerSocket {
+	CHANGES = '0',
+	GRID = '1',
+	SPAWN = '2',
+	DEATH = '3',
+	LEADERBOARD = '4',
+	
+
+	REGISTER_ERROR = '5',
+	REGISTERED = '6',
+
+	LOGIN_ERROR = '7',
+	LOGGED = '8',
+
+	LOGOUT_ERROR = '9',
+	UNLOGGED = 'A',
+
+	AUTO_LOGIN_ERROR = 'B',
+	AUTO_LOGGED = 'C',
+
+	DELETE_ACCOUNT_ERROR = 'D',
+	ACCOUNT_DELETED = 'E',
 }

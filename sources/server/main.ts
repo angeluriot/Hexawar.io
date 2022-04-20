@@ -6,7 +6,7 @@ import * as Grid from './grid/grid.js';
 import * as Game from './game.js';
 import * as Connection from './users/connection.js';
 import mongoose from 'mongoose';
-import { Global } from './properties.js';
+import { Global, ClientSocket } from './properties.js';
 import { Player } from './players/player.js';
 import * as Payment from './users/payment.js';
 import { config } from 'dotenv';
@@ -32,10 +32,10 @@ function init()
 	Grid.create_grid();
 	Game.game_loop();
 
-	Global.io.on('connection', (socket: Socket) =>
+	Global.io.on('connection' , (socket: Socket) =>
 	{
 		let player = new Player(socket);
-
+		player.last_message = Date.now();
 		Connection.connection_events(player);
 		Payment.buy_skin_events(player);
 
