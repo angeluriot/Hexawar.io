@@ -118,6 +118,7 @@ export function join(player: Player)
 
 			Grid.set_cells([change]);
 			player.socket.emit(ServerSocket.SPAWN, spawn);
+			player.last_message = Date.now();
 			update_leaderboard();
 		}
 	});
