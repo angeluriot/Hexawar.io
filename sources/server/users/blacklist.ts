@@ -1,6 +1,7 @@
 import { Socket } from "socket.io";
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 import { promises, writeFile } from 'fs';
+import { ClientSocket } from "../properties.js";
 
 let blacklist: string[] = [];
 let new_blacklist: string[] = [];
@@ -61,36 +62,25 @@ export function events(socket: Socket)
 	// load the blacklist
 	read_users();
 
-	// limiter of single moves
-	const move_limiter = new RateLimiterMemory(
-	{
-		points: 20,
-		duration: 1,
-	});
-
 	// limiter of gathering moves
 	const moves_limiter = new RateLimiterMemory(
 	{
-		points: 20,
-		duration: 1,
+		points: 10,
+		duration: 1
 	});
 
 	// limiter of logins
 	const login_limiter = new RateLimiterMemory(
 	{
-		points: 5,
-		duration: 10,
+		points: 10,
+		duration: 10
 	});
 
-	socket.on('move', async (_) => {
-		check_socket(socket, move_limiter);
-	});
-
-	socket.on('moves', async (_) => {
+	socket.on(ClientSocket.MOVES, async (_) => {
 		check_socket(socket, moves_limiter);
 	});
 
-	socket.on('login', async (_) => {
+	socket.on(ClientSocket.LOGIN, async (_) => {
 		check_socket(socket, login_limiter);
 	});
 

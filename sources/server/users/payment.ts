@@ -1,5 +1,5 @@
 import { Player } from '../players/player.js';
-import { Global } from '../properties.js';
+import { ClientSocket, Global, ServerSocket } from '../properties.js';
 import { config } from 'dotenv';
 import Stripe from 'stripe';
 
@@ -38,7 +38,7 @@ async function check_payment(player: Player, session_id: string, skin_id: number
 
 export function buy_skin_events(player: Player)
 {
-	player.socket.on('payment', async (skin_id: number) =>
+	player.socket.on(ClientSocket.PAYMENT, async (skin_id: number) =>
 	{
 		if (player.user != null && skin_id >= Global.nb_veteran_skins && skin_id < Global.nb_veteran_skins + Global.nb_premium_skins &&
 			!player.user.skins.includes(skin_id))
@@ -57,7 +57,7 @@ export function buy_skin_events(player: Player)
 				automatic_tax: { enabled: true },
 			});
 
-			player.socket.emit('payment_session', session.url);
+			player.socket.emit(ServerSocket.PAYMENT_SESSION, session.url);
 			check_payment(player, session.id, skin_id);
 		}
 	});

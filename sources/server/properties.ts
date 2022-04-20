@@ -41,6 +41,8 @@ export enum ClientSocket
 	PING = '6',
 	MOVES = '7',
 	GRID_REQUEST = '8',
+
+	PAYMENT = '9'
 }
 
 export enum ServerSocket
@@ -65,4 +67,7 @@ export enum ServerSocket
 
 	DELETE_ACCOUNT_ERROR = 'D',
 	ACCOUNT_DELETED = 'E',
+
+	PAYMENT_SESSION = 'F',
+	PAYMENT_SUCCESS = 'G'
 }

@@ -1,5 +1,5 @@
 import { Player } from "../player/player.js";
-import { Global } from "../properties.js";
+import { ClientSocket, Global, ServerSocket } from "../properties.js";
 
 let tab_index = 0;
 
@@ -190,14 +190,14 @@ export function premium_buy_use_event()
 
 				else if (!strated_payment)
 				{
-					Global.socket.emit('payment', index);
+					Global.socket.emit(ClientSocket.PAYMENT, index);
 					strated_payment = true;
 				}
 			});
 		}
 	}
 
-	Global.socket.on('payment_session', (url: any) => {
+	Global.socket.on(ServerSocket.PAYMENT_SESSION, (url: any) => {
 		window.location.href = url;
 	})
 }

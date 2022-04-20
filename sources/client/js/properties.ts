@@ -37,7 +37,6 @@ export class Global
 	//Server
 	static last_message: number = Date.now();
 	static last_response: number = Date.now();
-	 
 }
 
 
@@ -53,6 +52,7 @@ export enum ClientSocket {
 	MOVES = '7',
 	GRID_REQUEST = '8',
 
+	PAYMENT = '9'
 }
 
 export enum ServerSocket {
@@ -61,7 +61,6 @@ export enum ServerSocket {
 	SPAWN = '2',
 	DEATH = '3',
 	LEADERBOARD = '4',
-	
 
 	REGISTER_ERROR = '5',
 	REGISTERED = '6',
@@ -77,4 +76,7 @@ export enum ServerSocket {
 
 	DELETE_ACCOUNT_ERROR = 'D',
 	ACCOUNT_DELETED = 'E',
+
+	PAYMENT_SESSION = 'F',
+	PAYMENT_SUCCESS = 'G'
 }
