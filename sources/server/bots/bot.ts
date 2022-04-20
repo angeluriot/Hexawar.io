@@ -132,7 +132,7 @@ export class Bot
 		Grid.set_cells([change]);
 
 		this.cells.push({ i: spawn.i, j: spawn.j });
-
+		console.log('[' + new Date().toTimeString().split(' ')[0] + '] Spawned bot : ' + this.nickname);
 		this.play();
 	}
 
@@ -194,6 +194,7 @@ export class Bot
 		{
 			if (Bot.list[i].id == id)
 			{
+				console.log('[' + new Date().toTimeString().split(' ')[0] + '] Removed bot : ' + Bot.list[i].nickname);
 				Bot.list.splice(i, 1);
 				return;
 			}

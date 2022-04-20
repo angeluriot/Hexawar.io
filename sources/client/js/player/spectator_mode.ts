@@ -1,3 +1,4 @@
+import { ClientSocket, Global } from '../properties.js';
 import { Camera } from '../renderer/camera.js';
 import { Player } from './player.js';
 
@@ -20,6 +21,8 @@ export function events()
 		leaderboard.style.visibility = 'visible';
 
 		connect.style.display = 'none';
+
+		Global.socket.emit(ClientSocket.GRID_REQUEST);
 	});
 
 	button_game.addEventListener('click', e =>

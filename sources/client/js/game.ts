@@ -65,6 +65,7 @@ export function join_game()
 		if (cell != null)
 			Camera.move(cell.x, cell.y);
 
+		Global.socket.emit(ClientSocket.GRID_REQUEST);
 		render();
 	});
 

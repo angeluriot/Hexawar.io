@@ -45,6 +45,7 @@ function init()
 
 	Global.io.on('connection', (socket: Socket) =>
 	{
+		console.log('[' + new Date().toTimeString().split(' ')[0] + '] User connected (' + socket.conn.remoteAddress + ')' );
 		let player = new Player(socket);
 		player.last_message = Date.now();
 		Connection.connection_events(player);

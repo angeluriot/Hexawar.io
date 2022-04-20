@@ -47,7 +47,7 @@ export class Player
 						return false;
 				}
 			}
-
+			console.log('[' + new Date().toTimeString().split(' ')[0] + '] Spawned player (' + this.socket.conn.remoteAddress + ') : ' + this.nickname);
 			Player.list.push(this);
 
 			if (Bot.nb_bots > Bot.max_nb_bots - Player.list.length)
@@ -64,6 +64,7 @@ export class Player
 	{
 		if (this.is_playing())
 		{
+			console.log('[' + new Date().toTimeString().split(' ')[0] + '] Removed player (' + this.socket.conn.remoteAddress + ') : ' + this.nickname);
 			const index = Player.list.indexOf(this);
 			Player.list.splice(index, 1);
 
@@ -105,9 +106,10 @@ export class Player
 	die()
 	{
 		if (this.is_playing())
-		{
+		{	
 			this.leave();
 			this.socket.emit(ServerSocket.DEATH, this.conquered_lands, this.max_size);
+			console.log('[' + new Date().toTimeString().split(' ')[0] + '] Removed player (' + this.socket.conn.remoteAddress + ') : ' + this.nickname);
 		}
 	}
 
