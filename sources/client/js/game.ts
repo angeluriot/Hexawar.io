@@ -7,6 +7,7 @@ import { Player } from './player/player.js';
 import { Change } from './grid/cell.js';
 import * as Menu from './user/menu.js';
 import * as MatchResult from './player/match_result.js';
+import { show_popup } from './player/warning_popup.js';
 
 export type Move = {
 	from: { i: number, j: number },
@@ -52,15 +53,11 @@ export function join_game()
 		const form_div = document.querySelector('.connect_div') as HTMLDivElement;
 		const leaderboard = document.querySelector('.leaderboard') as HTMLDivElement;
 
-		const warning_popup = document.querySelector('.warning_popup') as HTMLDivElement;
-
 		Player.playing = true;
 		form_div.style.display = 'none';
 		leaderboard.style.visibility = 'visible';
 
-		warning_popup.style.visibility = 'visible';
-
-		console.log("show right : ", warning_popup.style.right);
+		show_popup();
 
 		game_events();
 		Cookie.create_cookie();

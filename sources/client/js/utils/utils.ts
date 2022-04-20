@@ -13,3 +13,8 @@ export function add_spaces(input: number)
 {
 	return input.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
+
+export function delay (ms: number)
+{
+	return new Promise( resolve => setTimeout(resolve, ms) );
+}

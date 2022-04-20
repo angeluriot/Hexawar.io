@@ -143,6 +143,11 @@ export function connection_events()
 		Menu.show_message('#ED2E2E', 'ERROR', message, '.account');
 	});
 
+	Global.socket.on('reload', () =>
+	{
+		setTimeout(() => { location.reload(); }, 100);
+	});
+
 	let token = Cookie.get_token();
 
 	if (token != null)
