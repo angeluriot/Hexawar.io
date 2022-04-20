@@ -59,12 +59,10 @@ export function update_leaderboard()
 		const nickname = document.querySelector('.leaderboard .nickname.player_line') as SVGTextElement;
 		const score = document.querySelector('.leaderboard .score.player_line') as SVGTextElement;
 		const admin_role = document.querySelector(`.leaderboard .admin_role.player_line`) as SVGGElement;
-		const bot_role = document.querySelector(`.leaderboard .bot_role.player_line`) as SVGGElement;
 
 		nickname.textContent = '';
 		score.textContent = '';
 		admin_role.style.opacity = '0';
-		bot_role.style.opacity = '0';
 	}
 
 	function cut_nickname(element: string, as_role: boolean)
@@ -127,7 +125,7 @@ export function update_leaderboard()
 				admin_role.style.opacity = '1';
 			}
 
-			if (best_players[i].bot)
+			else if (best_players[i].bot)
 			{
 				const nickname_2 = document.querySelector(`.leaderboard .nickname.line_${i + 1}`) as SVGTextElement;
 				update_role_position(bot_role, nickname_2);
@@ -144,24 +142,15 @@ export function update_leaderboard()
 				const nickname = document.querySelector('.leaderboard .nickname.player_line') as SVGTextElement;
 				const score = document.querySelector('.leaderboard .score.player_line') as SVGTextElement;
 				const admin_role = document.querySelector(`.leaderboard .admin_role.player_line`) as SVGGElement;
-				const bot_role = document.querySelector(`.leaderboard .bot_role.player_line`) as SVGGElement;
 
 				nickname.textContent = `${index + 1}. ` + (best_players[index].nickname == '' ? 'Unnamed territory' : best_players[index].nickname);
 				score.textContent = `${best_players[index].size}`;
-				cut_nickname(`.leaderboard .nickname.player_line`, best_players[index].admin || best_players[index].bot);
+				cut_nickname(`.leaderboard .nickname.player_line`, best_players[index].admin);
 
 				if (best_players[index].admin)
 				{
-					const nickname_2 = document.querySelector(`.leaderboard .nickname.line_${index + 1}`) as SVGTextElement;
-					update_role_position(admin_role, nickname_2);
+					update_role_position(admin_role, nickname);
 					admin_role.style.opacity = '1';
-				}
-
-				if (best_players[index].bot)
-				{
-					const nickname_2 = document.querySelector(`.leaderboard .nickname.line_${index + 1}`) as SVGTextElement;
-					update_role_position(bot_role, nickname_2);
-					bot_role.style.opacity = '1';
 				}
 
 				set_height(11);
@@ -172,7 +161,6 @@ export function update_leaderboard()
 				const nickname = document.querySelector(`.leaderboard .nickname.line_${index + 1}`) as SVGTextElement;
 				const score = document.querySelector(`.leaderboard .score.line_${index + 1}`) as SVGTextElement;
 				const admin_role = document.querySelector(`.leaderboard .admin_role.line_${index + 1}`) as SVGGElement;
-				const bot_role = document.querySelector(`.leaderboard .bot_role.line_${index + 1}`) as SVGGElement;
 
 				nickname.style.fill = '#F9A6AB';
 				score.style.fill = '#F9A6AB';
@@ -182,13 +170,6 @@ export function update_leaderboard()
 					admin_role.style.fill = '#F9A6AB';
 					update_role_position(admin_role, nickname);
 					admin_role.style.opacity = '1';
-				}
-
-				if (best_players[index].bot)
-				{
-					bot_role.style.fill = '#F9A6AB';
-					update_role_position(bot_role, nickname);
-					bot_role.style.opacity = '1';
 				}
 
 				set_height(Math.min(best_players.length, 10));

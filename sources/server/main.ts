@@ -41,7 +41,7 @@ function init()
 {
 	Grid.create_grid();
 	Game.game_loop();
-	Bot.spawn_bots(10);
+	Bot.spawn_bots(Bot.max_nb_bots);
 
 	Global.io.on('connection', (socket: Socket) =>
 	{

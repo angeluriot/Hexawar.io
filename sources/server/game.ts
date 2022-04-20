@@ -449,8 +449,8 @@ export function update_leaderboard()
 
 	let all_data = players_data;
 
-	for (let bot_data in bots_data)
-		all_data.push(bots_data[bot_data]);
+	for (let bot_data of bots_data)
+		all_data.push(bot_data);
 
 	all_data.sort((a, b) => b.size - a.size);
 

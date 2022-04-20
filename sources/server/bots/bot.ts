@@ -36,10 +36,10 @@ export class Bot
 
 	static list: Bot[] = [];
 
-	static nb_bots: number = 0;      		// Current number of bots
-	static max_nb_bots: number = 10; 		// Maximum number of bots allowed in game
-	static wait: number = 1000;      		// Delay of bots between each action
-	static time_to_live: number = 300000;	// Amount of time a bot plays before dying automatically
+	static nb_bots: number = 0;				// Current number of bots
+	static max_nb_bots: number = 12;		// Maximum number of bots allowed in game
+	static wait: number = 1000;				// Delay of bots between each action
+	static time_to_live: number = 30000;	// Amount of time a bot plays before dying automatically
 
 	static nickname_map: Map<string, boolean> = new Map<string, boolean>(
 	[
