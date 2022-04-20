@@ -31,15 +31,27 @@ export function render()
 	// Draw player cells
 	PlayerCells.draw_players(context);
 
-	// Render the drag line
+	// Render the drag arrow
 	if (Global.show_drag)
 	{
-		context.beginPath();
-		context.lineTo(Global.drag_from.x, Global.drag_from.y);
-		context.lineTo(Global.drag_to.x, Global.drag_to.y);
-		context.strokeStyle = 'black';
-		context.lineWidth = 0.1;
-		context.lineCap = 'round';
-		context.stroke();
+		let arrow_length = Math.sqrt((Global.mouse_pos.x - Global.drag_from.x) ** 2 + (Global.mouse_pos.y - Global.drag_from.y) ** 2);
+		let arrow_angle = Math.atan2(Global.mouse_pos.y - Global.drag_from.y, Global.mouse_pos.x - Global.drag_from.x);
+		let arrow_shift = 0.7;
+
+		if ((arrow_angle > Math.PI / 2 && arrow_angle < Math.PI) || (arrow_angle < -Math.PI / 2 && arrow_angle > -Math.PI))
+		{
+			context.translate(Global.drag_from.x - Math.sin(arrow_angle) * arrow_shift, Global.drag_from.y + Math.cos(arrow_angle) * arrow_shift);
+			context.rotate(arrow_angle);
+			context.rotate(Math.PI);
+			context.scale(-1, 1);
+		}
+
+		else
+		{
+			context.translate(Global.drag_from.x + Math.sin(arrow_angle) * arrow_shift, Global.drag_from.y - Math.cos(arrow_angle) * arrow_shift);
+			context.rotate(arrow_angle);
+		}
+
+		context.drawImage(Global.arrow, 0, 0, arrow_length, 1);
 	}
 }

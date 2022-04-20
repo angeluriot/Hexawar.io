@@ -5,6 +5,8 @@ export function load(next_function: (() => any))
 	const nb_skins = 10;
 	let nb_skins_loaded = 0;
 
+	Global.arrow = new Image();
+
 	function counter()
 	{
 		nb_skins_loaded++;
@@ -22,6 +24,9 @@ export function load(next_function: (() => any))
 			counter();
 		};
 	}
+
+	// Arrow
+	Global.arrow.src = '../../resources/shapes/arrow.svg';
 
 	// Skin 0
 	Global.skins[0].src = '../../resources/skins/skin_0.svg';
