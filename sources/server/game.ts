@@ -42,116 +42,60 @@ export function join(player: Player)
 		if (player.join())
 		{
 			// Gives the player a spawn cell
-			let spawn = Grid.get_spawn_cell();
-			
-			// Cut territories by spawn
-			let spawnAreaNeighbours : [number, number][][] = [];
-			let counter : number = 0;
-			let spawnNeighboursCoordinates : [number, number][] = Grid.get_neighbours_coordinates([spawn.i, spawn.j])
-			for(let k of spawnNeighboursCoordinates){
-				if(Grid.get_cell(k[0],k[1])?.player){
-							
-					spawnAreaNeighbours.push([])
-					spawnAreaNeighbours[counter].push(k);
-					counter += 1;
-				}
-			}
+			let spawn = { i:5, j:5 };
+			let getSpawn = Grid.get_cell(spawn.i,spawn.j);
+			let playerSpawn = getSpawn?.player;
+			if (playerSpawn != null){
+				let neighboursSpawn = Grid.get_neighbours_coordinates([spawn.i,spawn.j]);
+				let playerCellOffset : number = 0;
 
-			let spawnAreaNeighbours2 : [number, number][][] = [];
-			let spawnAreaNeighbours3 : [number, number][][] = [];
-			for(let c=0; c<spawnAreaNeighbours.length - 1;c++){
-				if((Grid.get_cell(spawnAreaNeighbours[c][0][0],spawnAreaNeighbours[c][0][1])?.player?.socket.id
-					!= Grid.get_cell(spawnAreaNeighbours[c+1][0][0],spawnAreaNeighbours[c+1][0][1])?.player?.socket.id)
-					&& spawnAreaNeighbours.length > 1 )
-					{
-					spawnAreaNeighbours2.push(spawnAreaNeighbours[0]);
-					spawnAreaNeighbours.shift();
-					break;
-				}
-			}
-			
-			if(spawnAreaNeighbours2.length > 0){
-				let coord : number = 0;
-				while(coord < spawnAreaNeighbours.length){
-					if(Grid.get_cell(spawnAreaNeighbours[coord][0][0],spawnAreaNeighbours[coord][0][1])?.player?.socket.id
-					== Grid.get_cell(spawnAreaNeighbours2[0][0][0],spawnAreaNeighbours2[0][0][1])?.player?.socket.id){
-						spawnAreaNeighbours2.push(spawnAreaNeighbours.splice(coord,1)[0]);
-						coord -= 1;
+				for(playerCellOffset = 0; playerCellOffset < neighboursSpawn.length; playerCellOffset++){
+					if(Grid.get_cell(neighboursSpawn[playerCellOffset][0],neighboursSpawn[playerCellOffset][1])?.player != playerSpawn){
+						break;
 					}
-					coord+=1
 				}
 
-				if(spawnAreaNeighbours.length > 1){
-					let coord2 : number = 0;
-					for(let c2=0; c2<spawnAreaNeighbours.length - 1;c2++){
-						if((Grid.get_cell(spawnAreaNeighbours[c2][0][0],spawnAreaNeighbours[c2][0][1])?.player?.socket.id
-							!= Grid.get_cell(spawnAreaNeighbours[c2+1][0][0],spawnAreaNeighbours[c2+1][0][1])?.player?.socket.id))
-							{
-							spawnAreaNeighbours3.push(spawnAreaNeighbours[0]);
-							spawnAreaNeighbours.shift();
-							break;
-						}
-					}
-					if(spawnAreaNeighbours3.length > 0){
-						while(coord2 < spawnAreaNeighbours.length){
-							if(Grid.get_cell(spawnAreaNeighbours[coord2][0][0],spawnAreaNeighbours[coord2][0][1])?.player?.socket.id
-							== Grid.get_cell(spawnAreaNeighbours3[0][0][0],spawnAreaNeighbours3[0][0][1])?.player?.socket.id){
-								spawnAreaNeighbours3.push(spawnAreaNeighbours.splice(coord2,1)[0]);
-								coord2 -= 1;
+				if(playerCellOffset != neighboursSpawn.length){
+					let lastWasCell = false;
+					let areas: [number, number][][] = [];
+					let last_x = neighboursSpawn[playerCellOffset][0];
+					let last_y = neighboursSpawn[playerCellOffset][1];
+					for(let i=1; i < neighboursSpawn.length+1; i+=1){
+						let [x, y] = neighboursSpawn[(playerCellOffset + i) % neighboursSpawn.length];
+						if(Grid.get_cell(x, y)?.player == playerSpawn){
+							if(lastWasCell){
+								//If we are not near a border (else jump between neighbours)
+								if(Grid.get_relative_distance([x, y], [last_x, last_y]) == 1){
+									areas[areas.length-1].push([x, y]);
+								}else{
+									areas.push([[x, y]]);
+								}
+							}else{
+									areas.push([[x, y]]);	
 							}
-						coord2+=1
+							lastWasCell = true;
+						}else{
+							lastWasCell = false;
 						}
+						last_x = x;
+						last_y = y;
 					}
-						
-				}	
-				
-				
-			}
-
-			let spawnDyingCells = Grid.dying_cells(spawnAreaNeighbours, [[spawn.i, spawn.j]]);
-			let spawnDyingCells2 = Grid.dying_cells(spawnAreaNeighbours2, [[spawn.i, spawn.j]]);
-			let spawnDyingCells3 = Grid.dying_cells(spawnAreaNeighbours3, [[spawn.i, spawn.j]]);
-
-			for(let dyingCell of spawnDyingCells){
-				let changes : Change[] = [];
-				changes.push({
-					i: dyingCell[0],
-					j: dyingCell[1],
-					color: '#FFFFFF',
-					skin_id: -1,
-					player: null,
-					nb_troops: 0
-				});
-				Grid.set_cells(changes,false);
-				
-			}
-
-			for(let dyingCell of spawnDyingCells2){
-				let changes : Change[] = [];
-				changes.push({
-					i: dyingCell[0],
-					j: dyingCell[1],
-					color: '#FFFFFF',
-					skin_id: -1,
-					player: null,
-					nb_troops: 0
-				});
-				Grid.set_cells(changes,false);
-				
-			}
-
-			for(let dyingCell of spawnDyingCells3){
-				let changes : Change[] = [];
-				changes.push({
-					i: dyingCell[0],
-					j: dyingCell[1],
-					color: '#FFFFFF',
-					skin_id: -1,
-					player: null,
-					nb_troops: 0
-				});
-				Grid.set_cells(changes,false);
-				
+					//Find dying cells
+					let toKill = Grid.dying_cells(areas, [[spawn.i, spawn.j]]);
+					let dyingCells: Change[] = [];
+					//Add dyingCells to array
+					for(let killed of toKill){
+						dyingCells.push({
+							i: killed[0],
+							j: killed[1],
+							color: '#FFFFFF',
+							skin_id: -1,
+							player: null,
+							nb_troops: 0
+						});
+					}
+					Grid.set_cells(dyingCells, false);					
+				}
 			}
 
 			// Set the change
@@ -263,8 +207,8 @@ export function player_moves(player: Player)
 						//Detect the differents areas
 						let lastWasCell = false;
 						let areas: [number, number][][] = [];
-						let last_x = move.to.i;
-						let last_y = move.to.j;
+						let last_x = move.from.i;
+						let last_y = move.from.j;
 						for(let i=1; i < neighbours.length+1; i+=1){
 							let [x, y] = neighbours[(playerCellOffset + i) % neighbours.length];
 							if(Grid.get_cell(x, y)?.player == dyingPlayer){
