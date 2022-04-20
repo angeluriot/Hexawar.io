@@ -8,7 +8,7 @@ let new_blacklist: string[] = [];
 // Load ip's of banned players
 async function read_users()
 {
-	await promises.readFile('./sources/server/resources/blacklist.txt', 'utf8').then(data => {
+	await promises.readFile('./blacklist.txt', 'utf8').then(data => {
 		blacklist.length = 0;
 		data.split(/\r?\n/).forEach((line) => {
 			blacklist.push(line);
@@ -40,8 +40,8 @@ async function update_blacklist()
 	for (let element of blacklist)
 		if (element.length > 2)
 			data += element + '\n';
-		
-	writeFile('./sources/server/resources/blacklist.txt', data, () => {});
+
+	writeFile('./blacklist.txt', data, () => {});
 }
 
 // check player's actions
@@ -75,7 +75,7 @@ export function events(socket: Socket)
 		duration: 1,
 	});
 
-	// limiter of logins		
+	// limiter of logins
 	const login_limiter = new RateLimiterMemory(
 	{
 		points: 5,
