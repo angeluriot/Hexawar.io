@@ -51,6 +51,60 @@ export function join(player: Player)
 		{
 			// Gives the player a spawn cell
 			let spawn = Grid.get_spawn_cell();
+			let getSpawn = Grid.get_cell(spawn.i,spawn.j);
+			let playerSpawn = getSpawn?.player;
+			if (playerSpawn != null){
+				let neighboursSpawn = Grid.get_neighbours_coordinates([spawn.i,spawn.j]);
+				let playerCellOffset : number = 0;
+
+				for(playerCellOffset = 0; playerCellOffset < neighboursSpawn.length; playerCellOffset++){
+					if(Grid.get_cell(neighboursSpawn[playerCellOffset][0],neighboursSpawn[playerCellOffset][1])?.player != playerSpawn){
+						break;
+					}
+				}
+
+				if(playerCellOffset != neighboursSpawn.length){
+					let lastWasCell = false;
+					let areas: [number, number][][] = [];
+					let last_x = neighboursSpawn[playerCellOffset][0];
+					let last_y = neighboursSpawn[playerCellOffset][1];
+					for(let i=1; i < neighboursSpawn.length+1; i+=1){
+						let [x, y] = neighboursSpawn[(playerCellOffset + i) % neighboursSpawn.length];
+						if(Grid.get_cell(x, y)?.player == playerSpawn){
+							if(lastWasCell){
+								//If we are not near a border (else jump between neighbours)
+								if(Grid.get_relative_distance([x, y], [last_x, last_y]) == 1){
+									areas[areas.length-1].push([x, y]);
+								}else{
+									areas.push([[x, y]]);
+								}
+							}else{
+									areas.push([[x, y]]);
+							}
+							lastWasCell = true;
+						}else{
+							lastWasCell = false;
+						}
+						last_x = x;
+						last_y = y;
+					}
+					//Find dying cells
+					let toKill = Grid.dying_cells(areas, [[spawn.i, spawn.j]]);
+					let dyingCells: Change[] = [];
+					//Add dyingCells to array
+					for(let killed of toKill){
+						dyingCells.push({
+							i: killed[0],
+							j: killed[1],
+							color: '#FFFFFF',
+							skin_id: -1,
+							player: null,
+							nb_troops: 0
+						});
+					}
+					Grid.set_cells(dyingCells);
+				}
+			}
 
 			// Set the change
 			const change = {
@@ -213,8 +267,8 @@ export function player_moves(player: Player)
 						//Detect the differents areas
 						let lastWasCell = false;
 						let areas: [number, number][][] = [];
-						let last_x = move.to.i;
-						let last_y = move.to.j;
+						let last_x = move.from.i;
+						let last_y = move.from.j;
 						for(let i=1; i < neighbours.length+1; i+=1){
 							let [x, y] = neighbours[(playerCellOffset + i) % neighbours.length];
 							if(Grid.get_cell(x, y)?.player == dyingPlayer){
