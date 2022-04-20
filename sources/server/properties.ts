@@ -16,6 +16,6 @@ export class Global
 	static spawn_per_sec = 100;
 
 	// Grid
-	static grid_size = { x: 41, y: 41 }; // x = y = 4*k+1
+	static grid_size = { x: 60, y: 30 };
 	static grid: Cell[][] = [];
 }

@@ -17,7 +17,7 @@ export class Global
 
 	// Grid
 	static background_color = '#777A89';
-	static grid_size = { x: 41, y: 41 }; // x = y = 4*k+1
+	static grid_size = { x: 60, y: 30 };
 	static grid: Cell[][] = [];
 	static grid_boundaries = { x: 0, y: 0, width: 0, height: 0 };
 

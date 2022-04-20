@@ -4,7 +4,6 @@ import { render } from '../renderer/renderer.js';
 import { Player } from '../player/player.js';
 import { Camera } from '../renderer/camera.js';
 import { PlayerCells } from './players.js';
-import { is_valid_cell } from '../utils/utils.js';
 
 // Create the grid of cells
 export function create_grid()
@@ -48,9 +47,6 @@ export function update_player_cells_and_draw_grid(context: CanvasRenderingContex
 	for (let i = 0; i < Global.grid_size.x; i++)
 		for (let j = 0; j < Global.grid_size.y; j++)
 		{
-			if (!is_valid_cell(i, j))
-				continue;
-
 			if (Global.grid[i][j].player_id != '')
 			{
 				if (Global.grid[i][j].player_id == Player.id)
