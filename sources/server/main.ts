@@ -5,6 +5,7 @@ import { Server, Socket } from 'socket.io';
 import * as Grid from './grid/grid.js';
 import * as Game from './game.js';
 import * as Connection from './users/connection.js';
+import * as Blacklist from './users/blacklist.js';
 import mongoose from 'mongoose';
 import { Global, ClientSocket } from './properties.js';
 import { Player } from './players/player.js';
@@ -15,6 +16,14 @@ config();
 const app = express();
 const server = Http.createServer(app);
 Global.io = new Server(server);
+
+// Deal with suspicious and banned players
+app.get('/', (req, _, next) => {
+	const ip_address: string = (req.socket.remoteAddress != null) ? req.socket.remoteAddress : '';
+
+	if (Blacklist.is_allowed(ip_address))
+		next();
+});
 
 // Set static folder
 const __dirname = Path.resolve();
@@ -42,6 +51,8 @@ function init()
 		Game.join(player);
 		Game.game_events(player);
 		Game.leave_game(player);
+
+		Blacklist.events(socket);
 	});
 }
 
