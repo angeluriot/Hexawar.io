@@ -252,7 +252,6 @@ export function player_moves(player: Player)
 								nb_troops: 0
 							});
 						}
-
 					}
 
 					change_to.nb_troops = change_from.nb_troops - change_to.nb_troops - 1;
@@ -260,7 +259,7 @@ export function player_moves(player: Player)
 					change_to.color = change_from.color;
 					change_to.skin_id = change_from.skin_id;
 					change_to.player = change_from.player;
-					
+
 					Grid.set_cells(dyingCells);
 				}
 
@@ -274,16 +273,13 @@ export function player_moves(player: Player)
 					if (change_to.nb_troops == 0)
 						change_to.nb_troops = 1;
 				}
-
-
 			}
 
 			Grid.set_cells([change_from, change_to]);
-
 		}
 	}
 
-	player.socket.on(ClientSocket.MOVES, (moves: any) => { 
+	player.socket.on(ClientSocket.MOVES, (moves: any) => {
 		if(!moves)
 			return;
 
@@ -296,7 +292,7 @@ export function player_moves(player: Player)
 		}
 
 		player.last_message = Date.now();
-		moves.forEach(move => move_event(move)); 
+		moves.forEach(move => move_event(move));
 	});
 }
 

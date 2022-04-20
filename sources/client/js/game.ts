@@ -28,13 +28,12 @@ export function load_background()
 	// Changes from server
 	Global.socket.on(ServerSocket.CHANGES, (changes: Change[]) =>
 	{
-	 	Grid.set_cells(changes);
-		
+		Grid.set_cells(changes);
+
 		changes.forEach((change) => {
 			if(change.player_id == Player.id && Player.last_move.i == change.i && Player.last_move.j == change.j)
 				Global.cell_from = Grid.get_cell(change.i, change.j);
 		});
-
 
 		render();
 	});
@@ -65,12 +64,12 @@ export function join_game()
 
 		if (cell != null)
 			Camera.move(cell.x, cell.y);
-		
+
 		render();
 	});
 
 	Menu.clear();
-	
+
 	// Tell the server that the player has joined
 	Global.socket.emit(ClientSocket.JOIN_GAME, Player.get_object());
 }
@@ -137,7 +136,7 @@ export function move()
 						from: { i: cells_from[i].i, j: cells_from[i].j },
 						to: { i: cell_to.i, j: cell_to.j }
 					});
-			
+
 			Player.last_move = { i: cell_to.i, j: cell_to.j };
 			Global.socket.emit(ClientSocket.MOVES, moves);
 			render();
@@ -194,7 +193,7 @@ export function move()
 				}]);
 				Player.last_move = { i: cell.i, j: cell.j };
 			}
-			
+
 			Global.show_drag = false;
 			Global.dragging = false;
 			render();
