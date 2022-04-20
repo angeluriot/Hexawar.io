@@ -25,7 +25,7 @@ export function join(player: Player)
 
 		if(!input_player)
 			return;
-			
+
 		if(typeof input_player.nickname != 'string' || typeof input_player.color != 'string' || typeof input_player.skin_id != 'number')
 			return;
 
@@ -89,7 +89,6 @@ export function send_changes() {
 // Reset changes list
 export function reset_changes() {
 	Global.changes_list = [];
-	
 }
 
 //Disconnect client if timed out
