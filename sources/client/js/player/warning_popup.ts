@@ -1,6 +1,4 @@
-import { Global } from '../properties.js';
 import { delay } from '../utils/utils.js';
-import { Player } from './player.js';
 
 export async function show_popup()
 {
