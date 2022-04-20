@@ -187,9 +187,10 @@ export function leave_game(player: Player)
 {
 	// When client disconnects
 	player.socket.on('disconnect', () =>
-	{
+	{	
 		player.leave();
 		Grid.remove_player_from_grid(player);
+		console.log('[' + new Date().toTimeString().split(' ')[0] + '] User disconnected (' + player.socket.conn.remoteAddress + ')');
 	});
 }
 

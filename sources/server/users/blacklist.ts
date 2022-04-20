@@ -46,12 +46,14 @@ async function update_blacklist()
 }
 
 // check player's actions
-async function check_socket(socket: Socket, limiter: RateLimiterMemory)
+async function check_socket(socket: Socket, limiter: RateLimiterMemory, reason: string)
 {
 	try {
 		await limiter.consume(socket.handshake.address);
 	} catch(rejRes) {
-		add((socket.conn.remoteAddress != null) ? socket.conn.remoteAddress : '')
+		let ban = (socket.conn.remoteAddress != null) ? socket.conn.remoteAddress : '';
+		console.log('[' + new Date().toTimeString().split(' ')[0] + '] ' + ban + ' Banned : ' + reason);
+		add(ban)
 		socket.disconnect();
 	}
 }
@@ -77,11 +79,11 @@ export function events(socket: Socket)
 	});
 
 	socket.on(ClientSocket.MOVES, async (_) => {
-		check_socket(socket, moves_limiter);
+		check_socket(socket, moves_limiter, 'too many moves');
 	});
 
 	socket.on(ClientSocket.LOGIN, async (_) => {
-		check_socket(socket, login_limiter);
+		check_socket(socket, login_limiter, 'too many logins');
 	});
 
 	// save new blacklist

@@ -28,6 +28,7 @@ async function check_payment(player: Player, session_id: string, skin_id: number
 
 			if (session.payment_status == 'paid' && player.user != null)
 			{
+				console.log('[' + new Date().toTimeString().split(' ')[0] + '] --- Buyed skin ! (' + player.socket.conn.remoteAddress + ') : ' + skin_id);
 				player.user.skins.push(skin_id);
 				player.user.save();
 				break;

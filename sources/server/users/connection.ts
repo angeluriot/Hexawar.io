@@ -77,7 +77,7 @@ function register(player: Player)
 						player.socket.emit(ServerSocket.REGISTERED, null, null, null);
 						return;
 					}
-
+					console.log('[' + new Date().toTimeString().split(' ')[0] + '] Account created (' + player.socket.conn.remoteAddress + ') : ' + username);
 					player.socket.emit(ServerSocket.REGISTERED, token, date.toUTCString(), Users.get_data(user));
 				});
 			}, (error) =>
@@ -155,7 +155,7 @@ function login(player: Player)
 						player.socket.emit(ServerSocket.LOGGED, null, null, null);
 						return;
 					}
-
+					console.log('[' + new Date().toTimeString().split(' ')[0] + '] User logged (' + player.socket.conn.remoteAddress + ') : ' + player.user?.nickname);
 					player.socket.emit(ServerSocket.LOGGED, token, date.toUTCString(), Users.get_data(user));
 				});
 			});
@@ -182,6 +182,7 @@ function logout(player: Player)
 			return;
 		}
 
+		console.log('[' + new Date().toTimeString().split(' ')[0] + '] User unlogged (' + player.socket.conn.remoteAddress + ') : ' + player.user?.nickname);
 		player.socket.emit(ServerSocket.UNLOGGED);
 		player.user = null;
 	});
@@ -220,6 +221,7 @@ function auto_login(player: Player)
 
 			Users.get_user(decoded.data, (user) =>
 			{
+				console.log('[' + new Date().toTimeString().split(' ')[0] + '] User logged (' + player.socket.conn.remoteAddress + ') : ' + player.user?.nickname);
 				player.user = user;
 				player.socket.emit(ServerSocket.AUTO_LOGGED, Users.get_data(user));
 			},
@@ -277,6 +279,7 @@ function delete_account(player: Player)
 
 				Users.remove_user(player.user.username, (user) =>
 				{
+					console.log('[' + new Date().toTimeString().split(' ')[0] + '] User deleted account (' + player.socket.conn.remoteAddress + ') : ' + player.user?.nickname);
 					player.socket.emit(ServerSocket.ACCOUNT_DELETED);
 					player.user = null;
 				}, (error) =>
