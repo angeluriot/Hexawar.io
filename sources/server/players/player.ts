@@ -2,6 +2,7 @@ import { Socket } from 'socket.io';
 import * as Utils from '../utils/utils.js';
 import { UserInterface } from '../../models/user.js';
 import { ServerSocket } from '../properties.js';
+import { Bot } from '../bots/bot.js';
 
 export class Player
 {
@@ -45,9 +46,13 @@ export class Player
 					if (player.user != null && player.user.username == this.user.username)
 						return false;
 				}
-			}	
+			}
 
 			Player.list.push(this);
+
+			if (Bot.nb_bots > Bot.max_nb_bots - Player.list.length)
+				Bot.kill_oldest();
+
 			return true;
 		}
 
@@ -87,6 +92,12 @@ export class Player
 
 				this.user.save();
 			}
+
+			if (Bot.nb_bots < Bot.max_nb_bots - Player.list.length)
+			{
+				let bot = new Bot();
+				bot.spawn();
+			}
 		}
 	}
 
@@ -112,7 +123,7 @@ export class Player
 	}
 
 	// Update player sizes
-	static update_sizes(player_from: Player | null, player_to: Player | null)
+	static update_sizes(player_from: Player | Bot | null, player_to: Player | Bot | null)
 	{
 		if (player_from != player_to)
 		{
@@ -121,7 +132,7 @@ export class Player
 			{
 				player_from.size--;
 
-				if (player_from.size == 0)
+				if (player_from.size == 0 && !(player_from instanceof Bot))
 					player_from.die();
 			}
 

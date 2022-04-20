@@ -1,7 +1,8 @@
 import * as Utils from '../utils/utils.js';
 import { Cell, Change, ClientChange, to_client, ClientCell } from './cell.js';
 import { Player } from '../players/player.js';
-import { Global, ServerSocket } from '../properties.js';
+import { Bot } from '../bots/bot.js';
+import { Global } from '../properties.js';
 
 // Create the grid of cells
 export function create_grid()
@@ -93,7 +94,7 @@ export function are_neighbours(cell_1: { i: number, j: number }, cell_2: { i: nu
 }
 
 // Remove all the cells of a player
-export function remove_player_from_grid(player: Player)
+export function remove_player_from_grid(player: Player | Bot)
 {
 	let changes: Change[] = [];
 
@@ -125,17 +126,16 @@ export function get_client_grid() : ClientChange[]
 		for (let j = 0; j < Global.grid_size.y; j++)
 		{
 			let cell = Global.grid[i][j];
-			if(cell.nb_troops > 0) {
-				
+			if(cell.nb_troops > 0)
+			{
 				grid.push({
 					i: i,
 					j: j,
 					color: cell.color,
 					skin_id: cell.skin_id,
-					player_id: (cell.player == null ? '' : cell.player.socket.id),
+					player_id: (cell.player == null ? '' : cell.player instanceof Bot ? cell.player.id as unknown as string : cell.player.socket.id),
 					nb_troops: cell.nb_troops
 				});
-				
 			}
 		}
 	}
@@ -186,7 +186,7 @@ export function get_relative_distance(cell_1: [number,number], cell_2: [number,n
 export function dying_cells(areas: [number, number][][], excludedCells: [number, number][]): [number, number][]{
 	if(areas.length>1){
 		let dyingCells: [number,number][] = [];
-		let player:Player = get_cell(areas[areas.length-1][0][0], areas[areas.length-1][0][1])!.player!;
+		let player: Player | Bot = get_cell(areas[areas.length-1][0][0], areas[areas.length-1][0][1])!.player!;
 
 		//Execute the A* algorithm between the last 2 areas of the array
 		let cost_so_far: (number|null)[][] = [];

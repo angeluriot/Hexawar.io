@@ -11,6 +11,7 @@ import { Global, ClientSocket } from './properties.js';
 import { Player } from './players/player.js';
 import * as Payment from './users/payment.js';
 import { config } from 'dotenv';
+import { Bot } from './bots/bot.js';
 
 config();
 const app = express();
@@ -40,8 +41,9 @@ function init()
 {
 	Grid.create_grid();
 	Game.game_loop();
+	Bot.spawn_bots(10);
 
-	Global.io.on('connection' , (socket: Socket) =>
+	Global.io.on('connection', (socket: Socket) =>
 	{
 		let player = new Player(socket);
 		player.last_message = Date.now();

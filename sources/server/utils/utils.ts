@@ -24,3 +24,15 @@ export function get_required_xp(level: number)
 {
 	return Math.round(Math.sqrt(level) * 500 - 500);
 }
+
+export function delay (ms: number)
+{
+	return new Promise( resolve => setTimeout(resolve, ms) );
+}
+
+export function shuffle_array(array: string[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
