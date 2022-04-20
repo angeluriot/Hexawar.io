@@ -2,10 +2,8 @@ const text:string[] =
 [
 	"Tutorial",
 	"Customise your player!",
-	"Join the game!",
-	"Expand your territory!",
-	"Gather troops.",
 	"Move your troops.",
+	"Gather troops.",
 	"Attack your opponents!",
 	"Split your opponents!",
 	"Good luck!"
@@ -94,7 +92,7 @@ function update()
 	const image = document.querySelector('.tutorial .image') as HTMLImageElement;
 
 	title.innerText = text[id_img];
-	image.src = "resources/tutorial/image_" + id_img + ".gif";
+	image.src = "resources/gifs/tuto_" + id_img + ".gif";
 }
 
 function inactive_button(button: SVGElement)
