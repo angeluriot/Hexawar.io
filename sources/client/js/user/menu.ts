@@ -36,7 +36,7 @@ function update_account()
 	const stats_2 = document.querySelector('.account .stats_value_2') as HTMLSpanElement;
 	const stats_3 = document.querySelector('.account .stats_value_3') as HTMLSpanElement;
 	const stats_4 = document.querySelector('.account .stats_value_4') as HTMLSpanElement;
-	const play_button = document.querySelector('.connection .svg_button') as SVGElement;
+	const play_button = document.querySelector('.connection .play .svg_button') as SVGElement;
 
 	if (Global.user_data != null)
 	{

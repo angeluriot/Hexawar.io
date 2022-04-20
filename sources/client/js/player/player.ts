@@ -13,6 +13,7 @@ export class Player
 	static highest_rank: number = Number.MAX_SAFE_INTEGER;
 	static start_time: number = Date.now();
 	static score: number[] = [];
+	static spectator = false;
 
 	static set_skin(skin_id: number)
 	{

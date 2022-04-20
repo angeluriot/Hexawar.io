@@ -44,7 +44,7 @@ export function form_events()
 	const color_picker = document.querySelector('.color_input') as HTMLInputElement;
 	const color_div = document.querySelector('.color_div') as HTMLDivElement;
 	const color_text = document.querySelector('.color_text') as HTMLSpanElement;
-	const play_button = document.querySelector('.svg_button') as SVGElement;
+	const play_button = document.querySelector('.play .svg_button') as SVGElement;
 
 	color_picker_events();
 	skin_events();

@@ -25,7 +25,7 @@ export class Camera
 		// Move the camera with the mouse
 		function on_move_mouse(e: MouseEvent)
 		{
-			if (Player.playing && !Global.dragging && e.buttons == 4)
+			if ((Player.spectator || Player.playing) && !Global.dragging && e.buttons == 4)
 			{
 				Camera.x += e.movementX;
 				Camera.y += e.movementY;
@@ -69,7 +69,7 @@ export class Camera
 
 		function update()
 		{
-			if (Player.playing && !Global.dragging)
+			if ((Player.spectator || Player.playing) && !Global.dragging)
 			{
 				if (left)
 					Camera.x += camera_speed;
@@ -93,7 +93,7 @@ export class Camera
 		// Zoom with the mouse wheel
 		function on_zoom(e: Event)
 		{
-			if (Player.playing && !Global.dragging)
+			if ((Player.spectator || Player.playing) && !Global.dragging)
 			{
 				let temp = Camera.screen_to_canvas(Camera.mouse_pos.x,Camera.mouse_pos.y);
 				Camera.zoom *= 1 - (<WheelEvent>e).deltaY / 5000.;
