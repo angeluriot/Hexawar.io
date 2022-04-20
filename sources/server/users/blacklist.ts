@@ -51,7 +51,7 @@ async function check_socket(socket: Socket, limiter: RateLimiterMemory)
 		await limiter.consume(socket.handshake.address);
 	} catch(rejRes) {
 		add((socket.conn.remoteAddress != null) ? socket.conn.remoteAddress : '')
-		socket.emit('reload');
+		socket.disconnect();
 	}
 }
 
