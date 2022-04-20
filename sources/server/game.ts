@@ -151,7 +151,6 @@ export function player_ping(player: Player) {
 		player.latency = Date.now() - send_date;
 		player.last_message = Date.now();
 	});
-
 }
 
 // Handle player moves
