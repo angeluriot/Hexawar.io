@@ -27,7 +27,7 @@
 	transform: translate(-50%, -50%);
 	top: 320px;
 	left: 50%;
-	width: 80px;
+	width: 75px;
 	cursor: pointer;
 	dominant-baseline: middle;
 	filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.25));
@@ -39,15 +39,31 @@
 .tutorial .button:hover
 {
 	transition: width 0.2s, fill 0.2s;
-	width: 84px;
+	width: 79px;
 	fill: rgb(3, 192, 120);
 }
 
 .tutorial .button:active
 {
 	transition: width 0.2s, fill 0.2s;
-	width: 80px;
+	width: 75px;
 	fill: rgb(6, 209, 125);
+}
+
+.tutorial .button.tutorial_button
+{
+	top: 330px;
+	width: 80px;
+}
+
+.tutorial .button.tutorial_button:hover
+{
+	width: 84px;
+}
+
+.tutorial .button.tutorial_button:active
+{
+	width: 80px;
 }
 
 .tutorial .next_button
@@ -62,12 +78,12 @@
 
 .tutorial .tuto_start
 {
-    visibility: visible;
+	visibility: visible;
 }
 
 .tutorial .tuto_navigate
 {
-    visibility: hidden;
+	visibility: hidden;
 }
 
 .tutorial .title
@@ -77,20 +93,20 @@
 	left: 50%;
 	top: 17.5%;
 	color: rgb(45, 47, 58);
-	font-size: 25px;
+	font-size: 18px;
 	text-align: center;
 	font-family: "Roboto_bold";
 }
 
 .tutorial .image
 {
-    position: absolute;
+	position: absolute;
 	transform: translate(-50%, -50%);
 	top: calc(50% - 25px);
-    width: 200px;
-    height: 150px;
+	width: 200px;
+	height: 150px;
 	left: 50%;
-    background-color: rgb(223, 223, 223);
+	background-color: rgb(223, 223, 223);
 	border-radius: 15px;
 	overflow: hidden;
 }
