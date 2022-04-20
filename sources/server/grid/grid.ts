@@ -30,12 +30,6 @@ export function set_cell(change: Change)
 	cell.player = change.player;
 	cell.nb_troops = change.nb_troops;
 
-	if (Bot.nb_bots < Bot.max_nb_bots)
-	{
-		let bot = new Bot();
-		bot.spawn();
-	}
-
 	Global.io.emit('change', to_client(change));
 }
 

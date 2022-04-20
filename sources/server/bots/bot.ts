@@ -1,7 +1,7 @@
 import * as Grid from '../grid/grid.js';
 import { Global } from '../properties.js';
 import { delay, random_int, shuffle_array } from '../utils/utils.js';
-import { Move } from '../game.js';
+import { Move, move_event } from '../game.js';
 import { random_color } from '../utils/utils.js';
 import { Change } from '../grid/cell.js';
 import { Player } from '../players/player.js';
@@ -32,11 +32,14 @@ export class Bot
 	army_coords: Coordinates;
 	spread_coords: Coordinates;
 
+	time_lived: number;
+
 	static list: Bot[] = [];
 
-	static nb_bots: number = 0;     // Current number of bots
-	static max_nb_bots: number = 1; // Maximum number of bots allowed in game
-	static wait: number = 1000;     // Delay of bots between each action
+	static nb_bots: number = 0;      		// Current number of bots
+	static max_nb_bots: number = 10; 		// Maximum number of bots allowed in game
+	static wait: number = 1000;      		// Delay of bots between each action
+	static time_to_live: number = 300000;	// Amount of time a bot plays before dying automatically
 
 	static nickname_map: Map<string, boolean> = new Map<string, boolean>(
 	[
@@ -58,7 +61,8 @@ export class Bot
 		["IG-11", 				true],
 		["GLaDOS", 				true],
 		["Bastion", 			true],
-		["T-800", 				true]
+		["T-800", 				true],
+		["BB-8",				true]
 	]);
 
 	constructor()
@@ -79,6 +83,7 @@ export class Bot
 		this.objective_cell = { i: -1, j: -1 };
 		this.army_coords = { i: -1, j: -1 };
 		this.spread_coords = { i: -1, j: -1 };
+		this.time_lived = 0;
 
 		Bot.list.push(this);
 	}
@@ -131,6 +136,23 @@ export class Bot
 		this.play();
 	}
 
+	static async spawn_bots(n: number)
+	{
+		for (let i = 0; i < n; i++)
+		{
+			if (Bot.nb_bots < Bot.max_nb_bots - Player.list.length)
+			{
+				let bot = new Bot();
+				bot.spawn();
+			}
+
+			else
+				return;
+
+			await delay(Bot.time_to_live / Bot.max_nb_bots);
+		}
+	}
+
 	// When a bot dies
 	die()
 	{
@@ -141,11 +163,29 @@ export class Bot
 
 		Bot.remove_bot(this.id);
 
-		if (Player.list.length > 0 && Bot.nb_bots < Bot.max_nb_bots)
+		if (Bot.nb_bots < Bot.max_nb_bots - Player.list.length)
 		{
 			let bot = new Bot();
 			bot.spawn();
 		}
+	}
+
+	static kill_oldest()
+	{
+		let oldest_age = 0;
+		let oldest_index = 0;
+
+		for (let i = 0; i < Bot.list.length; i++)
+		{
+			let age = Bot.list[i].time_lived
+			if (age > oldest_age)
+			{
+				oldest_age = age;
+				oldest_index = i;
+			}
+		}
+
+		Bot.list[oldest_index].die();
 	}
 
 	static remove_bot(id: number)
@@ -184,16 +224,19 @@ export class Bot
 	{
 		while (this.is_alive)
 		{
+			if (this.time_lived >= Bot.time_to_live)
+			{
+				this.die();
+				return;
+			}
+
 			let best_play = this.best_play();
 
 			if (best_play != null)
-				this.move_event(best_play);
+				move_event(best_play, this);
 
-			if (Player.list.length == 0)
-				this.die();
-
-			else
-				await delay(Bot.wait);
+			this.time_lived += Bot.wait;
+			await delay(Bot.wait);
 		}
 	}
 
@@ -389,10 +432,10 @@ export class Bot
 			if (cell_from != null)
 				if (cell_from.player instanceof Bot && cell_to.player instanceof Bot)
 					if (cell_from.player.id == cell_to.player!.id)
-						this.move_event({
+						move_event({
 							from: { i: cells_from[k][0], j: cells_from[k][1] },
 							to: { i: regroup_cell.i, j: regroup_cell.j }
-						});
+						}, this);
 		}
 	}
 
@@ -417,13 +460,13 @@ export class Bot
 		{
 			if (j < j_dest)
 			{
-				this.move_event({ from: { i: i, j: j}, to: { i: i, j: j + 1 }});
+				move_event({ from: { i: i, j: j}, to: { i: i, j: j + 1 }}, this);
 				new_coords = { i: i, j: j + 1};
 			}
 
 			else
 			{
-				this.move_event({ from: { i: i, j: j}, to: { i: i, j: j - 1 }});
+				move_event({ from: { i: i, j: j}, to: { i: i, j: j - 1 }}, this);
 				new_coords = { i: i, j: j - 1};
 			}
 		}
@@ -434,13 +477,13 @@ export class Bot
 			{
 				if (j <= j_dest)
 				{
-					this.move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j }});
+					move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j }}, this);
 					new_coords = { i: i + 1, j: j};
 				}
 
 				else
 				{
-					this.move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j - 1 }});
+					move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j - 1 }}, this);
 					new_coords = { i: i + 1, j: j - 1};
 				}
 			}
@@ -449,13 +492,13 @@ export class Bot
 			{
 				if (j <= j_dest)
 				{
-					this.move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j }});
+					move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j }}, this);
 					new_coords = { i: i - 1, j: j};
 				}
 
 				else
 				{
-					this.move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j - 1 }});
+					move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j - 1 }}, this);
 					new_coords = { i: i - 1, j: j - 1 };
 				}
 			}
@@ -467,13 +510,13 @@ export class Bot
 			{
 				if (j < j_dest)
 				{
-					this.move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j + 1 }});
+					move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j + 1 }}, this);
 					new_coords = { i: i + 1, j: j + 1 };
 				}
 
 				else
 				{
-					this.move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j }});
+					move_event({ from: { i: i, j: j}, to: { i: i + 1, j: j }}, this);
 					new_coords = { i: i + 1, j: j };
 				}
 			}
@@ -482,13 +525,13 @@ export class Bot
 			{
 				if (j < j_dest)
 				{
-					this.move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j + 1 }});
+					move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j + 1 }}, this);
 					new_coords = { i: i - 1, j: j + 1 };
 				}
 
 				else
 				{
-					this.move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j }});
+					move_event({ from: { i: i, j: j}, to: { i: i - 1, j: j }}, this);
 					new_coords = { i: i - 1, j: j };
 				}
 			}
@@ -499,130 +542,5 @@ export class Bot
 
 		else
 			this.spread_coords = new_coords;
-	}
-
-	move_event(move: Move)
-	{
-		let cell_from = Grid.get_cell(move.from.i, move.from.j);
-		let cell_to = Grid.get_cell(move.to.i, move.to.j);
-		let dyingCells: Change[] = [];
-		// If the move is valid
-		if (cell_from != null && cell_to != null && cell_from.player == this && Grid.are_neighbours(move.from, move.to) && cell_from.nb_troops > 1)
-		{
-			let change_from = {
-				i: move.from.i,
-				j: move.from.j,
-				color: cell_from.color,
-				skin_id: cell_from.skin_id,
-				player: cell_from.player,
-				nb_troops: cell_from.nb_troops
-			};
-
-			let change_to = {
-				i: move.to.i,
-				j: move.to.j,
-				color: cell_to.color,
-				skin_id: cell_to.skin_id,
-				player: cell_to.player,
-				nb_troops: cell_to.nb_troops
-			};
-
-			// If it's a simple move
-			if (change_to.player == this)
-			{
-				change_to.nb_troops += change_from.nb_troops - 1;
-				change_from.nb_troops = 1;
-
-				// If there are too many troops
-				if (change_to.nb_troops > Global.troops_max)
-				{
-					change_from.nb_troops += change_to.nb_troops - Global.troops_max;
-					change_to.nb_troops = Global.troops_max;
-				}
-			}
-
-			// If it's an attack
-			else
-			{
-				// If the attack succeeds
-				if (change_from.nb_troops > change_to.nb_troops + 1)
-				{
-					let dyingPlayer = change_to.player;
-
-					//If we attack a player
-					if(cell_to.player!=null){
-						//Find the starting point of the area detection
-						let neighbours: [number, number][] = Grid.get_neighbours_coordinates([move.to.i, move.to.j]);
-						let playerCellOffset: number = 0;
-						while(neighbours[playerCellOffset][0] != move.from.i && neighbours[playerCellOffset][1] != move.from.j )
-							playerCellOffset += 1;
-						//Detect the differents areas
-						let lastWasCell = false;
-						let areas: [number, number][][] = [];
-						let last_x = move.to.i;
-						let last_y = move.to.j;
-						for(let i=1; i < neighbours.length+1; i+=1){
-							let [x, y] = neighbours[(playerCellOffset + i) % neighbours.length];
-							if(Grid.get_cell(x, y)?.player == dyingPlayer){
-								if(lastWasCell){
-									//If we are not near a border (else jump between neighbours)
-									if(Grid.get_relative_distance([x, y], [last_x, last_y]) == 1){
-										areas[areas.length-1].push([x, y]);
-									}else{
-										areas.push([[x, y]]);
-									}
-								}else{
-										areas.push([[x, y]]);
-								}
-								lastWasCell = true;
-							}else{
-								lastWasCell = false;
-							}
-							last_x = x;
-							last_y = y;
-						}
-
-						//Find dying cells
-						let toKill = Grid.dying_cells(areas, [[move.to.i, move.to.j]]);
-
-						//Add dyingCells to array
-						for(let killed of toKill){
-							dyingCells.push({
-								i: killed[0],
-								j: killed[1],
-								color: '#FFFFFF',
-								skin_id: -1,
-								player: null,
-								nb_troops: 0
-							});
-						}
-
-					}
-
-					change_to.nb_troops = change_from.nb_troops - change_to.nb_troops - 1;
-					change_from.nb_troops = 1;
-					change_to.color = change_from.color;
-					change_to.skin_id = change_from.skin_id;
-					change_to.player = change_from.player;
-
-					this.cells.push({ i: change_to.i, j: change_to.j });
-				}
-
-				// If the attack fails
-				else
-				{
-					change_to.nb_troops -= change_from.nb_troops - 1;
-					change_from.nb_troops = 1;
-
-					// Add one troop to the defender if it's cell is empty
-					if (change_to.nb_troops == 0)
-						change_to.nb_troops = 1;
-				}
-			}
-
-			Grid.set_cells([change_from, change_to], true);
-
-			Grid.set_cells(dyingCells, false);
-		}
 	}
 }

@@ -96,146 +96,148 @@ export function leave_game(player: Player)
 // Handle player moves
 export function player_moves(player: Player)
 {
-	function move_event(move: Move)
+	player.socket.on('move', (move: Move) => { move_event(move, player); });
+	player.socket.on('moves', (moves: Move[]) => { moves.forEach(move => move_event(move, player)); });
+}
+
+export function move_event(move: Move, player: Player | Bot)
+{
+	let cell_from = Grid.get_cell(move.from.i, move.from.j);
+	let cell_to = Grid.get_cell(move.to.i, move.to.j);
+	let dyingCells: Change[] = [];
+	// If the move is valid
+	if (cell_from != null && cell_to != null && cell_from.player == player && Grid.are_neighbours(move.from, move.to) && cell_from.nb_troops > 1)
 	{
-		let cell_from = Grid.get_cell(move.from.i, move.from.j);
-		let cell_to = Grid.get_cell(move.to.i, move.to.j);
-		let dyingCells: Change[] = [];
-		// If the move is valid
-		if (cell_from != null && cell_to != null && cell_from.player == player && Grid.are_neighbours(move.from, move.to) && cell_from.nb_troops > 1)
+		let change_from = {
+			i: move.from.i,
+			j: move.from.j,
+			color: cell_from.color,
+			skin_id: cell_from.skin_id,
+			player: cell_from.player,
+			nb_troops: cell_from.nb_troops
+		};
+
+		let change_to = {
+			i: move.to.i,
+			j: move.to.j,
+			color: cell_to.color,
+			skin_id: cell_to.skin_id,
+			player: cell_to.player,
+			nb_troops: cell_to.nb_troops
+		};
+
+		// If it's a simple move
+		if (change_to.player == player)
 		{
-			let change_from = {
-				i: move.from.i,
-				j: move.from.j,
-				color: cell_from.color,
-				skin_id: cell_from.skin_id,
-				player: cell_from.player,
-				nb_troops: cell_from.nb_troops
-			};
+			change_to.nb_troops += change_from.nb_troops - 1;
+			change_from.nb_troops = 1;
 
-			let change_to = {
-				i: move.to.i,
-				j: move.to.j,
-				color: cell_to.color,
-				skin_id: cell_to.skin_id,
-				player: cell_to.player,
-				nb_troops: cell_to.nb_troops
-			};
-
-			// If it's a simple move
-			if (change_to.player == player)
+			// If there are too many troops
+			if (change_to.nb_troops > Global.troops_max)
 			{
-				change_to.nb_troops += change_from.nb_troops - 1;
-				change_from.nb_troops = 1;
+				change_from.nb_troops += change_to.nb_troops - Global.troops_max;
+				change_to.nb_troops = Global.troops_max;
+			}
+		}
 
-				// If there are too many troops
-				if (change_to.nb_troops > Global.troops_max)
+		// If it's an attack
+		else
+		{
+			// If the attack succeeds
+			if (change_from.nb_troops > change_to.nb_troops + 1)
+			{
+				let dyingPlayer = change_to.player;
+
+				// If the attacked player is a bot, remove their cell from their cell list
+				if (cell_to.player instanceof Bot)
 				{
-					change_from.nb_troops += change_to.nb_troops - Global.troops_max;
-					change_to.nb_troops = Global.troops_max;
+					cell_to.player.remove_cell(change_to.i, change_to.j);
+
+					if (!cell_to.player.is_attacked)
+						cell_to.player.alert(change_to.i, change_to.j);
 				}
+
+				//If we attack a player
+				if(cell_to.player!=null){
+					//Find the starting point of the area detection
+					let neighbours: [number, number][] = Grid.get_neighbours_coordinates([move.to.i, move.to.j]);
+					let playerCellOffset: number = 0;
+					while(neighbours[playerCellOffset][0] != move.from.i && neighbours[playerCellOffset][1] != move.from.j )
+						playerCellOffset += 1;
+					//Detect the differents areas
+					let lastWasCell = false;
+					let areas: [number, number][][] = [];
+					let last_x = move.to.i;
+					let last_y = move.to.j;
+					for(let i=1; i < neighbours.length+1; i+=1){
+						let [x, y] = neighbours[(playerCellOffset + i) % neighbours.length];
+						if(Grid.get_cell(x, y)?.player == dyingPlayer){
+							if(lastWasCell){
+								//If we are not near a border (else jump between neighbours)
+								if(Grid.get_relative_distance([x, y], [last_x, last_y]) == 1){
+									areas[areas.length-1].push([x, y]);
+								}else{
+									areas.push([[x, y]]);
+								}
+							}else{
+									areas.push([[x, y]]);
+							}
+							lastWasCell = true;
+						}else{
+							lastWasCell = false;
+						}
+						last_x = x;
+						last_y = y;
+					}
+
+					//Find dying cells
+					let toKill = Grid.dying_cells(areas, [[move.to.i, move.to.j]]);
+
+					//Add dyingCells to array
+					for(let killed of toKill){
+						dyingCells.push({
+							i: killed[0],
+							j: killed[1],
+							color: '#FFFFFF',
+							skin_id: -1,
+							player: null,
+							nb_troops: 0
+						});
+
+						// If the attacked player is a bot, remove their cell from their cell list
+						if (cell_to.player instanceof Bot)
+							cell_to.player.remove_cell(killed[0], killed[1]);
+					}
+
+				}
+
+				change_to.nb_troops = change_from.nb_troops - change_to.nb_troops - 1;
+				change_from.nb_troops = 1;
+				change_to.color = change_from.color;
+				change_to.skin_id = change_from.skin_id;
+				change_to.player = change_from.player;
+
+				if (player instanceof Bot)
+					player.cells.push({ i: change_to.i, j: change_to.j });
 			}
 
-			// If it's an attack
+			// If the attack fails
 			else
 			{
-				// If the attack succeeds
-				if (change_from.nb_troops > change_to.nb_troops + 1)
-				{
-					let dyingPlayer = change_to.player;
+				change_to.nb_troops -= change_from.nb_troops - 1;
+				change_from.nb_troops = 1;
 
-					// If the attacked player is a bot, remove their cell from their cell list
-					if (cell_to.player instanceof Bot)
-					{
-						cell_to.player.remove_cell(change_to.i, change_to.j);
-
-						if (!cell_to.player.is_attacked)
-							cell_to.player.alert(change_to.i, change_to.j);
-					}
-
-					//If we attack a player
-					if(cell_to.player!=null){
-						//Find the starting point of the area detection
-						let neighbours: [number, number][] = Grid.get_neighbours_coordinates([move.to.i, move.to.j]);
-						let playerCellOffset: number = 0;
-						while(neighbours[playerCellOffset][0] != move.from.i && neighbours[playerCellOffset][1] != move.from.j )
-							playerCellOffset += 1;
-						//Detect the differents areas
-						let lastWasCell = false;
-						let areas: [number, number][][] = [];
-						let last_x = move.to.i;
-						let last_y = move.to.j;
-						for(let i=1; i < neighbours.length+1; i+=1){
-							let [x, y] = neighbours[(playerCellOffset + i) % neighbours.length];
-							if(Grid.get_cell(x, y)?.player == dyingPlayer){
-								if(lastWasCell){
-									//If we are not near a border (else jump between neighbours)
-									if(Grid.get_relative_distance([x, y], [last_x, last_y]) == 1){
-										areas[areas.length-1].push([x, y]);
-									}else{
-										areas.push([[x, y]]);
-									}
-								}else{
-										areas.push([[x, y]]);
-								}
-								lastWasCell = true;
-							}else{
-								lastWasCell = false;
-							}
-							last_x = x;
-							last_y = y;
-						}
-
-						//Find dying cells
-						let toKill = Grid.dying_cells(areas, [[move.to.i, move.to.j]]);
-
-						//Add dyingCells to array
-						for(let killed of toKill){
-							dyingCells.push({
-								i: killed[0],
-								j: killed[1],
-								color: '#FFFFFF',
-								skin_id: -1,
-								player: null,
-								nb_troops: 0
-							});
-
-							// If the attacked player is a bot, remove their cell from their cell list
-							if (cell_to.player instanceof Bot)
-								cell_to.player.remove_cell(killed[0], killed[1]);
-						}
-
-					}
-
-					change_to.nb_troops = change_from.nb_troops - change_to.nb_troops - 1;
-					change_from.nb_troops = 1;
-					change_to.color = change_from.color;
-					change_to.skin_id = change_from.skin_id;
-					change_to.player = change_from.player;
-
-				}
-
-				// If the attack fails
-				else
-				{
-					change_to.nb_troops -= change_from.nb_troops - 1;
-					change_from.nb_troops = 1;
-
-					// Add one troop to the defender if it's cell is empty
-					if (change_to.nb_troops == 0)
-						change_to.nb_troops = 1;
-				}
+				// Add one troop to the defender if it's cell is empty
+				if (change_to.nb_troops == 0)
+					change_to.nb_troops = 1;
 			}
-
-			Grid.set_cells([change_from, change_to], true);
-
-			Grid.set_cells(dyingCells, false);
-
 		}
-	}
 
-	player.socket.on('move', (move: Move) => { move_event(move); });
-	player.socket.on('moves', (moves: Move[]) => { moves.forEach(move => move_event(move)); });
+		Grid.set_cells([change_from, change_to], true);
+
+		Grid.set_cells(dyingCells, false);
+
+	}
 }
 
 // Handle troops spawning

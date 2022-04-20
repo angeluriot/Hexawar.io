@@ -41,14 +41,6 @@ export class Player
 				{
 					let player = Player.list[i];
 
-					/*
-					if (Player.list.length >= 8)
-						Bot.max_nb_bots = 0;
-
-					else if (Player.list.length >= 4)
-						Bot.max_nb_bots = 1;
-					*/
-
 					if (player.user != null && player.user.username == this.user.username)
 						this.playing = false;
 				}
@@ -58,7 +50,12 @@ export class Player
 			this.playing = false;
 
 		if (this.playing)
+		{
 			Player.list.push(this);
+
+			if (Bot.nb_bots > Bot.max_nb_bots - Player.list.length)
+				Bot.kill_oldest();
+		}
 
 		return this.playing;
 	}
@@ -72,17 +69,7 @@ export class Player
 			this.playing = false;
 
 			if (index != -1)
-			{
 				Player.list.splice(index, 1);
-
-				/*
-				if (Player.list.length < 4)
-					Bot.max_nb_bots = 2;
-
-				else if (Player.list.length < 8)
-					Bot.max_nb_bots = 1;
-				*/
-			}
 
 			if (this.user != null)
 			{
@@ -108,6 +95,12 @@ export class Player
 				}
 
 				this.user.save();
+			}
+
+			if (Bot.nb_bots < Bot.max_nb_bots - Player.list.length)
+			{
+				let bot = new Bot();
+				bot.spawn();
 			}
 		}
 	}
