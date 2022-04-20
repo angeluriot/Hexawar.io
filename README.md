@@ -116,7 +116,6 @@ $ npm run dev
 **Server :**
 
 ```shell
-$ npm install forever
 $ npm run fstart
 ```
 (Stop the server with : `npm run fstop`).
