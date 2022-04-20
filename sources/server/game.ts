@@ -110,10 +110,7 @@ export function join(player: Player)
 						coord2+=1
 						}
 					}
-						
-				}	
-				
-				
+				}
 			}
 
 			let spawnDyingCells = Grid.dying_cells(spawnAreaNeighbours, [[spawn.i, spawn.j]]);
@@ -130,8 +127,7 @@ export function join(player: Player)
 					player: null,
 					nb_troops: 0
 				});
-				Grid.set_cells(changes,false);
-				
+				Grid.set_cells(changes);
 			}
 
 			for(let dyingCell of spawnDyingCells2){
@@ -144,8 +140,7 @@ export function join(player: Player)
 					player: null,
 					nb_troops: 0
 				});
-				Grid.set_cells(changes,false);
-				
+				Grid.set_cells(changes);
 			}
 
 			for(let dyingCell of spawnDyingCells3){
@@ -158,8 +153,7 @@ export function join(player: Player)
 					player: null,
 					nb_troops: 0
 				});
-				Grid.set_cells(changes,false);
-				
+				Grid.set_cells(changes);
 			}
 
 			// Set the change
