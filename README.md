@@ -8,6 +8,8 @@
 
 <br/>
 
+⚠️ This project was made for school with a deadline and I chose to leave it as it was at the time of submission ⚠️
+
 This project is a massively multiplayer game that runs directly on the browser, it takes up the concept of *.io* games: everyone plays on a large map and the goal is to be the first of the global ranking. It is a simple land capture game where you can attack other territories with your troops.
 
 The game is available on [**Hexawar.io**](https://hexawar.io).
