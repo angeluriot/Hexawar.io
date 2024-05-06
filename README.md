@@ -1,4 +1,4 @@
-# [Hexawar.io](https://hexawar.io)
+# [🛡 Hexawar.io](https://hexawar.io)
 
 ![Release](https://img.shields.io/badge/Release-v1.0-blueviolet)
 ![Language](https://img.shields.io/badge/Language-JavaScript-ffcc14)
@@ -8,7 +8,9 @@
 
 <br/>
 
-⚠️ This project was made for school with a deadline and I chose to leave it as it was at the time of submission ⚠️
+*⚠️ This project was made for school with a deadline and I chose to leave it as it was at the time of submission ⚠️*
+
+<br/>
 
 This project is a massively multiplayer game that runs directly on the browser, it takes up the concept of *.io* games: everyone plays on a large map and the goal is to be the first of the global ranking. It is a simple land capture game where you can attack other territories with your troops.
 
@@ -17,23 +19,24 @@ The game is available on [**Hexawar.io**](https://hexawar.io).
 <br/>
 
 <p align="center">
-	<img src="https://raw.githubusercontent.com/angeluriot/Hexawar.io/main/resources/misc/hexawar_logo.svg" width="500">
+	<img src="https://raw.githubusercontent.com/angeluriot/Hexawar.io/main/resources/misc/hexawar_logo.svg" width="700">
 </p>
 
 <br/>
 
-# Summary
+# 📋 Summary
 
-* **[Summary](#summary)**
-* **[How to play?](#how-to-play)**
-* **[Install](#install)**
-	* [Dependecies](#dependecies)
-	* [Setup](#setup)
-* **[Credits](#credits)**
+* **[📋 Summary](#-summary)**
+* **[🎮 How to play?](#-how-to-play)**
+* **[🛠️ Install](#%EF%B8%8F-install)**
+	* [📦 Dependecies](#-dependecies)
+	* [⚙️ Setup](#%EF%B8%8F-setup)
+	* [🚀 Run](#-run)
+* **[🙏 Credits](#-credits)**
 
 <br/>
 
-# How to play?
+# 🎮 How to play?
 
 First, choose a name and a color (or a skin if you had any) for your player.
 
@@ -67,9 +70,9 @@ You can also use them to attack other players and beat them in the global rankin
 
 <br/>
 
-# Install
+# 🛠️ Install
 
-## 1/ Dependecies
+## 📦 Dependecies
 
 * **[NodeJS](https://nodejs.org/en/)**
 * **[npm](https://www.npmjs.com)**
@@ -87,7 +90,9 @@ $ sudo apt install npm
 $ sudo apt install mongodb
 ```
 
-## 2/ Setup
+<br/>
+
+## ⚙️ Setup
 
 * Add a file named `.env` in the root of the project with :
 ```shell
@@ -101,7 +106,9 @@ MONGODB_PASSWORD=<password> #optional
 
 * Compile typescript files with `npm run build` *(or `npm run devBuild` for real time compilation)*
 
-## 3/ Run
+<br/>
+
+## 🚀 Run
 
 **Default :**
 
@@ -124,7 +131,7 @@ $ npm run fstart
 
 <br/>
 
-# Credits
+# 🙏 Credits
 
 * [**Angel Uriot**](https://github.com/angeluriot) : Co-creator of the project.
 * [**Arthur Azambre**](https://github.com/arthurazambre) : Co-creator of the project.
